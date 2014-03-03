@@ -1,0 +1,19 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if message %}
+Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
+{% endif %}
+
+<h1>All users</h1>
+{% if hits %}
+
+{% for hit in hits %}
+        <li>{{hit.id}} {{hit.name}} {{hit.box_id}} {{hit.email}} {{hit.phone}} {{hit.tag}} <a href='/edit_user/{{hit.id}}'>edit</a></li>
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

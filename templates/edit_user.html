@@ -1,0 +1,41 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if message %}
+Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
+{% endif %}
+
+{% if data %}
+<h1>Edit user</h1>
+<form action="" method="post" name="edit_user">
+    {{form.hidden_tag()}}
+    <p>
+    	Box_ID:<br>{{form.box_id(size=80,value=data.box_id)}}<br>
+        Name:<br>{{form.name(size=80, value=data.name)}}<br>
+        email:<br>{{form.email(size=80, value=data.email)}}<br>
+        phone:<br>{{form.phone(size=80, value=data.phone)}}<br>
+        tag:<br>{{form.tag(size=80, value=data.tag)}}<br>
+    </p>
+    <p><input type="submit" value="Save"></p>
+</form>
+
+<h2>Recent tagevents</h2>
+{% for tag in tags %}
+        <li>{{tag.timestamp}} {{tag.tag}} {{tag.id}}</li>
+{% endfor %}
+
+<form action="/crosstag/v1.0/link_user_to_last_tag/{{data.id}}" method="post" name="Link tag">
+<p><input type="submit" value="Link user to last tagevent"></p>
+</form>>
+<br><br><br><br><br><br>
+<form action="/crosstag/v1.0/remove_user/{{data.id}}" method="post" name="remove_user">
+<p><input type="submit" value="Delete user (forever ever)"></p>
+</form>
+
+{% else %}
+<h1>Edit user</h1>
+It looks like you haven't supplied a user id. How can you edit a user without supplying an ID? Maybe try to search for one?
+{% endif %}
+{% endblock %}

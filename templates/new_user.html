@@ -1,0 +1,21 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if message %}
+Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
+{% endif %}
+
+<h1>Create new user</h1>
+<form action="" method="post" name="new_user">
+    {{form.hidden_tag()}}
+    <p>
+        Name:<br>{{form.name(size=80)}}<br>
+        email:<br>{{form.email(size=80)}}<br>
+        phone:<br>{{form.phone(size=80)}}<br>
+        tag:<br>{{form.tag(size=80)}}<br>
+    </p>
+    <p><input type="submit" value="Create"></p>
+</form>
+{% endblock %}

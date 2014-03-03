@@ -1,0 +1,31 @@
+<html>
+  <head>
+    {% if title %}
+    <title>{{title}} - Crosstag</title>
+    {% else %}
+    <title>Crosstag</title>
+    {% endif %}
+  </head>
+  <body>
+    <div>Crosstag: <a href="/index">Home</a> 
+                   <a href="/add_new_user">Add new user</a>
+                   <a href="/edit_user">Edit user</a>
+                   <a href="/search_user">Search user</a>
+                   <a href="/all_users">All users</a>
+                   <a href="/all_tagevents">All Tagevents</a>
+                   <a href="/last_tagevents">Last Tagevents</a>
+                   <a href="/last_tagins">Last Tagins</a>
+                   </div>
+    <hr>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+    {% for message in messages %}
+        <li>{{ message }} </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </body>
+</html>

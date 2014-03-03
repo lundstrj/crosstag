@@ -1,0 +1,32 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if message %}
+Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
+{% endif %}
+
+<h1>Search user</h1>
+<form action="" method="post" name="search_user">
+    {{form.hidden_tag()}}
+    <p>
+    	ID:<br>{{form.id(size=80)}}<br>
+    	Box_ID:<br>{{form.box_id(size=80)}}<br>
+        Name:<br>{{form.name(size=80)}}<br>
+        email:<br>{{form.email(size=80)}}<br>
+        phone:<br>{{form.phone(size=80)}}<br>
+        tag:<br>{{form.tag(size=80)}}<br>
+    </p>
+    <p><input type="submit" value="Search"></p>
+</form>
+
+{% if hits %}
+
+{% for hit in hits %}
+        <li>{{hit.id}} {{hit.name}} {{hit.box_id}} {{hit.email}} {{hit.phone}} {{hit.tag}} <a href='/edit_user/{{hit.id}}'>edit</a></li>
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,23 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Welcome to Crosstag</h1>
+The server is running.
+
+Here is a handy list of API calls:<br>
+'/crosstag/v1.0/register_tag/user_id/tag_id'<br>
+'/crosstag/v1.0/link_user_to_last_tag/user_id'<br>
+'/crosstag/v1.0/get_all_tagevents'<br>
+'/crosstag/v1.0/get_all_users'<br>
+'/crosstag/v1.0/get_tag/user_id'<br>
+'/crosstag/v1.0/get_tagevents_user/user_id'<br>
+'/crosstag/v1.0/get_tagevents_tag/tag_id'<br>
+'/crosstag/v1.0/get_user_data/user_id'<br>
+'/crosstag/v1.0/get_user_data_tag/tag_id'<br>
+'/crosstag/v1.0/remove_user/id'<br>
+'/crosstag/v1.0/create_user/name/email/phone/box_id'<br>
+'/crosstag/v1.0/tagevent/tag_id'<br>
+
+{% endblock %}
