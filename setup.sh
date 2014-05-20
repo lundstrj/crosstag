@@ -1,5 +1,4 @@
-#sudo adduser crosstag
-cd /home/pi
+cd /home/pi/crosstag
 sudo apt-get install python-pip
 sudo pip install requests
 sudo pip install pyserial
