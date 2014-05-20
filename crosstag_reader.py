@@ -3,6 +3,7 @@ import time
 import datetime
 import sys
 import requests
+import glob
 from random import randint
 from optparse import OptionParser
 
@@ -13,8 +14,12 @@ sudo pip install requests
 class CrosstagReader(object):
     def main(self, server, reader):
         try:
-            """ ls /dev/serial/by-id/ to get all connected devices. Use that to determine this """
-            ser = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AD026CI5-if00-port0', 9600, timeout=0)
+            """ 
+                ls /dev/serial/by-id/ to get all connected devices. Use that to determine this 
+                /dev/serial/by-id/usb-FTDI_FT232R_USB_UART_AD026CI5-if00-port0 
+            """
+            usb_devices = glob.glob("/dev/serial/by-id/*")
+            ser = serial.Serial(usb_devices[0], 9600, timeout=0)
             print "Crosstag reader is up and running."
             sys.stdout.flush()
         except:

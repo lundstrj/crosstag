@@ -11,8 +11,6 @@ from flask.ext.wtf import Form
 from wtforms import TextField, BooleanField
 from wtforms.validators import Required
 from flask import render_template, flash, redirect
-#from app import app
-#from forms import LoginForm
 
 """
 sudo pip install flask-security flask-sqlalchemy
@@ -21,7 +19,7 @@ sudo pip install Flask-WTF
 """
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/crosstag/crosstag.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/pi/crosstag.db'
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/lujo/dev/crosstag/crosstag_1.db'
 app.config['WTF_CSRF_ENABLED'] = False
 app.config['SECRET_KEY'] = 'foo'

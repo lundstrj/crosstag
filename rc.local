@@ -20,7 +20,7 @@ fi
 printf "Starting the PiUPS software"
 piusvd start
 printf "Starting Crosstag reader"
-cd /home/crosstag
+cd /pi/crosstag
 python crosstag_reader.py --reader yes &
 printf "Starting Crosstag server"
 python crosstag_server.py &

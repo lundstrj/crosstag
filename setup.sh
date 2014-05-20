@@ -1,9 +1,6 @@
-sudo adduser crosstag
-cd /home/crosstag
+#sudo adduser crosstag
+cd /home/pi
 git clone https://github.com/lundstrj/crosstag.git
-cd crosstag
-mv * ../
-cd ..
 
 sudo apt-get install python-pip
 sudo pip install requests
