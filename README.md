@@ -1,7 +1,7 @@
 crosstag
 ========
 
-A small, lightweight, RFID tagin system for a gym
+A small, lightweight, RFID tagin system for a gym.
 
 Hardware used
 -------------
