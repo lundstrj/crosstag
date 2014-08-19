@@ -368,7 +368,7 @@ def edit_user(user_id=None):
 
 
 if __name__ == '__main__':
-    db.create_all()
+    
     parser = OptionParser(usage="usage: %prog [options] arg \nTry this: python crosstag_server.py", version="%prog 1.0")
     parser.add_option("-c", "--config",
                   action="store", type="string", dest="config", default="/root/crosstag.db", help="What config file do you want to use?")
@@ -376,6 +376,7 @@ if __name__ == '__main__':
                   action="store", type="string", dest="secret", default="foo", help="What app secret do you want?")
     (options, args) = parser.parse_args()
     load_config(options.config, options.secret)
+    db.create_all()
     app.run(host='0.0.0.0', port=80, debug = True)
 
 
