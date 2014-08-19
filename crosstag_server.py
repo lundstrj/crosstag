@@ -376,7 +376,8 @@ if __name__ == '__main__':
     parser.add_option("-s", "--secret",
                   action="store", type="string", dest="secret", default="foo", help="What app secret do you want?")
     (options, args) = parser.parse_args()
-    load_config(options.config, options.secret)
+    config['database_file'] = options.config
+    config['secret_key'] = options.secret
     db.create_all()
     app.run(host='0.0.0.0', port=80, debug = True)
 
