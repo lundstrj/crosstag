@@ -18,13 +18,13 @@ sudo pip install Flask-WTF
 
 """
 
+config = {'database_file':'', 'secret_key':''}
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/pi/crosstag.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/lujo/dev/crosstag/crosstag_1.db'
 app.config['WTF_CSRF_ENABLED'] = False
-app.config['SECRET_KEY'] = 'foo'
+app.config['SECRET_KEY'] = config['secret_key']
 db = SQLAlchemy(app)
-
 
 
 class NewUser(Form):
@@ -87,6 +87,8 @@ class Tagevent(db.Model):
     def __repr__(self):
         return '<Tagevent %s %s>' % (self.tag, self.timestamp)
 
+def load_config(file, secret):
+    config = {'database_file':file, 'secret_key':secret}
 
 def json_events(tag_id=None):
     if tag_id:
@@ -367,4 +369,13 @@ def edit_user(user_id=None):
 
 if __name__ == '__main__':
     db.create_all()
+    parser = OptionParser(usage="usage: %prog [options] arg \nTry this: python crosstag_server.py", version="%prog 1.0")
+    parser.add_option("-c", "--config",
+                  action="store", type="string", dest="config", default="/root/crosstag.db", help="What config file do you want to use?")
+    parser.add_option("-s", "--secret",
+                  action="store", type="string", dest="secret", default="foo", help="What app secret do you want?")
+    (options, args) = parser.parse_args()
+    load_config(options.config, options.secret)
     app.run(host='0.0.0.0', port=80, debug = True)
+
+
