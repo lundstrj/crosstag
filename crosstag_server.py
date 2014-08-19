@@ -19,7 +19,7 @@ sudo pip install Flask-WTF
 
 """
 
-config = {'database_file':'/root/crosstag.db', 'secret_key':'foo'}
+config = {'database_file':'sqlite://///root/crosstag.db', 'secret_key':'foo'}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/lujo/dev/crosstag/crosstag_1.db'
