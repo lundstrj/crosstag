@@ -54,6 +54,15 @@ class CrosstagReader(object):
                 except: # catch *all* exceptions
                     e = sys.exc_info()[0]
                     print "%s reader ERROR getting user info from tag, timeout? %s " % (now, e)
+                try:
+                    # TODO fetch user information and print to screen
+                    print '%s reader getting user history for tag [%s]' % (now, tag_nbr)
+                    res = requests.get("http://localhost:80/crosstag/v1.0/get_tagevents_tag/%s" % tag_nbr, timeout=3)
+                    now = datetime.datetime.now()
+                    print "%s reader getting user info from tag result: [%s]" % (now, res.text)
+                except: # catch *all* exceptions
+                    e = sys.exc_info()[0]
+                    print "%s reader ERROR getting user info from tag, timeout? %s " % (now, e)
             else:
                 if ser.inWaiting() > 0:
                     data = ser.readline()
