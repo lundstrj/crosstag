@@ -19,7 +19,8 @@ sudo pip install Flask-WTF
 
 """
 
-config = {'database_file':'sqlite://///root/crosstag.db', 'secret_key':'foo'}
+#config = {'database_file':'sqlite://///root/crosstag.db', 'secret_key':'foo'}
+config = {'database_file':'sqlite://////Users/lundstrj/repos/crosstag.db', 'secret_key':'foo'}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/lujo/dev/crosstag/crosstag_1.db'
@@ -34,6 +35,7 @@ class NewUser(Form):
     phone = TextField('phone', validators = [])
     box_id = TextField('box_id', validators = [])
     tag = TextField('tag', validators = [])
+    expiry_date = TextField('expiry_date', validators = [])
 
 class SearchUser(Form):
     id = TextField('id', validators = [])
@@ -42,6 +44,8 @@ class SearchUser(Form):
     email = TextField('email', validators = [])
     phone = TextField('phone', validators = [])
     tag = TextField('tag', validators = [])
+    expiry_date = TextField('expiry_date', validators = [])
+    created_date = TextField('created_date', validators = [])
 
 
 class User(db.Model):
@@ -51,22 +55,26 @@ class User(db.Model):
     email = db.Column(db.String(120))
     phone = db.Column(db.Integer)
     tag = db.Column(db.String(12))
+    expiry_date = db.Column(db.DateTime)
+    created_date = db.Column(db.DateTime)
 
-    def __init__(self, name, email, phone=None, tag=None, box_id=None):
+    def __init__(self, name, email, phone=None, tag=None, box_id=None, expiry_date=None):
         self.name = name
         self.email = email
         self.phone = phone
         self.tag = tag
         self.box_id = box_id
+        self.expiry_date = expiry_date
+        self.created_date = datetime.now()
 
     def __repr__(self):
         return '<User %r>' % self.name
     
     def dict(self):
-        return {'id':self.id, 'name':self.name, 'email':self.email, 'tag':self.tag, 'phone':self.phone, 'box_id':self.box_id}
+        return {'id':self.id, 'name':self.name, 'email':self.email, 'tag':self.tag, 'phone':self.phone, 'box_id':self.box_id, 'expiry_date':str(self.expiry_date), 'created_date':str(self.created_date)}
 
     def json(self):
-        d = jsonify({'id':self.id, 'name':self.name, 'email':self.email, 'tag':self.tag, 'phone':self.phone, 'box_id':self.box_id})
+        d = jsonify(self.dict())
         return d
 
 class Tagevent(db.Model):
@@ -80,13 +88,13 @@ class Tagevent(db.Model):
         #self.timestamp = 12345
 
     def dict(self):
-        return {'id':self.id, 'timestamp':self.timestamp, 'tag':self.tag}
+        return {'id':self.id, 'timestamp':str(self.timestamp), 'tag':self.tag}
 
     def __str__(self):
-        return '<Tagevent %s %s>' % (self.tag, self.timestamp)
+        return '<Tagevent %s %s>' % (self.tag, str(self.timestamp))
 
     def __repr__(self):
-        return '<Tagevent %s %s>' % (self.tag, self.timestamp)
+        return '<Tagevent %s %s>' % (self.tag, str(self.timestamp))
 
 def load_config(file, secret):
     config = {'database_file':file, 'secret_key':secret}
@@ -101,7 +109,7 @@ def json_events(tag_id=None):
         tmp = {}
         ret[event.id] = {}
         ret[event.id]['tag'] = event.tag
-        ret[event.id]['timestamp'] = event.timestamp
+        ret[event.id]['timestamp'] = str(event.timestamp)
     ret = jsonify(ret)
     return ret
 
@@ -175,7 +183,12 @@ def get_tagevents_user_dict(user_id):
 
 @app.route('/crosstag/v1.0/get_tagevents_tag/<tag_id>', methods = ['GET'])
 def get_tagevents_tag(tag_id):
-    return json_events(tag_id)
+    data = json_events(tag_id)
+    print "fooo"
+    print data
+    print type(data)
+    print "bar"
+    return data
 
 @app.route('/crosstag/v1.0/get_user_data/<user_id>', methods = ['GET'])
 def get_user_data(tag_id):
@@ -349,6 +362,9 @@ def edit_user(user_id=None):
         user.email = form.email.data
         user.phone = form.phone.data
         user.tag = form.tag.data
+        user.expiry_date = date_object = datetime.strptime(form.expiry_date.data, "%Y-%m-%d %H:%M:%S.%f")
+                                                                                   #2014-08-20 10:17:20.020920
+        user.created_date = date_object = datetime.strptime(form.created_date.data, "%Y-%m-%d %H:%M:%S.%f")
         db.session.commit()
         flash('Updated user: %s with id: %s' % (form.name.data, user.id))
         tagevent = get_last_tag_event()
