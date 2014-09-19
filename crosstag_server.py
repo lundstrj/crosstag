@@ -20,7 +20,7 @@ sudo pip install Flask-WTF
 """
 
 #config = {'database_file':'sqlite://///root/crosstag.db', 'secret_key':'foo'}
-config = {'database_file':'sqlite://////Users/lundstrj/repos/crosstag.db', 'secret_key':'foo'}
+config = {'database_file':'sqlite://////Users/lundstrj/repos/crosstag/crosstag.db', 'secret_key':'foo'}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/lujo/dev/crosstag/crosstag_1.db'
@@ -55,23 +55,27 @@ class User(db.Model):
     email = db.Column(db.String(120))
     phone = db.Column(db.Integer)
     tag = db.Column(db.String(12))
+    gender = db.Column(db.String(10))
+    birth_date = db.Column(db.DateTime)
     expiry_date = db.Column(db.DateTime)
     created_date = db.Column(db.DateTime)
 
-    def __init__(self, name, email, phone=None, tag=None, box_id=None, expiry_date=None):
+    def __init__(self, name, email, phone=None, tag=None, box_id=None, expiry_date=None, birth_date=None, gender=None):
         self.name = name
         self.email = email
         self.phone = phone
         self.tag = tag
         self.box_id = box_id
         self.expiry_date = expiry_date
+        self.birth_date = birth_date
+        self.gender = gender
         self.created_date = datetime.now()
 
     def __repr__(self):
         return '<User %r>' % self.name
     
     def dict(self):
-        return {'id':self.id, 'name':self.name, 'email':self.email, 'tag':self.tag, 'phone':self.phone, 'box_id':self.box_id, 'expiry_date':str(self.expiry_date), 'created_date':str(self.created_date)}
+        return {'id':self.id, 'name':self.name, 'email':self.email, 'tag':self.tag, 'phone':self.phone, 'box_id':self.box_id, 'expiry_date':str(self.expiry_date), 'created_date':str(self.created_date), 'birth_date':str(self.birth_date), 'gender':self.gender}
 
     def json(self):
         d = jsonify(self.dict())
@@ -85,7 +89,9 @@ class Tagevent(db.Model):
     def __init__(self, tag):
         self.tag = tag
         self.timestamp = datetime.now()
-        #self.timestamp = 12345
+
+    def json(self):
+        return jsonify(self.dict())
 
     def dict(self):
         return {'id':self.id, 'timestamp':str(self.timestamp), 'tag':self.tag}
@@ -346,6 +352,10 @@ def last_tagins():
         title = 'Last Tagins',
         hits = ret)
 
+@app.route('/crosstag/v1.0/last_tagin', methods = ['GET'])
+@app.route('/last_tagin', methods = ['GET'])
+def last_tagin():
+    return Tagevent.query.all()[-1].json()
 
 @app.route('/edit_user/', methods = ['GET', 'POST'])
 @app.route('/edit_user/<user_id>', methods = ['GET', 'POST'])
