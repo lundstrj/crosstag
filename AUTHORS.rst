@@ -1,5 +1,4 @@
-Requests is written and maintained by Johan Lundström and
-various contributors:
+Crosstag is written and maintained by Johan Lundström:
 
 Development Lead
 ````````````````
@@ -9,7 +8,7 @@ Development Lead
 Core Contributors
 `````````````````
 
-- Oxana Sachenkova <> `@meranlin <https://github.com/merenlin>`_
+- Oxana Sachenkova <oxana.sachenkova@gmail.com> `@meranlin <https://github.com/merenlin>`_
 
 
 Patches and Suggestions
