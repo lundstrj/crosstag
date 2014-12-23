@@ -8,7 +8,7 @@ from wtforms.validators import Required
 from datetime import datetime
 
 config = {'database_file':
-          'sqlite://////Users/lundstrj/repos/crosstag_2/dev_db.db',
+          'sqlite://////Users/lundstrj/repos/crosstag/dev_db.db',
           'secret_key': 'foo'}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
@@ -181,8 +181,8 @@ def last_tagins():
             js['user_index'] = user["index"]
             js['user_name'] = user['name']
         except:
-            js['user_index'] = "None"
-            js['user_name'] = "No user connected to this tag right now"
+            js['user_index'] = None
+            js['user_name'] = "No user connected to this tag"
         ret.append(js)
     ret.reverse()
     return render_template('last_tagevents.html',

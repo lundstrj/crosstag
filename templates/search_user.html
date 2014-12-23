@@ -34,9 +34,9 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                     {{form.tag(size=80, placeholder='44448888')}}
                 </div>
         </div>
-        {{form.gender()}}<br>
+        {{form.gender()}}
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">fortnox</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">fortnox_id</label>
                 <div class="col-sm-10">
                     {{form.fortnox_id(size=80, placeholder='1001')}}
                 </div>
@@ -47,7 +47,11 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                     {{form.index(size=80, placeholder='1')}}
                 </div>
         </div>
-    <p><input type="submit" value="Search"></p>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <input type="submit" value="Search" class="btn btn-default">
+            </div>
+        </div>
 </form>
 
 {% if hits %}

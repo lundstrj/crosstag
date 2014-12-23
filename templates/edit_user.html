@@ -68,9 +68,8 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
         </div>
     </div>
 </form>
-
-<h2>Recent tagevents for this user's tag</h2>
 {% if tags %}
+<h2>Recent tagevents for this user's tag</h2>
     <table class="table table-hover">
     <tbody>
         <thead>
@@ -88,11 +87,11 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 {% endif %}
 
 <form action="/crosstag/v1.0/link_user_to_last_tag/{{data.index}}" method="post" name="Link tag">
-<p><input type="submit" value="Link user to last tagevent"></p>
+<p><input type="submit" value="Link user to last system tagevent"></p>
 </form>
 <br><br><br><br><br><br>
 <form action="/crosstag/v1.0/remove_user/{{data.index}}" method="post" name="remove_user">
-<p><input type="submit" value="Delete user (forever ever)"></p>
+<p><input type="submit" value="Delete user (forever ever). No additional warnings given"></p>
 </form>
 
 {% else %}

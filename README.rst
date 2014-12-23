@@ -6,8 +6,8 @@ I really wish I had written more here. Maybe by Christmas?
 Features
 --------
 
-- Designed to run on a Raspberry Pi
-- COTS RFID-reader compatible
+- Designed to run on a Raspberry Pi (http://www.raspberrypi.org/products/)
+- COTS RFID-reader compatible (https://www.sparkfun.com/products/retired/9875, https://www.sparkfun.com/products/13198)
 - Stand alone server
 - Stand alone reader
 - Stand alone viewer
@@ -16,6 +16,13 @@ Features
 Installation
 ------------
 
-To install Crosstag, simply:
+To install Crosstag, simply clone and run.
 
-Clone and run
+# to start the server
+sudo python crosstag_server.py
+
+# to start the reader
+python crosstag_reader.py
+
+# to start the terminal based viewer
+python crosstag_viewer.py
