@@ -8,13 +8,8 @@ from wtforms import TextField, RadioField, DateField
 from wtforms.validators import Required
 from datetime import datetime, timedelta
 
-config = {'database_file':
-          'sqlite:////Users/merenlin/crosstag/dev_db.db',
-          'secret_key': 'foo'}
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
-app.config['WTF_CSRF_ENABLED'] = False
-app.config['SECRET_KEY'] = config['secret_key']
+app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 app_name = 'crosstag'
 
@@ -133,6 +128,16 @@ def index():
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
     event = Tagevent(tag_id)
+    db.session.add(event)
+    db.session.commit()
+    return "%s server tagged %s" % (event.timestamp, tag_id)
+
+
+@app.route('/crosstag/v1.0/specialtagevent/<tag_id>/<timestamp>')
+def specialtagevent(tag_id, timestamp):
+    event = Tagevent(tag_id)
+    # date_object = datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
+    event.timestamp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M')
     db.session.add(event)
     db.session.commit()
     return "%s server tagged %s" % (event.timestamp, tag_id)
@@ -306,19 +311,20 @@ def get_tagevents_user_dict(user_index):
 def statistics():
     return render_template('statistics.html', plot_paths='')
 
+
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
     three_months_ago = datetime.now() - timedelta(weeks=12)
-    tags = Tagevent.query.filter(Tagevent.timestamp>three_months_ago).all()
-    
-    tags_json={}
+    tags = Tagevent.query.filter(Tagevent.timestamp > three_months_ago).all()
+    tags_json = {}
+
     for tag in tags:
-        current=str(tag.timestamp.date())
+        current = str(tag.timestamp.date())
         if current in tags_json:
             tags_json[current] += 1
         else:
             tags_json[current] = 0
-    
+
     res = [{'datestamp': x, 'count': y} for x, y in tags_json.iteritems()]
     return json.dumps(res)
 
@@ -398,7 +404,7 @@ if __name__ == '__main__':
                       action="store", type="string", dest="secret",
                       default="foo", help="What app secret do you want?")
     (options, args) = parser.parse_args()
-    config['database_file'] = options.database
-    config['secret_key'] = options.secret
+    #config['database_file'] = options.database
+    #config['secret_key'] = options.secret
     db.create_all()
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=app.config["PORT"], debug=True)
