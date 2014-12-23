@@ -7,22 +7,21 @@
 Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
 {% endif %}
 
-<h1>All users</h1>
+<h1>{{title}}</h1>
 {% if hits %}
 	<table class="table table-hover">
 	<tbody>
 		<thead>
 			<tr>
-				<th>index</th> <th>name</th> <th>fortnox_id</th> <th>e-mail</th> <th>phone</th> <th>tag_id</th> <th></th>
+				<th>index</th> <th>timestamp</th><th>tag_id</th> <th> user_id </th> <th> user_name </th> <th></th>
 			</tr>
 		</thead>
 				{% for hit in hits %}
 				<tr>
-					<td>{{hit.index}}</td> <td>{{hit.name}}</td> <td>{{hit.fortnox_id}}</td> <td>{{hit.email}}</td> <td>{{hit.phone}}</td> <td>{{hit.tag_id}}</td> <td><a href='/edit_user/{{hit.index}}'>edit</a> </td>
+					<td>{{hit.index}}</td> <td>{{hit.timestamp}}</td> <td>{{hit.tag_id}}</td> <td>{{hit.user_index}}</td> <td>{{hit.user_name}}</td> <td> <a href='/edit_user/{{hit.user_index}}'>edit user</a> </td>
 				</tr>
 				{% endfor %}
 	</tbody>
 	</table>
 {% endif %}
-
 {% endblock %}

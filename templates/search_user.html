@@ -8,25 +8,52 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 {% endif %}
 
 <h1>Search user</h1>
-<form action="" method="post" name="search_user">
+<form action="" method="post" name="search_user" class="form-horizontal">
     {{form.hidden_tag()}}
-    <p>
-    	ID:<br>{{form.id(size=80)}}<br>
-    	Box_ID:<br>{{form.box_id(size=80)}}<br>
-        Name:<br>{{form.name(size=80)}}<br>
-        email:<br>{{form.email(size=80)}}<br>
-        phone:<br>{{form.phone(size=80)}}<br>
-        tag:<br>{{form.tag(size=80)}}<br>
-        expiry_date:<br>{{form.expiry_date(size=80)}}<br>
-        created_date:<br>{{form.created_date(size=80)}}<br>
-    </p>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">name</label>
+                <div class="col-sm-10">
+                    {{form.name(size=80, placeholder='Test Testsson')}}
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">e-mail</label>
+                <div class="col-sm-10">
+                    {{form.email(size=80, placeholder='test@test.te')}}
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">phone</label>
+                <div class="col-sm-10">
+                    {{form.phone(size=80, placeholder='070 123 4567')}}
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">tag</label>
+                <div class="col-sm-10">
+                    {{form.tag(size=80, placeholder='44448888')}}
+                </div>
+        </div>
+        {{form.gender()}}<br>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">fortnox</label>
+                <div class="col-sm-10">
+                    {{form.fortnox_id(size=80, placeholder='1001')}}
+                </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">index</label>
+                <div class="col-sm-10">
+                    {{form.index(size=80, placeholder='1')}}
+                </div>
+        </div>
     <p><input type="submit" value="Search"></p>
 </form>
 
 {% if hits %}
 
 {% for hit in hits %}
-        <li>{{hit.id}} {{hit.name}} {{hit.box_id}} {{hit.email}} {{hit.phone}} {{hit.tag}} <a href='/edit_user/{{hit.id}}'>edit</a></li>
+        <li>{{hit.id}} {{hit.name}} {{hit.fortnox_id}} {{hit.email}} {{hit.phone}} {{hit.tag}} <a href='/edit_user/{{hit.id}}'>edit</a></li>
 {% endfor %}
 
 {% endif %}

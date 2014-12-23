@@ -1,232 +1,133 @@
-from optparse import OptionParser
-from flask import Flask
-from flask import jsonify
-from flask import request
+# -*- coding: utf-8 -*-
+from flask import Flask, jsonify, render_template, flash
 from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import func
-from datetime import datetime
-from sqlalchemy.sql import text
-from flask import make_response
-from flask import render_template
+from optparse import OptionParser
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField
+from wtforms import TextField, RadioField, DateField
 from wtforms.validators import Required
-from flask import render_template, flash, redirect
+from datetime import datetime
 
-"""
-sudo pip install flask-security flask-sqlalchemy
-sudo pip install Flask-WTF
-
-"""
-
-#config = {'database_file':'sqlite://///root/crosstag.db', 'secret_key':'foo'}
-config = {'database_file':'sqlite://////Users/lundstrj/repos/crosstag/crosstag.db', 'secret_key':'foo'}
+config = {'database_file':
+          'sqlite://////Users/lundstrj/repos/crosstag_2/dev_db.db',
+          'secret_key': 'foo'}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://///Users/lujo/dev/crosstag/crosstag_1.db'
 app.config['WTF_CSRF_ENABLED'] = False
 app.config['SECRET_KEY'] = config['secret_key']
 db = SQLAlchemy(app)
+app_name = 'crosstag'
 
 
 class NewUser(Form):
-    name = TextField('name', validators = [Required()])
-    email = TextField('email', validators = [])
-    phone = TextField('phone', validators = [])
-    box_id = TextField('box_id', validators = [])
-    tag = TextField('tag', validators = [])
-    expiry_date = TextField('expiry_date', validators = [])
+    name = TextField('name', validators=[])
+    email = TextField('email', validators=[])
+    phone = TextField('phone', validators=[])
+    fortnox_id = TextField('fortnox_id', validators=[])
+    tag_id = TextField('tag_id', validators=[])
+    expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d',
+                            description="DESC1")
+    birth_date = DateField('birth_date', format='%Y-%m-%d', validators=[])
+    gender = RadioField(
+        'gender',
+        [Required()],
+        choices=[('male', 'male'), ('female', 'female'),
+                 ('unknown', 'unknown')], default='unknown'
+    )
+
 
 class SearchUser(Form):
-    id = TextField('id', validators = [])
-    box_id = TextField('bo_id', validators = [])
-    name = TextField('name', validators = [])
-    email = TextField('email', validators = [])
-    phone = TextField('phone', validators = [])
-    tag = TextField('tag', validators = [])
-    expiry_date = TextField('expiry_date', validators = [])
-    created_date = TextField('created_date', validators = [])
+    index = TextField('name', validators=[])
+    name = TextField('name', validators=[])
+    email = TextField('email', validators=[])
+    phone = TextField('phone', validators=[])
+    fortnox_id = TextField('fortnox_id', validators=[])
+    tag = TextField('tag', validators=[])
+    gender = RadioField(
+        'gender',
+        [Required()],
+        choices=[('male', 'male'), ('female', 'female'),
+                 ('unknown', 'unknown')], default='unknown'
+    )
+
+
+class EditUser(Form):
+    name = TextField('name', validators=[])
+    email = TextField('email', validators=[])
+    phone = TextField('phone', validators=[])
+    fortnox_id = TextField('fortnox_id', validators=[])
+    tag_id = TextField('tag_id', validators=[])
+    expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d',
+                            description="DESC1")
+    birth_date = DateField('birth_date', format='%Y-%m-%d', validators=[])
+    create_date = DateField('create_date', format='%Y-%m-%d', validators=[])
+    gender = RadioField(
+        'gender',
+        [Required()],
+        choices=[('male', 'male'), ('female', 'female'),
+                 ('unknown', 'unknown')]
+    )
 
 
 class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    box_id = db.Column(db.Integer)
+    index = db.Column(db.Integer, primary_key=True)
+    fortnox_id = db.Column(db.Integer)
     name = db.Column(db.String(80))
     email = db.Column(db.String(120))
     phone = db.Column(db.Integer)
-    tag = db.Column(db.String(12))
+    tag_id = db.Column(db.String(12))
     gender = db.Column(db.String(10))
-    birth_date = db.Column(db.DateTime)
-    expiry_date = db.Column(db.DateTime)
-    created_date = db.Column(db.DateTime)
+    birth_date = db.Column(db.Date)
+    expiry_date = db.Column(db.Date)
+    create_date = db.Column(db.Date)
 
-    def __init__(self, name, email, phone=None, tag=None, box_id=None, expiry_date=None, birth_date=None, gender=None):
+    def __init__(self, name, email, phone=None, tag_id=None, fortnox_id=None,
+                 expiry_date=None, birth_date=None, gender=None):
         self.name = name
         self.email = email
         self.phone = phone
-        self.tag = tag
-        self.box_id = box_id
+        self.tag_id = tag_id
+        self.fortnox_id = fortnox_id
         self.expiry_date = expiry_date
         self.birth_date = birth_date
         self.gender = gender
-        self.created_date = datetime.now()
+        self.create_date = datetime.now()
 
-    def __repr__(self):
-        return '<User %r>' % self.name
-    
     def dict(self):
-        return {'id':self.id, 'name':self.name, 'email':self.email, 'tag':self.tag, 'phone':self.phone, 'box_id':self.box_id, 'expiry_date':str(self.expiry_date), 'created_date':str(self.created_date), 'birth_date':str(self.birth_date), 'gender':self.gender}
+        return {'index': self.index, 'name': self.name,
+                'email': self.email, 'tag_id': self.tag_id,
+                'phone': self.phone, 'fortnox_id': self.fortnox_id,
+                'expiry_date': str(self.expiry_date),
+                'create_date': str(self.create_date),
+                'birth_date': str(self.birth_date),
+                'gender': self.gender}
 
-    def json(self):
-        d = jsonify(self.dict())
-        return d
 
 class Tagevent(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    index = db.Column(db.Integer, primary_key=True)
+    tag_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime)
-    tag = db.Column(db.Integer)
 
     def __init__(self, tag):
-        self.tag = tag
+        self.tag_id = tag
         self.timestamp = datetime.now()
 
-    def json(self):
-        return jsonify(self.dict())
-
     def dict(self):
-        return {'id':self.id, 'timestamp':str(self.timestamp), 'tag':self.tag}
+        return {'index': self.index, 'timestamp': str(self.timestamp),
+                'tag_id': self.tag_id}
 
-    def __str__(self):
-        return '<Tagevent %s %s>' % (self.tag, str(self.timestamp))
-
-    def __repr__(self):
-        return '<Tagevent %s %s>' % (self.tag, str(self.timestamp))
-
-def load_config(file, secret):
-    config = {'database_file':file, 'secret_key':secret}
-
-def json_events(tag_id=None):
-    if tag_id:
-        events = Tagevent.query.filter_by(tag=tag_id)
-    else:
-        events = Tagevent.query.all()
-    ret = {}
-    for event in events:
-        tmp = {}
-        ret[event.id] = {}
-        ret[event.id]['tag'] = event.tag
-        ret[event.id]['timestamp'] = str(event.timestamp)
-    ret = jsonify(ret)
-    return ret
 
 def get_last_tag_event():
-    res = db.engine.execute(text("SELECT max(id) FROM tagevent;"))
-    row = res.fetchone()
-    event_id = row[0]
-    tagevent = Tagevent.query.filter_by(id=event_id).first()
+    top_index = db.session.query(db.func.max(Tagevent.index)).scalar()
+    tagevent = Tagevent.query.filter_by(index=top_index).first()
     return tagevent
 
-base_url = "/crosstag/v1.0/"
 
 @app.route('/')
 @app.route('/index')
-@app.route('/crosstag')
+@app.route('/%s' % app_name)
 def index():
     return render_template('index.html')
 
-@app.route('/crosstag/v1.0/register_tag/<user_id>/<tag_id>')
-def register_tag(user_id, tag_id):
-    user = User.query.filter_by(id=user_id).first()
-    user.tag = tag_id
-    db.session.commit()
-    return "OK"
-
-@app.route('/crosstag/v1.0/link_user_to_last_tag/<user_id>', methods=['GET','POST'])
-def link_user_to_last_tag(user_id):
-    tagevent = get_last_tag_event()
-    user = User.query.filter_by(id=user_id).first()
-    user.tag = tagevent.tag
-    db.session.commit()
-    return "OK"
-
-@app.route('/crosstag/v1.0/get_all_tagevents', methods = ['GET'])
-def get_all_tagevents():
-    return json_events()
-
-@app.route('/crosstag/v1.0/get_all_users', methods = ['GET'])
-def get_all_users():
-    print "GET ALL THE USERS!"
-    users = User.query.all()
-    ret = {}
-    for user in users:
-        tmp = {}
-        ret[user.id] = {}
-        ret[user.id]['name'] = user.name
-        ret[user.id]['tag'] = user.tag
-    ret = jsonify(ret)
-    return ret
-
-@app.route('/crosstag/v1.0/get_tag/<user_id>', methods = ['GET'])
-def get_tag(user_id):
-    user = User.query.filter_by(id=user_id).first()
-    return str(user.tag)
-
-@app.route('/crosstag/v1.0/get_tagevents_user/<user_id>', methods = ['GET'])
-def get_tagevents_user(user_id):
-    tag_id = get_tag(user_id)
-    return json_events(int(tag_id))
-
-@app.route('/crosstag/v1.0/get_tagevents_user_dict/<user_id>', methods = ['GET'])
-def get_tagevents_user_dict(user_id):
-    tag_id = get_tag(user_id)
-    events = Tagevent.query.filter_by(tag=tag_id)[-20:]
-    ret = []
-    for hit in events:
-        js = hit.dict()
-        ret.append(js)
-    ret.reverse()
-    return ret
-
-@app.route('/crosstag/v1.0/get_tagevents_tag/<tag_id>', methods = ['GET'])
-def get_tagevents_tag(tag_id):
-    data = json_events(tag_id)
-    print "fooo"
-    print data
-    print type(data)
-    print "bar"
-    return data
-
-@app.route('/crosstag/v1.0/get_user_data/<user_id>', methods = ['GET'])
-def get_user_data(tag_id):
-    user = User.query.filter_by(id=user_id).first()
-    return user.json()
-
-@app.route('/crosstag/v1.0/get_user_data_tag/<tag_id>', methods = ['GET'])
-def get_user_data_tag(tag_id):
-    try:
-        user = User.query.filter_by(tag=tag_id).first()
-        return user.json()
-    except:
-        return jsonify({})
-
-@app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>', methods = ['GET'])
-def get_user_data_tag_dict(tag_id):
-    user = User.query.filter_by(tag=tag_id).first()
-    return user.dict()
-
-@app.route('/crosstag/v1.0/remove_user/<id>', methods = ['GET', 'POST'])
-def remove_user(id):
-        user = User.query.filter_by(id=id).first()
-        db.session.delete(user)
-        db.session.commit()
-        return "removed user"
-
-@app.route('/crosstag/v1.0/create_user/<name>/<email>/<phone>/<box_id>')
-def create_user(name, email, phone, box_id):
-        tmp_usr = User(name, email, phone, box_id=box_id)
-        db.session.add(tmp_usr)
-        db.session.commit()
-        return "Created new user"
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
@@ -235,38 +136,112 @@ def tagevent(tag_id):
     db.session.commit()
     return "%s server tagged %s" % (event.timestamp, tag_id)
 
-@app.route('/add_new_user', methods = ['GET', 'POST'])
+
+@app.route('/all_tagevents', methods=['GET'])
+def all_tagevents():
+    ret = []
+    events = Tagevent.query.all()
+    for hit in events:
+        js = hit.dict()
+        ret.append(js)
+    ret.reverse()
+    return render_template('all_tagevents.html',
+                           title='All Tagevents',
+                           hits=ret)
+
+
+@app.route('/all_users', methods=['GET'])
+def all_users():
+    ret = []
+    users = User.query.all()
+    for hit in users:
+        js = hit.dict()
+        ret.append(js)
+    return render_template('all_users.html',
+                           title='All Users',
+                           hits=ret)
+
+
+@app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>',
+           methods=['GET'])
+def get_user_data_tag_dict(tag_id):
+    user = User.query.filter_by(tag_id=tag_id).first()
+    return user.dict()
+
+
+@app.route('/last_tagins', methods=['GET'])
+def last_tagins():
+    ret = []
+    events = Tagevent.query.all()[-10:]
+    for hit in events:
+        js = hit.dict()
+        tag = js['tag_id']
+        try:
+            user = get_user_data_tag_dict(tag)
+            js['user_index'] = user["index"]
+            js['user_name'] = user['name']
+        except:
+            js['user_index'] = "None"
+            js['user_name'] = "No user connected to this tag right now"
+        ret.append(js)
+    ret.reverse()
+    return render_template('last_tagevents.html',
+                           title='Last Tagins',
+                           hits=ret)
+
+
+@app.route('/crosstag/v1.0/remove_user/<index>', methods=['POST'])
+def remove_user(index):
+        user = User.query.filter_by(index=index).first()
+        db.session.delete(user)
+        db.session.commit()
+        return "removed user"
+
+
+@app.route('/add_new_user', methods=['GET', 'POST'])
 def add_new_user():
     form = NewUser()
+    print str(form.validate_on_submit())
+    print "errors", form.errors
     if form.validate_on_submit():
-        tmp_usr = User(form.name.data, form.email.data, form.phone.data, form.tag.data)
+        tmp_usr = User(form.name.data, form.email.data, form.phone.data,
+                       form.tag_id.data, form.fortnox_id.data,
+                       form.expiry_date.data, form.birth_date.data,
+                       form.gender.data)
         db.session.add(tmp_usr)
         db.session.commit()
-        flash('Create new user: %s with id: %s' % (form.name.data, tmp_usr.id))
+        flash('Created new user: %s with id: %s' % (form.name.data,
+                                                    tmp_usr.index))
         tagevent = get_last_tag_event()
-        #flash('Add tag: %s to this user? <a herf="/crosstag/v1.0/link_user_to_last_tag/%s">YES</a>' % (tagevent.tag, tmp_usr.id))
-        return render_template('new_user.html', 
-            title = 'New User',
-            form = form,
-            message = (tmp_usr.id, tagevent.tag))
-            #return redirect('/add_new_user')
-    return render_template('new_user.html', 
-        title = 'New User',
-        form = form)
+        msg = None
+        if tagevent is None:
+            msg = None
+        else:
+            msg = (tmp_usr.index, tagevent.tag_id)
+        form = NewUser()
+        return render_template('new_user.html',
+                               title='New User',
+                               form=form,
+                               message=msg)
+    return render_template('new_user.html',
+                           title='New User',
+                           form=form)
 
-@app.route('/search_user', methods = ['GET', 'POST'])
+
+@app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
-    # TODO: Implement this
     form = SearchUser()
+    print str(form.validate_on_submit())
+    print "errors", form.errors
     hits = []
     if form.validate_on_submit():
-        if form.id.data:
-            user_id = form.id.data
-            users = User.query.filter_by(id=user_id)
+        if form.index.data:
+            user_index = form.index.data
+            users = User.query.filter_by(index=user_index)
             hits.extend(users)
-        if form.box_id.data:
-            box_id = form.box_id.data
-            users = User.query.filter_by(box_id=box_id)
+        if form.fortnox_id.data:
+            fortnox_id = form.fortnox_id.data
+            users = User.query.filter_by(fortnox_id=fortnox_id)
             hits.extend(users)
         if form.name.data:
             name = form.name.data
@@ -288,123 +263,125 @@ def search_user():
         for hit in hits:
             js = hit.dict()
             ret.append(js)
-        return render_template('search_user.html', 
-            title = 'Search User',
-            form = form,
-            hits = ret)
-    return render_template('search_user.html', 
-        title = 'Search User',
-        form = form)
+        return render_template('search_user.html',
+                               title='Search User',
+                               form=form,
+                               hits=ret)
+    return render_template('search_user.html',
+                           title='Search User',
+                           form=form)
 
 
-@app.route('/all_users', methods = ['GET'])
-def all_users():
+@app.route('/crosstag/v1.0/link_user_to_last_tag/<user_id>',
+           methods=['GET', 'POST'])
+def link_user_to_last_tag(user_id):
+    tagevent = get_last_tag_event()
+    user = User.query.filter_by(index=user_id).first()
+    user.tag_id = tagevent.tag_id
+    db.session.commit()
+    return "OK"
+
+
+@app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])
+def get_tag(user_index):
+    user = User.query.filter_by(index=user_index).first()
+    return str(user.tag_id)
+
+
+@app.route('/crosstag/v1.0/get_tagevents_user_dict/<user_index>',
+           methods=['GET'])
+def get_tagevents_user_dict(user_index):
+    tag_id = get_tag(user_index)
+    events = Tagevent.query.filter_by(tag_id=tag_id)[-20:]
     ret = []
-    users = User.query.all()
-    for hit in users:
-        js = hit.dict()
-        ret.append(js)
-    return render_template('all_users.html', 
-        title = 'All Users',
-        hits = ret)
-
-@app.route('/all_tagevents', methods = ['GET'])
-def all_tagevents():
-    ret = []
-    events = Tagevent.query.all()
     for hit in events:
         js = hit.dict()
         ret.append(js)
     ret.reverse()
-    return render_template('all_tagevents.html', 
-        title = 'All Tagevents',
-        hits = ret)
+    return ret
 
-@app.route('/last_tagevents', methods = ['GET'])
-def last_tagevents():
-    ret = []
-    events = Tagevent.query.all()[-10:]
-    for hit in events:
-        js = hit.dict()
-        ret.append(js)
-    ret.reverse()
-    return render_template('all_tagevents.html', 
-        title = 'Last Tagevents',
-        hits = ret)
 
-@app.route('/last_tagins', methods = ['GET'])
-def last_tagins():
-    ret = []
-    events = Tagevent.query.all()[-10:]
-    for hit in events:
-        js = hit.dict()
-        tag = js['tag']
-        try:
-            user = get_user_data_tag_dict(tag)
-            js['user_id'] = user["id"]
-            js['user_name'] = user['name']
-        except:
-            js['user_id'] = "None"
-            js['user_name'] = "None"
-        ret.append(js)
-    ret.reverse()
-    return render_template('all_tagevents.html', 
-        title = 'Last Tagins',
-        hits = ret)
+@app.route('/statistics', methods=['GET'])
+def statistics():
+    return render_template('statistics.html', plot_paths='')
 
-@app.route('/crosstag/v1.0/last_tagin', methods = ['GET'])
-@app.route('/last_tagin', methods = ['GET'])
-def last_tagin():
-    return Tagevent.query.all()[-1].json()
 
-@app.route('/edit_user/', methods = ['GET', 'POST'])
-@app.route('/edit_user/<user_id>', methods = ['GET', 'POST'])
-def edit_user(user_id=None):
-    form = SearchUser()
-    if user_id == None:
-        return render_template('edit_user.html', 
-            title = 'Edit User',
-            form = form)
-    user = User.query.filter_by(id=user_id).first()
+@app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
+def edit_user(user_index=None):
+    user = User.query.filter_by(index=user_index).first()
+    if user is None:
+        return "she wrote upon it; no such number, no such zone"
+    form = EditUser(obj=user)
+    tagevents = get_tagevents_user_dict(user_index)
+
     if form.validate_on_submit():
-        user.box_id = form.box_id.data
+        user.fortnox_id = form.fortnox_id.data
         user.name = form.name.data
         user.email = form.email.data
         user.phone = form.phone.data
-        user.tag = form.tag.data
-        user.expiry_date = date_object = datetime.strptime(form.expiry_date.data, "%Y-%m-%d %H:%M:%S.%f")
-                                                                                   #2014-08-20 10:17:20.020920
-        user.created_date = date_object = datetime.strptime(form.created_date.data, "%Y-%m-%d %H:%M:%S.%f")
+        user.tag_id = form.tag_id.data
+        user.gender = form.gender.data
+        user.birth_date = form.birth_date.data
+        user.expiry_date = form.expiry_date.data
+        user.create_date = form.create_date.data
         db.session.commit()
-        flash('Updated user: %s with id: %s' % (form.name.data, user.id))
+        flash('Updated user: %s with id: %s' % (form.name.data, user.index))
         tagevent = get_last_tag_event()
-        user = User.query.filter_by(id=user_id).first()
-        return render_template('edit_user.html', 
-            title = 'Edit User',
-            form = form,
-            data = user.dict(),
-            message = (user.id, tagevent.tag),
-            tags = "")
-    tagevents = get_tagevents_user_dict(user_id)
-    return render_template('edit_user.html', 
-        title = 'Edit User',
-        form = form,
-        data = user.dict(),
-        tags = tagevents)
+        msg = None
+        if tagevent is None:
+            msg = None
+        else:
+            msg = (user.index, tagevent.tag_id)
+        user = User.query.filter_by(index=user_index).first()
+        return render_template('edit_user.html',
+                               title='Edit User',
+                               form=form,
+                               data=user.dict(),
+                               message=msg,
+                               tags=tagevents)
+    if user:
+        return render_template('edit_user.html',
+                               title='Edit User',
+                               form=form,
+                               data=user.dict(),
+                               tags=tagevents)
+    else:
+        return "she wrote upon it; no such number, no such zone"
 
+
+@app.route('/%s/v1.0/link_user_to_tag/<user_index>/<tag_id>' % app_name,
+           methods=['POST'])
+def link_user_to_tag(user_index, tag_id):
+    user = User.query.filter_by(index=user_index).first()
+    user.tag = tag_id
+    db.session.commit()
+    return "OK"
+
+
+@app.route('/%s/v1.0/get_all_users' % app_name, methods=['GET'])
+def get_all_users():
+    users = User.query.all()
+    ret = {}
+    for user in users:
+        ret[user.index] = {}
+        ret[user.index]['name'] = user.name
+        ret[user.index]['tag'] = user.tag_id
+    ret = jsonify(ret)
+    return ret
 
 
 if __name__ == '__main__':
-    
-    parser = OptionParser(usage="usage: %prog [options] arg \nTry this: python crosstag_server.py", version="%prog 1.0")
-    parser.add_option("-c", "--config",
-                  action="store", type="string", dest="config", default="/root/crosstag.db", help="What config file do you want to use?")
+    parser = OptionParser(usage="usage: %prog [options] arg \nTry this: " +
+                          "python crosstag_server.py", version="%prog 1.0")
+    parser.add_option("-d", "--database",
+                      action="store", type="string", dest="database",
+                      default="/root/crosstag.db",
+                      help="What database file do you want to use?")
     parser.add_option("-s", "--secret",
-                  action="store", type="string", dest="secret", default="foo", help="What app secret do you want?")
+                      action="store", type="string", dest="secret",
+                      default="foo", help="What app secret do you want?")
     (options, args) = parser.parse_args()
-    config['database_file'] = options.config
+    config['database_file'] = options.database
     config['secret_key'] = options.secret
     db.create_all()
-    app.run(host='0.0.0.0', port=80, debug = True)
-
-
+    app.run(host='0.0.0.0', port=80, debug=True)

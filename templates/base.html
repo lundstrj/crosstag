@@ -1,31 +1,56 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../static/favicon.ico">
+
     {% if title %}
     <title>{{title}} - Crosstag</title>
     {% else %}
     <title>Crosstag</title>
     {% endif %}
+    {% block scripts %}{% endblock%}
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/bootstrap.css" rel="stylesheet">
+    <link href="../../static/jumbotron-narrow.css" rel="stylesheet">
+    <script src="../../static/ie-emulation-modes-warning.js"></script>
   </head>
+
   <body>
-    <div>Crosstag: <a href="/index">Home</a> 
-                   <a href="/add_new_user">Add new user</a>
-                   <a href="/edit_user">Edit user</a>
-                   <a href="/search_user">Search user</a>
-                   <a href="/all_users">All users</a>
-                   <a href="/all_tagevents">All Tagevents</a>
-                   <a href="/last_tagevents">Last Tagevents</a>
-                   <a href="/last_tagins">Last Tagins</a>
-                   </div>
-    <hr>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul>
-    {% for message in messages %}
-        <li>{{ message }} </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    {% block content %}{% endblock %}
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="/index">Home</a></li>
+            <li role="presentation"><a href="/add_new_user">Add new user</a></li>
+            <li role="presentation"><a href="/search_user">Search user</a></li>
+            <li role="presentation"><a href="/all_users">All users</a></li>
+            <li role="presentation"><a href="/all_tagevents">All tagevents</a></li>
+            <li role="presentation"><a href="/last_tagins">Last tagins</a></li>
+            <li role="presentation"><a href="/statistics">Statistics</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">Crosstag</h3>
+      </div>
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <ul>
+      {% for message in messages %}
+          <li>{{ message }} </li>
+      {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+      <footer class="footer">
+        <p>&copy; Crosstag 2013-2014</p>
+      </footer>
+
+    </div> <!-- /container -->
+    <script src="../../static/ie10-viewport-bug-workaround.js"></script>
   </body>
 </html>
