@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash
+import json
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from flask.ext.wtf import Form
 from wtforms import TextField, RadioField, DateField
 from wtforms.validators import Required
-from datetime import datetime
+from datetime import datetime, timedelta
 
 config = {'database_file':
-          'sqlite://////Users/lundstrj/repos/crosstag/dev_db.db',
+          'sqlite:////Users/merenlin/crosstag/dev_db.db',
           'secret_key': 'foo'}
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = config['database_file']
@@ -305,6 +306,22 @@ def get_tagevents_user_dict(user_index):
 def statistics():
     return render_template('statistics.html', plot_paths='')
 
+@app.route('/getrecentevents', methods=['GET'])
+def get_recent_events():
+    three_months_ago = datetime.now() - timedelta(weeks=12)
+    tags = Tagevent.query.filter(Tagevent.timestamp>three_months_ago).all()
+    
+    tags_json={}
+    for tag in tags:
+        current=str(tag.timestamp.date())
+        if current in tags_json:
+            tags_json[current] += 1
+        else:
+            tags_json[current] = 0
+    
+    res = [{'datestamp': x, 'count': y} for x, y in tags_json.iteritems()]
+    return json.dumps(res)
+
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
@@ -384,4 +401,4 @@ if __name__ == '__main__':
     config['database_file'] = options.database
     config['secret_key'] = options.secret
     db.create_all()
-    app.run(host='0.0.0.0', port=80, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
