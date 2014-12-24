@@ -97,6 +97,9 @@ class User(db.Model):
                 'birth_date': str(self.birth_date),
                 'gender': self.gender}
 
+    def json(self):
+        return jsonify(self.dict())
+
 
 class Tagevent(db.Model):
     index = db.Column(db.Integer, primary_key=True)
@@ -110,6 +113,9 @@ class Tagevent(db.Model):
     def dict(self):
         return {'index': self.index, 'timestamp': str(self.timestamp),
                 'tag_id': self.tag_id}
+
+    def json(self):
+        return jsonify(self.dict())
 
 
 def get_last_tag_event():
@@ -131,6 +137,22 @@ def tagevent(tag_id):
     db.session.add(event)
     db.session.commit()
     return "%s server tagged %s" % (event.timestamp, tag_id)
+
+
+@app.route('/crosstag/v1.0/last_tagin', methods=['GET'])
+def last_tagin():
+    try:
+        return Tagevent.query.all()[-1].json()
+    except:
+        return jsonify({})
+
+
+@app.route('/crosstag/v1.0/get_user_data_tag/<tag_id>', methods=['GET'])
+def get_user_data_tag(tag_id):
+    try:
+        return User.query.filter_by(tag_id=tag_id).first().json()
+    except:
+        return jsonify({})
 
 
 @app.route('/crosstag/v1.0/specialtagevent/<tag_id>/<timestamp>')
