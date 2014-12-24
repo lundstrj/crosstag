@@ -28,6 +28,9 @@ var y = d3.scale.linear().range([height, 0]);
 // Parse the date / time
 var parseDate = d3.time.format("%Y-%m-%d").parse;
 
+// Our color bands
+var color = d3.scale.ordinal()
+    .range(["#308fef", "#5fa9f3", "#1176db"]);
 
 var xAxis = d3.svg.axis()
     .scale(x)

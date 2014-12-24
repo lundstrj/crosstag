@@ -334,6 +334,32 @@ def statistics():
     return render_template('statistics.html', plot_paths='')
 
 
+@app.route('/getrecenteventsgender', methods=['GET'])
+def get_recent_events_gender():
+    three_months_ago = datetime.now() - timedelta(weeks=12)
+    events = Tagevent.query.filter(Tagevent.timestamp>three_months_ago).all()
+    
+    events_json={}
+
+    for event in events:
+        current=str(event.timestamp.date())
+        try:
+            gender=User.query.filter_by(tag_id=event.tag_id).first().gender
+        except: 
+            gender='unknown'
+        
+        genders.append(gender)
+
+        if current in events_json:
+            events_json[current] += 1
+        else:
+            events_json[current] = 1
+    
+   #[{datestamp: ["2014-12-22", "2014-12-23"], unknown: [0,0], male: [9, 5], female: [0,0]}]
+    res = [{'datestamp': male.keys(), 'male': male.values(), 'female': female.values(), 'unknown': unknown.values()} ]
+    return json.dumps(res)
+
+
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
     three_months_ago = datetime.now() - timedelta(weeks=12)
