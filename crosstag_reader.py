@@ -36,7 +36,7 @@ class CrosstagReader(object):
                 data = ser.readline()
                 if len(data) < 12:
                     continue
-                now = datetime.datetime.now()
+                now = datetime.now()
                 ser.flushOutput()
                 data = data.strip()
                 tag_nbr = data[1:]

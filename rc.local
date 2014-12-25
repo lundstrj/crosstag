@@ -1,0 +1,44 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+printf "Starting the PiUPS software\n"
+piusvd start
+
+printf "Starting Crosstag server\n"
+cd /home/pi/crosstag
+touch reader.tmp
+touch server.tmp
+touch viewer.tmp
+screen -d -m python crosstag_server.py & > server.tmp
+sleep 10
+
+printf "Starting Crosstag reader\n"
+screen -d -m python crosstag_reader.py & > reader.tmp
+sleep 5
+
+printf "Starting Crosstag viewer\n"
+python crosstag_viewer.py &
+sleep 5
+
+printf "Here comes the IP again"
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+exit 0

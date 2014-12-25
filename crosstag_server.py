@@ -444,15 +444,11 @@ def get_all_users():
 if __name__ == '__main__':
     parser = OptionParser(usage="usage: %prog [options] arg \nTry this: " +
                           "python crosstag_server.py", version="%prog 1.0")
-    parser.add_option("-d", "--database",
-                      action="store", type="string", dest="database",
-                      default="/root/crosstag.db",
-                      help="What database file do you want to use?")
-    parser.add_option("-s", "--secret",
-                      action="store", type="string", dest="secret",
-                      default="foo", help="What app secret do you want?")
+    parser.add_option('--debug', dest='debug', default=False, action='store_true', help="Do you want to run this thing with debug output?")
     (options, args) = parser.parse_args()
     #config['database_file'] = options.database
     #config['secret_key'] = options.secret
     db.create_all()
+    #if options.debug:
+    app.logger.propagate = False
     app.run(host='0.0.0.0', port=app.config["PORT"], debug=True)

@@ -34,5 +34,5 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules',
     ],
     install_requires=['flask', 'flask-WTF', 'flask-security', 'pyserial',
-                      'requests', 'flask-sqlalchemy'],
+                      'requests', 'flask-sqlalchemy', 'screen'],
 )

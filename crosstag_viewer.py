@@ -23,17 +23,29 @@ class CrosstagViewer(object):
         self.server = server
         self.port = port
         current = self.poll_server()
-        self.last_event = current['index']
+        try:
+            self.last_event = current['index']
+        except:
+            print "unable to fetch data =("
+            self.last_event = 0
         while True:
+            # current could be NONE you need to deal with that. Make it robust!
+            # you need to supress the output from the server.
+            # you need to supress the output from the reader.
+            # use a logger?
+
             current = self.poll_server()
             if self.online:
-                self.print_clear_screen("online")
+                pass
+                #self.print_clear_screen("online")
             else:
                 self.print_clear_screen("offline")
 
-            if current['index'] == self.last_event:
-                pass
-            else:
+            if current is None:
+                self.display_user = False
+                self.print_clear_screen("offline")
+            elif current['index'] != self.last_event:
+                self.print_clear_screen("online")
                 self.last_event = current['index']
                 self.display_user = True
                 self.counter = 0
@@ -43,14 +55,18 @@ class CrosstagViewer(object):
                 self.user_data = self.get_user_data(current['tag_id'])
             if not self.user_data and self.display_user:
                 print "read tag: %s" % current['tag_id']
-            if self.display_user and self.user_data:
+                self.display_user = False
+            if self.display_user and self.user_data and self.counter == 0:
                 self.print_user(self.user_data, self.user_tagins)
                 self.counter += 1
-                print self.display_time - self.counter * self.sleep_time
+            if self.display_user and self.user_data and self.counter != 0:
+                self.counter += 1
+                #print self.display_time - self.counter * self.sleep_time
             if self.counter == self.display_time / self.sleep_time:
                 self.counter = 0
                 self.display_user = False
                 self.user_data = None
+                self.print_clear_screen("online")
 
             time.sleep(self.sleep_time)
 
