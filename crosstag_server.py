@@ -371,7 +371,7 @@ def get_recent_events():
         if current in tags_json:
             tags_json[current] += 1
         else:
-            tags_json[current] = 0
+            tags_json[current] = 1
 
     res = [{'datestamp': x, 'count': y} for x, y in tags_json.iteritems()]
     return json.dumps(res)

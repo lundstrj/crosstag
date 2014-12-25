@@ -7,8 +7,9 @@
 {% endblock %}
 
 {% block content %}
+<br>
 <h1>Statistics</h1>
-
+<h2>Tag events in the last 3 months</h2>
 <div id="plot">
 </div>
 
@@ -62,7 +63,7 @@ var callback = function (data) {
         d.count = +d.count;
     });
 
-    x.domain(data.map(function(d) { return d.date; }));
+    x.domain(data.map(function(d) { return d.date; }).sort(d3.ascending));
     y.domain([0, d3.max(data, function(d) { return d.count; })]);
 
     svg.append("g")
