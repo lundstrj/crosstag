@@ -31,6 +31,7 @@ python crosstag_viewer.py
 Avoid screen blanking
 ---------------------
 sudo nano /etc/kbd/config
+
 BLANK_TIME=0
 POWERDOWN_TIME=0
 
