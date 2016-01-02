@@ -26,3 +26,12 @@ python crosstag_reader.py
 
 # to start the terminal based viewer
 python crosstag_viewer.py
+
+
+Avoid screen blanking
+---------------------
+sudo nano /etc/kbd/config
+BLANK_TIME=0
+POWERDOWN_TIME=0
+
+sudo /etc/init.d/kbd restart
