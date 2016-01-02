@@ -42,7 +42,7 @@ sudo nano /etc/lightdm/lightdm.conf
 
 xserver-command=X -s 0 dpms
 
-Setup for remove access
+Setup for remote access
 -----------------------
 
 sudo apt-get update
