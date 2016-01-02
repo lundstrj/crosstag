@@ -33,6 +33,20 @@ Avoid screen blanking
 sudo nano /etc/kbd/config
 
 BLANK_TIME=0
+
 POWERDOWN_TIME=0
 
 sudo /etc/init.d/kbd restart
+
+sudo nano /etc/lightdm/lightdm.conf
+
+xserver-command=X -s 0 dpms
+
+Setup for remove access
+-----------------------
+
+sudo apt-get update
+
+sudo apt-get install weavedconnectd
+
+sudo weavedinstaller
