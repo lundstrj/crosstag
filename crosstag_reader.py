@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
 import glob
-import serial
+try:
+    import serial
+except:
+    # no support for an actual RFID-reader
+    print("unable to import serial, you will be forced to run in dummy mode")
 import sys
 from datetime import datetime
 from optparse import OptionParser
@@ -48,7 +52,7 @@ class CrosstagReader(object):
                     # audio signal and visual signal.
                     continue
                 try:
-                    print '%s reader tagging [%s]' % (now, tag_nbr)
+                    print('%s reader tagging [%s]' % (now, tag_nbr))
                     res = requests.get("http://%s:%d/crosstag/v1.0/tagevent/%s"
                                        % (server, port, tag_nbr), timeout=3)
                     now = datetime.now()
@@ -63,7 +67,7 @@ class CrosstagReader(object):
         logging.basicConfig(filename='logs/dummy_reader.log', level=logging.DEBUG)
         while True:
             tag_nbr = '00000000'
-            answer = raw_input("Send a tag_event?: ")
+            answer = input("Send a tag_event?: ")
             if "e" in answer or "q" in answer:
                 now = datetime.now()
                 logging.info("%s reader exiting due to user command" % (now))
@@ -75,7 +79,7 @@ class CrosstagReader(object):
             elif int(answer) > 0 and int(answer) <= 9:
                 tag_nbr = ('%s' % answer) * 8
             now = datetime.now()
-            print '%s reader tagging [%s]' % (now, tag_nbr)
+            print('%s reader tagging [%s]' % (now, tag_nbr))
             res = requests.get("http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr), timeout=3)
             now = datetime.now()
             logging.info("%s reader tagging result: [%s]" % (now, res.text))

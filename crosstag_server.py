@@ -229,8 +229,8 @@ def remove_user(index):
 @app.route('/add_new_user', methods=['GET', 'POST'])
 def add_new_user():
     form = NewUser()
-    print str(form.validate_on_submit())
-    print "errors", form.errors
+    print(str(form.validate_on_submit()))
+    print("errors", form.errors)
     if form.validate_on_submit():
         tmp_usr = User(form.name.data, form.email.data, form.phone.data,
                        form.tag_id.data, form.fortnox_id.data,
@@ -259,8 +259,8 @@ def add_new_user():
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
     form = SearchUser()
-    print str(form.validate_on_submit())
-    print "errors", form.errors
+    print(str(form.validate_on_submit()))
+    print("errors", form.errors)
     hits = []
     if form.validate_on_submit():
         if form.index.data:

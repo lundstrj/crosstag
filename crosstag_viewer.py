@@ -26,7 +26,7 @@ class CrosstagViewer(object):
         try:
             self.last_event = current['index']
         except:
-            print "unable to fetch data =("
+            print("unable to fetch data =(")
             self.last_event = 0
         while True:
             # current could be NONE you need to deal with that. Make it robust!
@@ -54,7 +54,7 @@ class CrosstagViewer(object):
                 # todo johan: imptimize this so we only pull the user data once
                 self.user_data = self.get_user_data(current['tag_id'])
             if not self.user_data and self.display_user:
-                print "read tag: %s" % current['tag_id']
+                print("read tag: %s" % current['tag_id'])
                 self.display_user = False
             if self.display_user and self.user_data and self.counter == 0:
                 self.print_user(self.user_data, self.user_tagins)
@@ -72,7 +72,7 @@ class CrosstagViewer(object):
 
     def ascii_print(self, text, font='slant'):
         f = Figlet(font=font)
-        print f.renderText(text),
+        print(f.renderText(text),)
 
     def get_user_data(self, tag_nbr):
         try:
@@ -88,22 +88,19 @@ class CrosstagViewer(object):
     def print_user(self, user_data, user_tagins):
         to_print = {}
         keys = ['name', 'expiry_date', 'create_date']
-        for k, v in user_data.iteritems():
+        for k, v in user_data.items():
             if k in keys:
                 to_print[k] = v
 
-        for k, v in to_print.iteritems():
-            #if not "unicode" in str(type(k)):
-            k = k.encode('utf-8')
-            #if not "unicode" in str(type(v)):
-            v = v.encode('utf-8')
-            print k.rjust(15), str(v).ljust(10)
+        for k, v in to_print.items():
+            print(k.rjust(15), str(v).ljust(10))
 
     def print_clear_screen(self, msg=None):
         os.system('clear')
         self.ascii_print("Crossfit Kalmar")
+        print("Crossfit Kalmar")
         if msg:
-            print msg
+            print (msg)
 
     def poll_server(self):
         try:
