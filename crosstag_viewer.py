@@ -72,7 +72,7 @@ class CrosstagViewer(object):
 
     def ascii_print(self, text, font='slant'):
         f = Figlet(font=font)
-        print(f.renderText(text),)
+        print(f.renderText(text) end=" ")
 
     def get_user_data(self, tag_nbr):
         try:
@@ -98,7 +98,6 @@ class CrosstagViewer(object):
     def print_clear_screen(self, msg=None):
         os.system('clear')
         self.ascii_print("Crossfit Kalmar")
-        print("Crossfit Kalmar")
         if msg:
             print (msg)
 
