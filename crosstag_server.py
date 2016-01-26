@@ -336,7 +336,7 @@ def statistics():
 
 @app.route('/getrecenteventsgender', methods=['GET'])
 def get_recent_events_gender():
-    three_months_ago = datetime.now() - timedelta(weeks=12)
+    three_months_ago = datetime.now() - timedelta(weeks=8)
     events = Tagevent.query.filter(Tagevent.timestamp>three_months_ago).all()
     
     events_json={}
@@ -362,7 +362,7 @@ def get_recent_events_gender():
 
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
-    three_months_ago = datetime.now() - timedelta(weeks=12)
+    three_months_ago = datetime.now() - timedelta(weeks=8)
     tags = Tagevent.query.filter(Tagevent.timestamp > three_months_ago).all()
     tags_json = {}
 
@@ -372,6 +372,15 @@ def get_recent_events():
             tags_json[current] += 1
         else:
             tags_json[current] = 1
+
+    # add zeroes to all the unvisited days
+    tmp_date = three_months_ago.date()
+    while tmp_date < datetime.now().date():
+        if str(tmp_date) in tags_json:
+            pass
+        else:
+            tags_json[str(tmp_date)] = 0
+        tmp_date = tmp_date + timedelta(days=1)
 
     res = [{'datestamp': x, 'count': y} for x, y in tags_json.iteritems()]
     return json.dumps(res)

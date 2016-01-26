@@ -44,7 +44,7 @@ class CrosstagViewer(object):
             if current is None:
                 self.display_user = False
                 self.print_clear_screen("offline")
-            elif current['index'] != self.last_event:
+            elif current['index'] != self.last_event: # THIS FAILS WHEN THE DB IS EMPTY
                 self.print_clear_screen("online")
                 self.last_event = current['index']
                 self.display_user = True
@@ -93,6 +93,10 @@ class CrosstagViewer(object):
                 to_print[k] = v
 
         for k, v in to_print.iteritems():
+            #if not "unicode" in str(type(k)):
+            k = k.encode('utf-8')
+            #if not "unicode" in str(type(v)):
+            v = v.encode('utf-8')
             print k.rjust(15), str(v).ljust(10)
 
     def print_clear_screen(self, msg=None):
