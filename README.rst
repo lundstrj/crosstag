@@ -26,3 +26,27 @@ python crosstag_reader.py
 
 # to start the terminal based viewer
 python crosstag_viewer.py
+
+
+Avoid screen blanking
+---------------------
+sudo nano /etc/kbd/config
+
+BLANK_TIME=0
+
+POWERDOWN_TIME=0
+
+sudo /etc/init.d/kbd restart
+
+sudo nano /etc/lightdm/lightdm.conf
+
+xserver-command=X -s 0 dpms
+
+Setup for remote access
+-----------------------
+
+sudo apt-get update
+
+sudo apt-get install weavedconnectd
+
+sudo weavedinstaller
