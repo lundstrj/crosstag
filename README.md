@@ -1,6 +1,5 @@
-Crosstag: A sensible gym solution for sensible people
+Crosstag: A sensible gym solution for sensible gyms
 =========================
-
 I really wish I had written more here. Maybe by Christmas?
 
 Features
@@ -15,54 +14,48 @@ Features
 
 Installation
 ------------
-
-To install Crosstag, simply clone and run.
-
-# install dependencies
-
+### install dependencies
+```sh
 sudo pip3 install —upgrade pip
-
 sudo pip3 install Flask
-
 sudo pip3 install Flask-SQLAlchemy
-
 sudo pip3 install Flask-wtf
-
 sudo pip3 install pyfiglet
-
 sudo pip3 install requests
-
 sudo pip3 install pyserial
-
-# to start the server
+```
+clone this repo
+### to start the server
+```sh
 sudo python crosstag_server.py
-
-# to start the reader
+```
+### to start the reader
+```sh
 python crosstag_reader.py
-
-# to start the terminal based viewer
+```
+### to start the terminal based viewer
+```sh
 python crosstag_viewer.py
-
+```
 
 Avoid screen blanking
 ---------------------
+```sh
 sudo nano /etc/kbd/config
-
+```
+```
 BLANK_TIME=0
-
 POWERDOWN_TIME=0
-
+```
+```sh
 sudo /etc/init.d/kbd restart
-
 sudo nano /etc/lightdm/lightdm.conf
-
 xserver-command=X -s 0 dpms
-
+```
 Setup for remote access
 -----------------------
-
+```sh
 sudo apt-get update
-
 sudo apt-get install weavedconnectd
-
 sudo weavedinstaller
+```
