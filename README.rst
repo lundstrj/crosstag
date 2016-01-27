@@ -18,6 +18,22 @@ Installation
 
 To install Crosstag, simply clone and run.
 
+# install dependencies
+
+sudo pip3 install —upgrade pip
+
+sudo pip3 install Flask
+
+sudo pip3 install Flask-SQLAlchemy
+
+sudo pip3 install Flask-wtf
+
+sudo pip3 install pyfiglet
+
+sudo pip3 install requests
+
+sudo pip3 install pyserial
+
 # to start the server
 sudo python crosstag_server.py
 
