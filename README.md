@@ -14,7 +14,7 @@ Features
 
 Installation
 ------------
-### install dependencies
+### install dependencies and clone this repo
 ```sh
 sudo pip3 install —upgrade pip
 sudo pip3 install Flask
@@ -23,8 +23,8 @@ sudo pip3 install Flask-wtf
 sudo pip3 install pyfiglet
 sudo pip3 install requests
 sudo pip3 install pyserial
+git clone https://github.com/lundstrj/crosstag.git
 ```
-clone this repo
 ### to start the server
 ```sh
 sudo python crosstag_server.py
