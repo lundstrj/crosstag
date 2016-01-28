@@ -12,7 +12,7 @@ setup(
     name='crosstag',
     version='0.0.1',
     description='Tag-in system for a gym',
-    long_description=(read('README.rst') + '\n\n' +
+    long_description=(read('README.md') + '\n\n' +
                       read('HISTORY.rst') + '\n\n' +
                       read('AUTHORS.rst')),
     url='https://github.com/lundstrj/crosstag',
