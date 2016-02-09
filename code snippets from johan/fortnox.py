@@ -14,13 +14,13 @@ headers = {"Client-Secret":"R1438E69IP",
 
 # Send synchronously
 
-connection.request('GET', '/3/invoices/', None, headers)
+connection.request('GET', '/3/customers/', None, headers)
 try:
 	response = connection.getresponse()
 	content = response.read()
 	# Success
 	print('Response status ' + str(response.status))
-	print content
+	print (content)
 except httplib.HTTPException, e:
 	# Exception
-	print('Exception during request')
+	print("Exception during request")
