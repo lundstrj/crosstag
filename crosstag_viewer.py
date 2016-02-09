@@ -72,7 +72,7 @@ class CrosstagViewer(object):
 
     def ascii_print(self, text, font='slant'):
         f = Figlet(font=font)
-        print(f.renderText(text), end=" ")
+        print(f.renderText(text), end=" ")#Test Comment
 
     def get_user_data(self, tag_nbr):
         try:
