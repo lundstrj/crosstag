@@ -69,6 +69,20 @@ class EditUser(Form):
     )
 
 
+class Member_status(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.String(12))
+
+    def __init__(self, status):
+        self.status = status
+
+    def dict(self):
+        return {'id': self.id, 'status': self.status}
+
+    def json(self):
+        return jsonify(self.dict())
+
+
 class User(db.Model):
     index = db.Column(db.Integer, primary_key=True)
     fortnox_id = db.Column(db.Integer)
@@ -80,10 +94,10 @@ class User(db.Model):
     birth_date = db.Column(db.Date)
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
-    #status = db.Column(db.Integer, db.ForeignKey('member_status.id'))
+    status = db.Column(db.Integer, db.ForeignKey('member_status.id'))
 
     def __init__(self, name, email, phone=None, tag_id=None, fortnox_id=None,
-                 expiry_date=None, birth_date=None, gender=None):
+                 expiry_date=None, birth_date=None, gender=None, status=None):
         self.name = name
         self.email = email
         self.phone = phone
@@ -93,7 +107,7 @@ class User(db.Model):
         self.birth_date = birth_date
         self.gender = gender
         self.create_date = datetime.now()
-        #self.status = status
+        self.status = status
 
     def dict(self):
         return {'index': self.index, 'name': self.name,
@@ -103,6 +117,7 @@ class User(db.Model):
                 'create_date': str(self.create_date),
                 'birth_date': str(self.birth_date),
                 'gender': self.gender,
+                'status': self.status
                 }
 
 
