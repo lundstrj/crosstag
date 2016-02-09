@@ -1,0 +1,26 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block scripts %}
+<script>console.log("bar!")</script>
+{{super()}}
+{% endblock %}
+
+{% block content %}
+<br>
+<h1>Personal best</h1>
+<table class="table table-hover">
+	<tr>
+		<td>Name</td> <td>TagID</td> <td>Exercise</td> <td>Record</td> <td>Unit</td> <td>Date</td> <td>UserID</td>
+	</tr>
+	{% for user in users %}
+		{% for hit in data %}
+			<tr>
+				<td>{{user.name}}</td> <td>{{user.tag_id}}</td> <td> {{hit.exercise_id}} </td> <td> {{hit.record}} </td> <td>{{hit.unit}}</td> <td>{{hit.record_date}}</td> <td>{{hit.uid}}</td>
+			</tr>
+		{% endfor %}
+	{% endfor %}
+</table>
+<div id="plot">
+</div>
+{% endblock %}

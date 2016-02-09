@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash
 import json
+from generateStatistics import generateStats
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from flask.ext.wtf import Form
@@ -12,6 +13,10 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 app_name = 'crosstag'
+
+
+class NewTag(Form):
+    tag_id = TextField('tag_id', validators=[])
 
 
 class NewUser(Form):
@@ -105,14 +110,22 @@ class Tagevent(db.Model):
     index = db.Column(db.Integer, primary_key=True)
     tag_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime)
+    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
 
     def __init__(self, tag):
         self.tag_id = tag
         self.timestamp = datetime.now()
+        users = User.query.filter_by(tag_id=self.tag_id)
+        js = None
+        for user in users:
+            js = user.dict()
+
+        self.uid = js['index']
+
 
     def dict(self):
         return {'index': self.index, 'timestamp': str(self.timestamp),
-                'tag_id': self.tag_id}
+                'tag_id': self.tag_id, 'uid':self.uid}
 
     def json(self):
         return jsonify(self.dict())
@@ -229,7 +242,6 @@ def remove_user(index):
 @app.route('/add_new_user', methods=['GET', 'POST'])
 def add_new_user():
     form = NewUser()
-    print(str(form.validate_on_submit()))
     print("errors", form.errors)
     if form.validate_on_submit():
         tmp_usr = User(form.name.data, form.email.data, form.phone.data,
@@ -255,6 +267,25 @@ def add_new_user():
                            title='New User',
                            form=form)
 
+
+@app.route('/tagin_user', methods=['GET', 'POST'])
+def tagin_user():
+    form = NewTag(csrf_enabled=False)
+
+    print(str(form.validate_on_submit()))
+    print("errors", form.errors)
+    if form.validate_on_submit():
+        tmp_tag = Tagevent(form.tag_id.data)
+
+        db.session.add(tmp_tag)
+        db.session.commit()
+        flash('New tag created')
+        return render_template('tagin_user.html',
+                               title='New tag',
+                               form=form)
+    return render_template('tagin_user.html',
+                               title='New tag',
+                               form=form)
 
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
@@ -331,7 +362,100 @@ def get_tagevents_user_dict(user_index):
 
 @app.route('/statistics', methods=['GET'])
 def statistics():
-    return render_template('statistics.html', plot_paths='')
+
+    gs = generateStats()
+
+    # Fetch the data from the database.
+    users = User.query.all()
+    event = Tagevent
+
+    # Send the data to a method who returns an multi dimensional array with statistics.
+    ret = gs.get_data(users, event)
+
+    return render_template('statistics.html',
+                           plot_paths='',
+                           data=ret)
+
+
+class Exercise(db.Model):
+    index = db.Column(db.Integer, primary_key=True)
+    exercise = db.Column(db.String(20))
+
+    def __init__(self):
+        self.exercise = None
+
+    def dict(self):
+        return {'index': self.index, 'exercise': self.exercise}
+
+    def json(self):
+        return jsonify(self.dict())
+
+
+# TEST KLASS!!!!!---------------------------------------------------------------------------------------
+class Records(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercise.index'))
+    record = db.Column(db.Float)
+    unit = db.Column(db.String(10))
+    record_date = db.Column(db.Date)
+    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
+
+    def __init__(self):
+        self.exercise_id = None
+        self.record = None
+        self.unit = None
+        self.record_date = datetime.now()
+
+    def dict(self):
+        return {'id': self.id, 'exercise_id': self.exercise_id, 'record': self.record, 'unit': self.unit, 'record_date': self.record_date, 'uid':self.uid}
+
+    def json(self):
+        return jsonify(self.dict())
+
+
+# TEST FUNKTION!!!!!
+@app.route('/pb/<user_id>', methods=['GET'])
+def pb(user_id):
+
+### OLD SHIT, Save for future reference--------------------------------|
+    #tag_id = get_tag(1)
+    #events = Statistics.query.filter_by(tag_id=tag_id)[-20:]
+    #userList = users.query.join(friendships, users.id==friendships.user_id)
+    # .add_columns(users.userId, users.name, users.email, friends.userId, friendId)
+    # .filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
+
+    '''results = User.query.join(Statistics, User.index == Statistics.uid).add_columns(User.name, User.tag_id, Statistics.exercise, Statistics.record, Statistics.unit, Statistics.record_date, Statistics.uid).filter(User.index == user_id).filter(Statistics.uid == user_id)
+    ret = []
+    logging.debug("hello")'''
+### END OF OLD SHIT----------------------------------------------------|
+
+
+    users = User.query.filter_by(index=user_id)
+    personalstats = Records.query.filter_by(uid=user_id)
+
+
+    ret = []
+    userret = []
+    exerciseret = []
+
+    #name = User.name
+    for hit in personalstats:
+        pbjs = hit.dict()
+        ret.append(pbjs)
+
+   #  exercise = Exercise.query.filter_by(index=pbjs['exercise_id'])
+    #exercisejs = exercise[0].dict()
+    #exerciseret.append(exercisejs)
+
+    for hit in users:
+        js = hit.dict()
+        userret.append(js)
+
+   # ret.append(name)
+    return render_template('PB.html', plot_paths='', data=ret, users=userret, exercises=exerciseret)
+
+   # return render_template('PB.html', plot_paths='', data=ret, users=userret, exercisetypes=exercisearr)
+#-----------------------------------------------------------------------------------------------------
 
 
 @app.route('/getrecenteventsgender', methods=['GET'])
@@ -340,6 +464,7 @@ def get_recent_events_gender():
     events = Tagevent.query.filter(Tagevent.timestamp>three_months_ago).all()
     
     events_json={}
+    genders = []
 
     for event in events:
         current=str(event.timestamp.date())
@@ -461,3 +586,5 @@ if __name__ == '__main__':
     #if options.debug:
     app.logger.propagate = False
     app.run(host='0.0.0.0', port=app.config["PORT"], debug=True)
+
+
