@@ -3,7 +3,7 @@ Crosstag: A sensible gym solution for sensible gyms
 I really wish I had written more here. Maybe by Christmas?
 
 Features
---------
+----------
 
 - Designed to run on a Raspberry Pi (http://www.raspberrypi.org/products/)
 - COTS RFID-reader compatible (https://www.sparkfun.com/products/retired/9875, https://www.sparkfun.com/products/13198)

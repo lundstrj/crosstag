@@ -5,7 +5,7 @@ from optparse import OptionParser
 import requests
 import json
 import time
-
+#Test commit
 
 class CrosstagViewer(object):
     server = None
@@ -87,7 +87,7 @@ class CrosstagViewer(object):
 
     def print_user(self, user_data, user_tagins):
         to_print = {}
-        keys = ['name', 'expiry_date', 'create_date', 'gender']
+        keys = ['name', 'expiry_date', 'create_date', 'gender', 'status']
         for k, v in user_data.items():
             if k in keys:
                 to_print[k] = v
