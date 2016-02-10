@@ -25,15 +25,15 @@ cd /home/pi/crosstag
 touch reader.tmp
 touch server.tmp
 touch viewer.tmp
-screen -d -m python crosstag_server.py & > server.tmp
+screen -d -m python3 crosstag_server.py & > server.tmp
 sleep 10
 
 printf "Starting Crosstag reader\n"
-screen -d -m python crosstag_reader.py & > reader.tmp
+screen -d -m python3 crosstag_reader.py & > reader.tmp
 sleep 5
 
 printf "Starting Crosstag viewer\n"
-python crosstag_viewer.py &
+python3 crosstag_viewer.py &
 sleep 5
 
 printf "Here comes the IP again"
