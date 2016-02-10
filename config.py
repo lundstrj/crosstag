@@ -1,4 +1,0 @@
-DEBUG = True
-PORT = 80
-SQLALCHEMY_DATABASE_URI = "sqlite:///dev_db.db"
-SECRET_KEY = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RD"
