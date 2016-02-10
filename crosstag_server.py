@@ -68,12 +68,13 @@ class EditUser(Form):
                  ('unknown', 'unknown')]
     )
 
-
+#Implementerade status i user, skriver bara ut siffra atm. // Rydberg 2016-02-10.
 class Member_status(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(12))
 
-    def __init__(self, status):
+    def __init__(self, id, status):
+        self.id = id
         self.status = status
 
     def dict(self):
@@ -94,7 +95,7 @@ class User(db.Model):
     birth_date = db.Column(db.Date)
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
-    status = db.Column(db.Integer, db.ForeignKey('member_status.id'))
+    status = db.Column(db.Integer, db.ForeignKey('member_status.status'))
 
     def __init__(self, name, email, phone=None, tag_id=None, fortnox_id=None,
                  expiry_date=None, birth_date=None, gender=None, status=None):
@@ -107,7 +108,7 @@ class User(db.Model):
         self.birth_date = birth_date
         self.gender = gender
         self.create_date = datetime.now()
-        self.status = status
+        self.status = Member_status.status
 
     def dict(self):
         return {'index': self.index, 'name': self.name,
