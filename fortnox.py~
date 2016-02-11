@@ -3,7 +3,7 @@ import fortnox_cfg as cfg
 from pyfiglet import Figlet
 import os
 
-##testar fortnox hämtning.
+
 class Fortnox:
     def __init__(self):
 
