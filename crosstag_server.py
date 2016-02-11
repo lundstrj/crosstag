@@ -4,69 +4,17 @@ import json
 from generateStatistics import generateStats
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
-from flask.ext.wtf import Form
-from wtforms import TextField, RadioField, DateField
-from wtforms.validators import Required
 from datetime import datetime, timedelta
+from forms.new_tag import NewTag
+from forms.new_user import NewUser
+from forms.edit_user import EditUser
+from forms.search_user import SearchUser
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 app_name = 'crosstag'
 
-
-class NewTag(Form):
-    tag_id = TextField('tag_id', validators=[])
-
-
-class NewUser(Form):
-    name = TextField('name', validators=[])
-    email = TextField('email', validators=[])
-    phone = TextField('phone', validators=[])
-    fortnox_id = TextField('fortnox_id', validators=[])
-    tag_id = TextField('tag_id', validators=[])
-    expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d',
-                            description="DESC1")
-    birth_date = DateField('birth_date', format='%Y-%m-%d', validators=[])
-    gender = RadioField(
-        'gender',
-        [Required()],
-        choices=[('male', 'male'), ('female', 'female'),
-                 ('unknown', 'unknown')], default='unknown'
-    )
-
-
-class SearchUser(Form):
-    index = TextField('name', validators=[])
-    name = TextField('name', validators=[])
-    email = TextField('email', validators=[])
-    phone = TextField('phone', validators=[])
-    fortnox_id = TextField('fortnox_id', validators=[])
-    tag = TextField('tag', validators=[])
-    gender = RadioField(
-        'gender',
-        [Required()],
-        choices=[('male', 'male'), ('female', 'female'),
-                 ('unknown', 'unknown')], default='unknown'
-    )
-
-
-class EditUser(Form):
-    name = TextField('name', validators=[])
-    email = TextField('email', validators=[])
-    phone = TextField('phone', validators=[])
-    fortnox_id = TextField('fortnox_id', validators=[])
-    tag_id = TextField('tag_id', validators=[])
-    expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d',
-                            description="DESC1")
-    birth_date = DateField('birth_date', format='%Y-%m-%d', validators=[])
-    create_date = DateField('create_date', format='%Y-%m-%d', validators=[])
-    gender = RadioField(
-        'gender',
-        [Required()],
-        choices=[('male', 'male'), ('female', 'female'),
-                 ('unknown', 'unknown')]
-    )
 
 #Implementerade status i user, skriver bara ut siffra atm. // Rydberg 2016-02-10.
 class Member_status(db.Model):
@@ -149,6 +97,42 @@ class Tagevent(db.Model):
 
     def json(self):
         return jsonify(self.dict())
+
+
+class Records(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercise.index'))
+    record = db.Column(db.Float)
+    unit = db.Column(db.String(10))
+    record_date = db.Column(db.Date)
+    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
+
+    def __init__(self):
+        self.exercise_id = None
+        self.record = None
+        self.unit = None
+        self.record_date = datetime.now()
+
+    def dict(self):
+        return {'id': self.id, 'exercise_id': self.exercise_id, 'record': self.record, 'unit': self.unit, 'record_date': self.record_date, 'uid':self.uid}
+
+    def json(self):
+        return jsonify(self.dict())
+
+
+class Exercise(db.Model):
+    index = db.Column(db.Integer, primary_key=True)
+    exercise = db.Column(db.String(20))
+
+    def __init__(self):
+        self.exercise = None
+
+    def dict(self):
+        return {'index': self.index, 'exercise': self.exercise}
+
+    def json(self):
+        return jsonify(self.dict())
+
 
 
 def get_last_tag_event():
@@ -395,42 +379,6 @@ def statistics():
     return render_template('statistics.html',
                            plot_paths='',
                            data=ret)
-
-
-class Exercise(db.Model):
-    index = db.Column(db.Integer, primary_key=True)
-    exercise = db.Column(db.String(20))
-
-    def __init__(self):
-        self.exercise = None
-
-    def dict(self):
-        return {'index': self.index, 'exercise': self.exercise}
-
-    def json(self):
-        return jsonify(self.dict())
-
-
-# TEST KLASS!!!!!---------------------------------------------------------------------------------------
-class Records(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercise.index'))
-    record = db.Column(db.Float)
-    unit = db.Column(db.String(10))
-    record_date = db.Column(db.Date)
-    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
-
-    def __init__(self):
-        self.exercise_id = None
-        self.record = None
-        self.unit = None
-        self.record_date = datetime.now()
-
-    def dict(self):
-        return {'id': self.id, 'exercise_id': self.exercise_id, 'record': self.record, 'unit': self.unit, 'record_date': self.record_date, 'uid':self.uid}
-
-    def json(self):
-        return jsonify(self.dict())
 
 
 # TEST FUNKTION!!!!!
