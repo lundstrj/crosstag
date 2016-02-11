@@ -18,3 +18,4 @@ class ReadFromFortnox:
                 print('Response HTTP Response Body : {content})'.format(content=r.content))
             except requests.exceptions.RequestException as e:
                 print('HTTP Request failed')
+
