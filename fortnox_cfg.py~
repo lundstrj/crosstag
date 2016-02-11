@@ -1,0 +1,23 @@
+<<<<<<< HEAD
+import preprocessing
+
+fortnox = {'Access-Token': '3f01c142-04ae-4e33-8199-b671bfe0f008',
+           'Client-Secret': 'WcL4oKGKf9',
+	   'Content-Type': 'application/json',
+           'Accept': 'application/json'}
+=======
+fortnox = {'Authorization-Code': '',
+           "Client-Secret":"R1438E69IP",
+           "Content-Type":"application/xml",
+           "Access-Token":"6d50f61c-a545-420c-80a6-2989cb78cc5e",
+           "Accept":"application/xml"}
+>>>>>>> ab2f3325a3aacb3aa002dc8f3a49075c7543ee0a
+
+preprocessing_queue = [preprocessing.scale_and_center,
+                       preprocessing.dot_reduction,
+                       preprocessing.connect_lines]
+use_anonymous = True
+<<<<<<< HEAD
+
+=======
+>>>>>>> ab2f3325a3aacb3aa002dc8f3a49075c7543ee0a

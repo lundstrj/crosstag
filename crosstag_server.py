@@ -2,6 +2,8 @@
 from flask import Flask, jsonify, render_template, flash
 import json
 from generate_statistics import GenerateStats
+#ta bort fortnox här sen
+from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from datetime import datetime, timedelta
@@ -381,6 +383,18 @@ def statistics():
                            plot_paths='',
                            data=ret)
 
+# Testar fortnox hämtning 2016-02-11/Filip, Adam, Kevin, Kim
+@app.route('/fortnox', methods=['GET'])
+def fortnoxusers():
+
+
+    fortnoxData = Fortnox()
+
+    ret = fortnoxData.get_all_customers()
+
+    return render_template('fortnox.html',
+                           plot_paths='',
+                           data=ret)
 
 # TEST FUNKTION!!!!!
 @app.route('/pb/<user_id>', methods=['GET'])
