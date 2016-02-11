@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash
 import json
-from generateStatistics import generateStats
+from generate_statistics import generateStats
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from datetime import datetime, timedelta

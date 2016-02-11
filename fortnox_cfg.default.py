@@ -1,5 +1,3 @@
-import preprocessing
-
 fortnox = {'Authorization-Code': '',
            'Client-Secret': ''}
 
