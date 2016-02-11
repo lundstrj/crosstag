@@ -1,22 +1,34 @@
 import http.client
+import fortnox_cfg as cfg
+from pyfiglet import Figlet
+import os
 
-# Request: Account Charts (https://api.fortnox.se/3/accountcharts)
+
+class Fortnox:
+    def __init__(self):
+
+        self.get_all_customers()
+
+    def get_all_customers(self):
+
+        connection = http.client.HTTPSConnection('api.fortnox.se')
+        connection.request('GET', '/3/customers', None, cfg.headers_json)
+
+        response = connection.getresponse()
+        content = response.read()
 
 
-connection = http.client.HTTPSConnection('api.fortnox.se')
+        return content
 
-# Headers
 
-headers = {"Client-Secret": "WcL4oKGKf9",
-           "Access-Token": "3f01c142-04ae-4e33-8199-b671bfe0f008",
-           "Content-Type": "application/json",
-           "Accept": "application/json"}
 
-connection.request('GET', '/3/customers', None, headers)
 
-response = connection.getresponse()
-content = response.read()
 
-print(str(response.status))
-print(content)
+
+
+
+
+
+
+
 
