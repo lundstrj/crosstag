@@ -1,0 +1,10 @@
+import preprocessing
+
+fortnox = {'Authorization-Code': '6d50f61c-a545-420c-80a6-2989cb78cc5e',
+           'Client-Secret': 'R1438E69IP'}
+
+preprocessing_queue = [preprocessing.scale_and_center,
+                       preprocessing.dot_reduction,
+                       preprocessing.connect_lines]
+use_anonymous = True
+
