@@ -88,7 +88,8 @@ class Tagevent(db.Model):
         for user in users:
             js = user.dict()
 
-        self.uid = js['index']
+        if js != None:
+            self.uid = js['index']
 
 
     def dict(self):
