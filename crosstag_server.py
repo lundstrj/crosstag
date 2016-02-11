@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash
 import json
-from generate_statistics import generateStats
+from generate_statistics import GenerateStats
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from datetime import datetime, timedelta
@@ -367,7 +367,7 @@ def get_tagevents_user_dict(user_index):
 @app.route('/statistics', methods=['GET'])
 def statistics():
 
-    gs = generateStats()
+    gs = GenerateStats()
 
     # Fetch the data from the database.
     users = User.query.all()
