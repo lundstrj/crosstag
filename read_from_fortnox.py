@@ -7,7 +7,7 @@ class ReadFromFortnox:
             try:
                 r = requests.get(
                     url="https://api.fortnox.se/3/customers",
-                    headers = {
+                    headers={
                         "Access-Token":"",
                         "Client-Secret":"",
                         "Content-Type":"application/json",
