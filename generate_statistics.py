@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-class generateStats:
+class GenerateStats:
 
     def get_data(self, users, tagevent ):
         data = []
