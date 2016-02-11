@@ -88,7 +88,7 @@ class Tagevent(db.Model):
         for user in users:
             js = user.dict()
 
-        if js != None:
+        if js != None:#Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
             self.uid = js['index']
 
 
