@@ -5,7 +5,7 @@
 import requests
 import json
 
-class ReadFromFortnox:
+class CreateFortnoxMember:
 
     def send_request(self):
         # Customer (POST https://api.fortnox.se/3/customers)
