@@ -5,14 +5,11 @@ import os
 
 ##testar fortnox hämtning.
 class Fortnox:
-    def __init__(self):
-
-        self.get_all_customers()
 
     def get_all_customers(self):
 
         connection = http.client.HTTPSConnection('api.fortnox.se')
-        connection.request('GET', '/3/customers', None, cfg.fortnox)
+        connection.request('GET', '/3/customers/', None, cfg.fortnox)
 
         try:
             response = connection.getresponse()
@@ -20,11 +17,27 @@ class Fortnox:
             # Success
             print('Response status ' + str(response.status))
             print (content)
+
+            return content
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
 
-        #return content
+    def get_customer_by_id(self, id):
+        connection = http.client.HTTPSConnection('api.fortnox.se')
+        connection.request('GET', '/3/customers/'+id+'/', None, cfg.fortnox)
+
+        try:
+            response = connection.getresponse()
+            content = response.read()
+            # Success
+            print('Response status ' + str(response.status))
+            print (content)
+
+            return content
+        except http.client.HTTPException:
+            # Exception
+            print('Exception during request')
 
 
 
