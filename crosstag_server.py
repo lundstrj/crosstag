@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash
 import json
+from io import StringIO
 from generate_statistics import GenerateStats
 #ta bort fortnox här sen
 from fortnox import Fortnox
@@ -384,12 +385,22 @@ def statistics():
 
 # Testar fortnox hämtning 2016-02-11/Filip, Adam, Kevin, Kim
 @app.route('/fortnox', methods=['GET'])
-def fortnoxusers():
-
+def fortnox_users():
 
     fortnoxData = Fortnox()
 
     ret = fortnoxData.get_all_customers()
+    return render_template('fortnox.html',
+                           plot_paths='',
+                           data=ret)
+
+# Testar fortnoxhämtning av en customer. 2016-02-12/ Kim, Patrik
+@app.route('/fortnox/<fortnox_id>', methods=['GET'])
+def fortnox_specific_user(fortnox_id):
+
+    fortnoxData = Fortnox()
+
+    ret = fortnoxData.get_customer_by_id(fortnox_id)
 
     return render_template('fortnox.html',
                            plot_paths='',
