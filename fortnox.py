@@ -12,13 +12,19 @@ class Fortnox:
     def get_all_customers(self):
 
         connection = http.client.HTTPSConnection('api.fortnox.se')
-        connection.request('GET', '/3/customers', None, cfg.headers_json)
+        connection.request('GET', '/3/customers', None, cfg.fortnox)
 
-        response = connection.getresponse()
-        content = response.read()
+        try:
+            response = connection.getresponse()
+            content = response.read()
+            # Success
+            print('Response status ' + str(response.status))
+            print (content)
+        except http.client.HTTPException:
+            # Exception
+            print('Exception during request')
 
-
-        return content
+        #return content
 
 
 
