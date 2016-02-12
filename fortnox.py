@@ -2,8 +2,10 @@ import http.client
 import fortnox_cfg as cfg
 from pyfiglet import Figlet
 import os
+import json
 
-##testar fortnox hämtning.
+
+#testar fortnox hämtning.
 class Fortnox:
     def __init__(self):
 
@@ -23,6 +25,11 @@ class Fortnox:
             # Exception
             print('Exception during request')
 
+<<<<<<< HEAD
+
+
+        return content["Customer"]
+=======
         #Testar anropa metoden nedanför.
         self.get_customer_by_id("5")
 
@@ -41,6 +48,7 @@ class Fortnox:
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
+>>>>>>> 30c55060c344e7ce7d872aa0189293e407ad3108
 
 
         return customer

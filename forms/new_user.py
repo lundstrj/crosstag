@@ -17,4 +17,5 @@ class NewUser(Form):
         [Required()],
         choices=[('male', 'male'), ('female', 'female'),
                  ('unknown', 'unknown')], default='unknown'
+
     )
