@@ -46,10 +46,10 @@ class User(db.Model):
     birth_date = db.Column(db.Date)
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
-    status = db.Column(db.Integer, db.ForeignKey('member_status.status'))
+
 
     def __init__(self, name, email, phone=None, tag_id=None, fortnox_id=None,
-                 expiry_date=None, birth_date=None, gender=None, status=None):
+                 expiry_date=None, birth_date=None, gender=None):
         self.name = name
         self.email = email
         self.phone = phone
@@ -59,7 +59,7 @@ class User(db.Model):
         self.birth_date = birth_date
         self.gender = gender
         self.create_date = datetime.now()
-        self.status = Member_status.status
+
 
     def dict(self):
         return {'index': self.index, 'name': self.name,
@@ -68,8 +68,7 @@ class User(db.Model):
                 'expiry_date': str(self.expiry_date),
                 'create_date': str(self.create_date),
                 'birth_date': str(self.birth_date),
-                'gender': self.gender,
-                'status': self.status
+                'gender': self.gender
                 }
 
 
