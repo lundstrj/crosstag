@@ -801,3 +801,9 @@ INFO:urllib3.connectionpool:Starting new HTTP connection (1): localhost
 DEBUG:urllib3.connectionpool:Setting read timeout to 3
 DEBUG:urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
 INFO:root:2016-02-04 12:55:12.627493 reader tagging result: [2016-02-04 12:55:12.387073 server tagged 11111111]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
+INFO:root:2016-02-12 11:35:30.344633 reader tagging result: [2016-02-12 11:35:30.314486 server tagged 11111111]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11112222 HTTP/1.1" 200 49
+INFO:root:2016-02-12 11:36:02.496632 reader tagging result: [2016-02-12 11:36:02.471554 server tagged 11112222]
