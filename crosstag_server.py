@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash
 import json
+from io import StringIO
 from generate_statistics import GenerateStats
+#ta bort fortnox här sen
+from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from datetime import datetime, timedelta
@@ -38,37 +41,43 @@ class User(db.Model):
     name = db.Column(db.String(80))
     email = db.Column(db.String(120))
     phone = db.Column(db.Integer)
+    address = db.Column(db.String(50))
+    address2 = db.Column(db.String(50))
+    city = db.Column(db.String(120))
+    zip_code = db.Column(db.Integer)
     tag_id = db.Column(db.String(12))
     gender = db.Column(db.String(10))
     birth_date = db.Column(db.Date)
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
-    status = db.Column(db.Integer, db.ForeignKey('member_status.status'))
 
-    def __init__(self, name, email, phone=None, tag_id=None, fortnox_id=None,
-                 expiry_date=None, birth_date=None, gender=None, status=None):
+    def __init__(self, name, email, phone=None, address=None, address2=None, city=None, zip_code=None, tag_id=None, fortnox_id=None,
+                 expiry_date=None, birth_date=None, gender=None):
         self.name = name
         self.email = email
         self.phone = phone
+        self.address = address
+        self.address2 = address2
+        self.city = city
+        self.zip_code = zip_code
         self.tag_id = tag_id
         self.fortnox_id = fortnox_id
         self.expiry_date = expiry_date
         self.birth_date = birth_date
         self.gender = gender
         self.create_date = datetime.now()
-        self.status = Member_status.status
 
     def dict(self):
         return {'index': self.index, 'name': self.name,
                 'email': self.email, 'tag_id': self.tag_id,
-                'phone': self.phone, 'fortnox_id': self.fortnox_id,
+                'phone': self.phone, 'address': self.address,
+                'address2': self.address2, 'city': self.city,
+                'zip_code': self.zip_code, 'fortnox_id': self.fortnox_id,
                 'expiry_date': str(self.expiry_date),
                 'create_date': str(self.create_date),
                 'birth_date': str(self.birth_date),
-                'gender': self.gender,
-                'status': self.status
+                'gender': self.gender
                 }
-
 
     def json(self):
         return jsonify(self.dict())
@@ -250,7 +259,8 @@ def add_new_user():
     print("errors", form.errors)
     if form.validate_on_submit():
         tmp_usr = User(form.name.data, form.email.data, form.phone.data,
-                       form.tag_id.data, form.fortnox_id.data,
+                       form.address.data, form.address2.data, form.city.data,
+                       form.zip_code.data, form.tag_id.data, form.fortnox_id.data,
                        form.expiry_date.data, form.birth_date.data,
                        form.gender.data)
         db.session.add(tmp_usr)
@@ -384,6 +394,43 @@ def statistics():
                            plot_paths='',
                            data=ret)
 
+# Testar fortnox hämtning 2016-02-11/Filip, Adam, Kevin, Kim
+@app.route('/fortnox', methods=['GET'])
+def fortnox_users():
+
+    fortnoxData = Fortnox()
+
+    customers = fortnoxData.get_all_customers()
+    ret = []
+
+
+    for customer in customers:
+        ret.append(customer["CustomerNumber"])
+        ret.append(customer["Name"])
+        ret.append(customer["Email"])
+        ret.append(customer["Phone"])
+        ret.append(customer["Address1"])
+        ret.append(customer["Address2"])
+        ret.append(customer["City"])
+        ret.append(customer["ZipCode"])
+
+
+    return render_template('fortnox.html',
+                           plot_paths='',
+                           data=ret)
+
+
+# Testar fortnoxhämtning av en custom# er. 2016-02-12/ Kim, Patrik
+@app.route('/fortnox/<fortnox_id>', methods=['GET'])
+def fortnox_specific_user(fortnox_id):
+
+    fortnoxData = Fortnox()
+
+    ret = fortnoxData.get_customer_by_id(fortnox_id)
+
+    return render_template('fortnox.html',
+                           plot_paths='',
+                           data=ret)
 
 # TEST FUNKTION!!!!!
 @app.route('/pb/<user_id>', methods=['GET'])
@@ -496,11 +543,16 @@ def edit_user(user_index=None):
         user.name = form.name.data
         user.email = form.email.data
         user.phone = form.phone.data
+        user.address = form.address.data
+        user.address2 = form.address2.data
+        user.city = form.city.data
+        user.zip_code = form.zip_code
         user.tag_id = form.tag_id.data
         user.gender = form.gender.data
         user.birth_date = form.birth_date.data
         user.expiry_date = form.expiry_date.data
         user.create_date = form.create_date.data
+
         db.session.commit()
         flash('Updated user: %s with id: %s' % (form.name.data, user.index))
         tagevent = get_last_tag_event()

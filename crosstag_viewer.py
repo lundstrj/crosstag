@@ -72,7 +72,7 @@ class CrosstagViewer(object):
 
     def ascii_print(self, text, font='slant'):
         f = Figlet(font=font)
-        print(f.renderText(text), end=" ")
+        print(f.renderText(text))
 
     def get_user_data(self, tag_nbr):
         try:
@@ -87,7 +87,7 @@ class CrosstagViewer(object):
 
     def print_user(self, user_data, user_tagins):
         to_print = {}
-        keys = ['name', 'expiry_date', 'create_date', 'gender', 'status']
+        keys = ['name', 'expiry_date', 'create_date', 'gender']
         for k, v in user_data.items():
             if k in keys:
                 to_print[k] = v
