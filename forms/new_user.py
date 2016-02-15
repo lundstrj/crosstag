@@ -7,6 +7,10 @@ class NewUser(Form):
     name = TextField('name', validators=[])
     email = TextField('email', validators=[])
     phone = TextField('phone', validators=[])
+    address = TextField('address', validators=[])
+    address2 = TextField('address2', validators=[])
+    city = TextField('cty', validators=[])
+    zip_code =TextField('zip_code', validators=[])
     fortnox_id = TextField('fortnox_id', validators=[])
     tag_id = TextField('tag_id', validators=[])
     expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d',

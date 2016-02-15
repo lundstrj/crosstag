@@ -41,18 +41,25 @@ class User(db.Model):
     name = db.Column(db.String(80))
     email = db.Column(db.String(120))
     phone = db.Column(db.Integer)
+    address = db.Column(db.String(50))
+    address2 = db.Column(db.String(50))
+    city = db.Column(db.String(120))
+    zip_code = db.Column(db.Integer)
     tag_id = db.Column(db.String(12))
     gender = db.Column(db.String(10))
     birth_date = db.Column(db.Date)
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
 
-
-    def __init__(self, name, email, phone=None, tag_id=None, fortnox_id=None,
+    def __init__(self, name, email, phone=None, address=None, address2=None, city=None, zip_code=None, tag_id=None, fortnox_id=None,
                  expiry_date=None, birth_date=None, gender=None):
         self.name = name
         self.email = email
         self.phone = phone
+        self.address = address
+        self.address2 = address2
+        self.city = city
+        self.zip_code = zip_code
         self.tag_id = tag_id
         self.fortnox_id = fortnox_id
         self.expiry_date = expiry_date
@@ -60,17 +67,17 @@ class User(db.Model):
         self.gender = gender
         self.create_date = datetime.now()
 
-
     def dict(self):
         return {'index': self.index, 'name': self.name,
                 'email': self.email, 'tag_id': self.tag_id,
-                'phone': self.phone, 'fortnox_id': self.fortnox_id,
+                'phone': self.phone, 'address': self.address,
+                'address2': self.address2, 'city': self.city,
+                'zip_code': self.zip_code, 'fortnox_id': self.fortnox_id,
                 'expiry_date': str(self.expiry_date),
                 'create_date': str(self.create_date),
                 'birth_date': str(self.birth_date),
                 'gender': self.gender
                 }
-
 
     def json(self):
         return jsonify(self.dict())
@@ -252,7 +259,8 @@ def add_new_user():
     print("errors", form.errors)
     if form.validate_on_submit():
         tmp_usr = User(form.name.data, form.email.data, form.phone.data,
-                       form.tag_id.data, form.fortnox_id.data,
+                       form.address.data, form.address2.data, form.city.data,
+                       form.zip_code.data, form.tag_id.data, form.fortnox_id.data,
                        form.expiry_date.data, form.birth_date.data,
                        form.gender.data)
         db.session.add(tmp_usr)
