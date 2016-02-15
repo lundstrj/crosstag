@@ -389,12 +389,27 @@ def fortnox_users():
 
     fortnoxData = Fortnox()
 
-    ret = fortnoxData.get_all_customers()
+    customers = fortnoxData.get_all_customers()
+    ret = []
+
+
+    for customer in customers:
+        ret.append(customer["CustomerNumber"])
+        ret.append(customer["Name"])
+        ret.append(customer["Email"])
+        ret.append(customer["Phone"])
+        ret.append(customer["Address1"])
+        ret.append(customer["Address2"])
+        ret.append(customer["City"])
+        ret.append(customer["ZipCode"])
+
+
     return render_template('fortnox.html',
                            plot_paths='',
                            data=ret)
 
-# Testar fortnoxhämtning av en customer. 2016-02-12/ Kim, Patrik
+
+# Testar fortnoxhämtning av en custom# er. 2016-02-12/ Kim, Patrik
 @app.route('/fortnox/<fortnox_id>', methods=['GET'])
 def fortnox_specific_user(fortnox_id):
 
