@@ -1,4 +1,5 @@
 import http.client
+import json
 import fortnox_cfg as cfg
 from pyfiglet import Figlet
 import os
@@ -18,7 +19,9 @@ class Fortnox:
             print('Response status ' + str(response.status))
             print (content)
 
-            return content
+            str_response = content.decode('utf-8')
+            obj = json.loads(str_response)
+            return obj["Customers"]
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
