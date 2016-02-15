@@ -540,11 +540,16 @@ def edit_user(user_index=None):
         user.name = form.name.data
         user.email = form.email.data
         user.phone = form.phone.data
+        user.address = form.address.data
+        user.address2 = form.address2.data
+        user.city = form.city.data
+        user.zip_code = form.zip_code
         user.tag_id = form.tag_id.data
         user.gender = form.gender.data
         user.birth_date = form.birth_date.data
         user.expiry_date = form.expiry_date.data
         user.create_date = form.create_date.data
+
         db.session.commit()
         flash('Updated user: %s with id: %s' % (form.name.data, user.index))
         tagevent = get_last_tag_event()
