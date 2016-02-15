@@ -18,7 +18,7 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 		</thead>
 				{% for hit in hits %}
 				<tr>
-					<td>{{hit.index}}</td> <td>{{hit.name}}</td> <td>{{hit.fortnox_id}}</td> <td>{{hit.email}}</td> <td>{{hit.phone}}</td> <td>{{hit.tag_id}}</td> <td><a href='/edit_user/{{hit.index}}'>edit</a> </td>
+					<td>{{hit.index}}</td> <td>{{hit.name}}</td> <td>{{hit.fortnox_id}}</td> <td>{{hit.email}}</td> <td>{{hit.phone}}</td> <td>{{hit.tag_id}}</td> <td><a href='/user_page/{{hit.index}}'>See</a> </td>
 				</tr>
 				{% endfor %}
 	</tbody>
