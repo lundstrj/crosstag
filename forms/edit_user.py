@@ -11,7 +11,6 @@ class EditUser(Form):
     address2 = TextField('address2', validators=[])
     city = TextField('city', validators=[])
     zip_code = TextField('zip_code', validators=[])
-    fortnox_id = TextField('fortnox_id', validators=[])
     tag_id = TextField('tag_id', validators=[])
     expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d',
                             description="DESC1")

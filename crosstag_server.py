@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, render_template, flash
+from flask import Flask, jsonify, render_template, flash, redirect
 import json
 from io import StringIO
 from generate_statistics import GenerateStats
@@ -531,6 +531,23 @@ def get_recent_events():
     return json.dumps(res)
 
 
+@app.route('/user_page/<user_index>', methods=['GET', 'POST'])
+def user_page(user_index=None):
+    user = User.query.filter_by(index=user_index).first()
+
+
+    if user is None:
+        return "No user Found"
+
+    else:
+
+        tagevents = get_tagevents_user_dict(user_index)
+        return render_template('user_page.html',
+                               title='User Page',
+                               data=user.dict(),
+                               tags=tagevents)
+
+
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
     user = User.query.filter_by(index=user_index).first()
@@ -540,21 +557,23 @@ def edit_user(user_index=None):
     tagevents = get_tagevents_user_dict(user_index)
 
     if form.validate_on_submit():
-        user.fortnox_id = form.fortnox_id.data
         user.name = form.name.data
         user.email = form.email.data
         user.phone = form.phone.data
         user.address = form.address.data
         user.address2 = form.address2.data
         user.city = form.city.data
-        user.zip_code = form.zip_code
+        user.zip_code = form.zip_code.data
         user.tag_id = form.tag_id.data
         user.gender = form.gender.data
         user.birth_date = form.birth_date.data
         user.expiry_date = form.expiry_date.data
-        user.create_date = form.create_date.data
+
 
         db.session.commit()
+        ##If we successfully edited the user, redirect back to userpage.
+        return redirect("/user_page/"+str(user.index))
+
         flash('Updated user: %s with id: %s' % (form.name.data, user.index))
         tagevent = get_last_tag_event()
         msg = None
