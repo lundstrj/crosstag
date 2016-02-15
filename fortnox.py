@@ -9,7 +9,6 @@ import os
 class Fortnox:
 
     def get_all_customers(self):
-
         try:
             r = requests.get(
                 url = 'https://api.fortnox.se/3/customers',
@@ -25,7 +24,6 @@ class Fortnox:
     def get_customer_by_id(self, id):
         connection = http.client.HTTPSConnection('api.fortnox.se')
         connection.request('GET', '/3/customers/'+id+'/', None, cfg.fortnox)
-
         try:
             response = connection.getresponse()
             content = response.read()
