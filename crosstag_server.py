@@ -50,9 +50,10 @@ class User(db.Model):
     birth_date = db.Column(db.Date)
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
+    status = db.Column(db.String(50))
 
     def __init__(self, name, email, phone=None, address=None, address2=None, city=None, zip_code=None, tag_id=None, fortnox_id=None,
-                 expiry_date=None, birth_date=None, gender=None):
+                 expiry_date=None, birth_date=None, gender=None, status=None):
         self.name = name
         self.email = email
         self.phone = phone
@@ -66,6 +67,7 @@ class User(db.Model):
         self.birth_date = birth_date
         self.gender = gender
         self.create_date = datetime.now()
+        self.status = status
 
     def dict(self):
         return {'index': self.index, 'name': self.name,
@@ -76,7 +78,8 @@ class User(db.Model):
                 'expiry_date': str(self.expiry_date),
                 'create_date': str(self.create_date),
                 'birth_date': str(self.birth_date),
-                'gender': self.gender
+                'gender': self.gender,
+                'status': self.status
                 }
 
     def json(self):
@@ -149,6 +152,65 @@ def get_last_tag_event():
     top_index = db.session.query(db.func.max(Tagevent.index)).scalar()
     tagevent = Tagevent.query.filter_by(index=top_index).first()
     return tagevent
+
+
+# Syncs the fortnox database with the local DB
+def sync_from_fortnox():
+    fortnox_data = Fortnox()
+
+    customers = fortnox_data.get_all_customers()
+    ret = []
+
+    for customer in customers:
+        cust = {'FortnoxID': customer["CustomerNumber"],
+                'OrganisationsNumber': customer['OrganisationNumber'],
+                'Name': customer["Name"],
+                'Email': customer['Email'],
+                'Phone': customer['Phone'],
+                'Address1': customer['Address1'],
+                'Address2': customer['Address2'],
+                'City': customer['City'],
+                'Zipcode': customer['ZipCode']}
+
+        ret.append(cust)
+
+    for customer in ret:
+        if User.query.filter_by(fortnox_id=customer['FortnoxID']).first() is not None:
+            update_user_in_local_db_from_fortnox(customer)
+        else:
+            add_user_to_local_db_from_fortnox(customer)
+
+
+# Updating an existing user in local DB from fortnox.
+def update_user_in_local_db_from_fortnox(customer):
+    user = User.query.filter_by(fortnox_id=customer['FortnoxID']).first()
+    if user is None:
+        return "she wrote upon it; no such number, no such zone"
+    else:
+        user.name = customer['Name']
+        user.email = customer['Email']
+        user.phone = customer['Phone']
+        user.address = customer['Address1']
+        user.address2 = customer['Address2']
+        user.city = customer['City']
+        user.zip_code = customer['Zipcode']
+        user.gender = user.gender
+        user.birth_date = user.birth_date
+        user.expiry_date = user.expiry_date
+        user.create_date = user.create_date
+
+        db.session.commit()
+
+
+# Adding a fortnox user to the local DB
+def add_user_to_local_db_from_fortnox(customer):
+    tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
+                       customer['Address1'], customer['Address2'], customer['City'],
+                       customer['Zipcode'], None, customer['FortnoxID'],
+                       None, None,
+                       None, None)
+    db.session.add(tmp_usr)
+    db.session.commit()
 
 
 @app.route('/')
@@ -395,30 +457,13 @@ def statistics():
                            plot_paths='',
                            data=ret)
 
-# Testar fortnox hämtning 2016-02-11/Filip, Adam, Kevin, Kim
-@app.route('/fortnox', methods=['GET'])
+
+# Syncs the local database with customers from fortnox
+@app.route('/crosstag/v1.0/fortnox/', methods=['GET'])
 def fortnox_users():
-
-    fortnoxData = Fortnox()
-
-    customers = fortnoxData.get_all_customers()
-    ret = []
-
-
-    for customer in customers:
-        ret.append(customer["CustomerNumber"])
-        ret.append(customer["Name"])
-        ret.append(customer["Email"])
-        ret.append(customer["Phone"])
-        ret.append(customer["Address1"])
-        ret.append(customer["Address2"])
-        ret.append(customer["City"])
-        ret.append(customer["ZipCode"])
-
-
-    return render_template('fortnox.html',
-                           plot_paths='',
-                           data=ret)
+    sync_from_fortnox()
+    flash('Local database synced with fortnox')
+    return redirect("/")
 
 
 # Testar fortnoxhämtning av en custom# er. 2016-02-12/ Kim, Patrik
@@ -549,13 +594,13 @@ def user_page(user_index=None):
 
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
+@app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
     user = User.query.filter_by(index=user_index).first()
     if user is None:
         return "she wrote upon it; no such number, no such zone"
     form = EditUser(obj=user)
     tagevents = get_tagevents_user_dict(user_index)
-
     if form.validate_on_submit():
         user.name = form.name.data
         user.email = form.email.data
@@ -572,6 +617,8 @@ def edit_user(user_index=None):
 
         db.session.commit()
         ##If we successfully edited the user, redirect back to userpage.
+        fortnoxData = Fortnox()
+        fortnoxData.update_customer(user)
         return redirect("/user_page/"+str(user.index))
 
         flash('Updated user: %s with id: %s' % (form.name.data, user.index))
@@ -593,9 +640,11 @@ def edit_user(user_index=None):
                                title='Edit User',
                                form=form,
                                data=user.dict(),
-                               tags=tagevents)
+                               tags=tagevents,
+                               error=form.errors)
     else:
         return "she wrote upon it; no such number, no such zone"
+
 
 
 @app.route('/%s/v1.0/link_user_to_tag/<user_index>/<tag_id>' % app_name,
