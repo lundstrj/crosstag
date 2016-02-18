@@ -13,9 +13,9 @@ class EditUser(Form):
     zip_code = TextField('zip_code', validators=[])
     tag_id = TextField('tag_id', validators=[])
     expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d', description="DESC1")
-    birth_date = DateField('birth_date', format='%Y-%m-%d', validators=[])
+    ssn = TextField('ssn', [validators.Length(max=13), validators.DataRequired()])
     gender = RadioField('gender', [validators.DataRequired()], choices=[('male', 'male'), ('female', 'female'),
-                                                                        ('unknown', 'unknown')])
+                                                                      ('unknown', 'unknown')])
     status = RadioField(
         'status',
         [Required()],

@@ -47,13 +47,13 @@ class User(db.Model):
     zip_code = db.Column(db.Integer)
     tag_id = db.Column(db.String(12))
     gender = db.Column(db.String(10))
-    birth_date = db.Column(db.Date)
+    ssn = db.Column(db.String(13))
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
     status = db.Column(db.String(50))
 
     def __init__(self, name, email, phone=None, address=None, address2=None, city=None, zip_code=None, tag_id=None, fortnox_id=None,
-                 expiry_date=None, birth_date=None, gender=None, status=None):
+                 expiry_date=None, ssn=None, gender=None, status=None):
         self.name = name
         self.email = email
         self.phone = phone
@@ -64,7 +64,7 @@ class User(db.Model):
         self.tag_id = tag_id
         self.fortnox_id = fortnox_id
         self.expiry_date = expiry_date
-        self.birth_date = birth_date
+        self.ssn = ssn
         self.gender = gender
         self.create_date = datetime.now()
         self.status = status
@@ -77,7 +77,7 @@ class User(db.Model):
                 'zip_code': self.zip_code, 'fortnox_id': self.fortnox_id,
                 'expiry_date': str(self.expiry_date),
                 'create_date': str(self.create_date),
-                'birth_date': str(self.birth_date),
+                'ssn': self.ssn,
                 'gender': self.gender,
                 'status': self.status
                 }
@@ -163,7 +163,7 @@ def sync_from_fortnox():
 
     for customer in customers:
         cust = {'FortnoxID': customer["CustomerNumber"],
-                'OrganisationsNumber': customer['OrganisationNumber'],
+                'OrganisationNumber': customer['OrganisationNumber'],
                 'Name': customer["Name"],
                 'Email': customer['Email'],
                 'Phone': customer['Phone'],
@@ -195,7 +195,7 @@ def update_user_in_local_db_from_fortnox(customer):
         user.city = customer['City']
         user.zip_code = customer['Zipcode']
         user.gender = user.gender
-        user.birth_date = user.birth_date
+        user.ssn = customer['OrganisationNumber']
         user.expiry_date = user.expiry_date
         user.create_date = user.create_date
 
@@ -207,7 +207,7 @@ def add_user_to_local_db_from_fortnox(customer):
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
                        customer['Address1'], customer['Address2'], customer['City'],
                        customer['Zipcode'], None, customer['FortnoxID'],
-                       None, None,
+                        None, customer['OrganisationNumber'],
                        None, None)
     db.session.add(tmp_usr)
     db.session.commit()
@@ -593,7 +593,7 @@ def user_page(user_index=None):
                                tags=tagevents)
 
 
-@app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
+
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
     user = User.query.filter_by(index=user_index).first()
@@ -611,8 +611,9 @@ def edit_user(user_index=None):
         user.zip_code = form.zip_code.data
         user.tag_id = form.tag_id.data
         user.gender = form.gender.data
-        user.birth_date = form.birth_date.data
+        user.ssn = form.ssn.data
         user.expiry_date = form.expiry_date.data
+        user.status = form.status.data
 
 
         db.session.commit()
