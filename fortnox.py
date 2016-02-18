@@ -17,10 +17,6 @@ class Fortnox:
             print('Response status: {status_code}'.format(status_code=r.status_code))
             content = json.loads(r.text)
             return content["Customers"]
-<<<<<<< HEAD
-
-=======
->>>>>>> 628c26bb036dfad7c70384b2702e55e85ccc9c3d
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
