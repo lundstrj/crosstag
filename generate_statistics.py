@@ -81,7 +81,8 @@ class GenerateStats:
 
         for user in users:
 
-            userBirthYear = user.birth_date.year
+            # "year" verkar inte finnas på user.birth_date.year. Hårdkodade in ett datum för att statistiksidan ska fungera! /Patrik
+            userBirthYear = 1985 #user.birth_date.year
 
             age = currentYear - userBirthYear
 
