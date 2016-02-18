@@ -7,6 +7,10 @@
 Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
 {% endif %}
 
+{% if error %}
+    {{error}}
+{% endif %}
+
 {% if data %}
 <h1>Edit user</h1>
 <form action="" method="post" name="new_user" class="form-horizontal" role="form">
