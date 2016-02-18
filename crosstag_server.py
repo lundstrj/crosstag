@@ -106,7 +106,7 @@ class Tagevent(db.Model):
 
     def dict(self):
         return {'index': self.index, 'timestamp': str(self.timestamp),
-                'tag_id': self.tag_id, 'uid':self.uid}
+                'tag_id': self.tag_id, 'uid': self.uid}
 
     def json(self):
         return jsonify(self.dict())

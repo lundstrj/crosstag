@@ -39,6 +39,11 @@
     <canvas id="tagChart" width="600" height="400"></canvas>
 </div>
 
+<div>
+    <h2>Tags per Days {{ data[4][28] }} </h2>
+    <canvas id="tagChart2" width="600" height="400"></canvas>
+</div>
+
 <!--JS script for the Charts, data is the information from the server-->
 <script>
     var chart = new statistic.Main();
@@ -46,6 +51,7 @@
     chart.genderTags({{ data }});
     chart.tagsByMonths({{ data }});
     chart.ageOfMembers({{ data }});
+    chart.tagsByDays({{ data }});
 </script>
 
 
