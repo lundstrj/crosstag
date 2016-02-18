@@ -12,12 +12,15 @@ class Fortnox:
         try:
             r = requests.get(
                 url = 'https://api.fortnox.se/3/customers',
-                headers = cfg.fortnox
+                headers=cfg.fortnox
             )
             print('Response status: {status_code}'.format(status_code=r.status_code))
             content = json.loads(r.text)
             return content["Customers"]
+<<<<<<< HEAD
 
+=======
+>>>>>>> 628c26bb036dfad7c70384b2702e55e85ccc9c3d
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
@@ -56,6 +59,36 @@ class Fortnox:
             )
             print('Response status: {status_code}'.format(status_code=r.status_code))
             print(user.name)
+            print(user.email)
+            print(user.address)
+            print(user.address2)
+            print(user.city)
+            print(user.zip_code)
+        except http.client.HTTPException as e:
+            print('Exception during POST-request')
+
+
+    #Kommer fungera sen när vår databas har fortnox ID på posterna! Patrik, Kim, Kevin
+    def update_customer(self, user):
+        try:
+            userId = str(user.fortnox_id)
+            r = requests.put(
+                url = 'https://api.fortnox.se/3/customers/'+userId+'/',
+                headers = cfg.fortnox,
+                data = json.dumps({
+                    "Customer": {
+                        "Name": user.name,
+                        "Email": user.email,
+                        "Address1": user.address,
+                        "Address2": user.address2,
+                        "City": user.city,
+                        "ZipCode": user.zip_code
+                    }
+                })
+            )
+            print('Response status: {status_code}'.format(status_code=r.status_code))
+            print(user.name)
+            print(userId)
             print(user.email)
             print(user.address)
             print(user.address2)

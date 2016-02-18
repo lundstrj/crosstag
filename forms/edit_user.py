@@ -19,5 +19,11 @@ class EditUser(Form):
         'gender',
         [Required()],
         choices=[('male', 'male'), ('female', 'female'),
-                 ('unknown', 'unknown')]
+                 ('unknown', 'unknown')])
+
+    status = RadioField(
+        'status',
+        [Required()],
+        choices=[('active', 'active'), ('inactive', 'inactive'), ('frozen', 'frozen'),
+                 ('free', 'free'), ('special', 'special')]
     )
