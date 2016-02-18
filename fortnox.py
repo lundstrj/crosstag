@@ -18,19 +18,6 @@ class Fortnox:
             content = json.loads(r.text)
             return content["Customers"]
 
-        connection = http.client.HTTPSConnection('api.fortnox.se')
-        connection.request('GET', '/3/customers/', None, cfg.fortnox)
-
-        try:
-            response = connection.getresponse()
-            content = response.read()
-            # Success
-            print('Response status ' + str(response.status))
-            print (content)
-
-            str_response = content.decode('utf-8')
-            obj = json.loads(str_response)
-            return obj["Customers"]
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
