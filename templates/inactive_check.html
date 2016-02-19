@@ -1,0 +1,30 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Check</h2>
+
+{% if hits %}
+	<table class="table table-hover">
+	<tbody>
+		<thead>
+			<tr>
+				<th>Name</th> <th>Tag_id</th> <th>Address</th> <th>Phone</th> <th>Last tag-day</th> <th>Days since tagged</th>
+			</tr>
+		</thead>
+				{% for hit in hits %}
+				<tr>
+					<td>{{hit['user'].name}}</td> <td>{{hit['user'].tag_id}}</td> <td>{{hit['user'].address}}</td> <td>{{hit['user'].phone}}</td> <td>{{ hit['event'] }}</td> <td>{{ hit['days'] }}</td>
+				</tr>
+				{% endfor %}
+	</tbody>
+	</table>
+{% endif %}
+
+
+
+
+
+
+{% endblock %}

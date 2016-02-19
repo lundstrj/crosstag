@@ -349,6 +349,9 @@ def add_new_user():
                            form=form)
 
 
+
+
+
 @app.route('/tagin_user', methods=['GET', 'POST'])
 def tagin_user():
     form = NewTag(csrf_enabled=False)
@@ -439,6 +442,44 @@ def get_tagevents_user_dict(user_index):
         ret.append(js)
     ret.reverse()
     return ret
+
+
+@app.route('/inactive_check', methods=['GET'])
+def inactive_check():
+
+    users = User.query.all()
+    arr = []
+    testarr = []
+
+    two_weeks = datetime.now() - timedelta(weeks=2)
+
+    for user in users:
+
+        valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()
+        valid_tagevent.reverse()
+        for event in valid_tagevent:
+
+            if event.timestamp < two_weeks:
+
+                day_intervall = datetime.now() - event.timestamp
+
+                temp = int(str(day_intervall)[:3])
+
+                if temp >= 99:
+
+                    temp = str(99) + "+"
+
+
+                testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': temp}
+                arr.append(testarr)
+
+                break
+
+
+    return render_template('inactive_check.html',
+                           title='Check',
+                           hits=arr)
+
 
 
 @app.route('/statistics', methods=['GET'])
