@@ -14,6 +14,7 @@ class GenerateStats:
         data.append(self.get_taginsByMonth(tagevent))
         data.append(self.get_ageData(users))
         data.append(self.get_taginsByDay(tagevent))
+        data.append(self.get_taginsByHour(tagevent))
         return data
 
     def get_allGenderData(self, users):
@@ -80,8 +81,11 @@ class GenerateStats:
 
         dayArr = [0]*daysInMonth
 
+
         fulHack = "-"
-        fulHack += "0"
+        if int(currentMonth) < 10:
+            fulHack += "0"
+
         fulHack += currentMonth
         fulHack += "-"
 
@@ -97,6 +101,28 @@ class GenerateStats:
         #dayArr.append(currentMonth)
         return dayArr
 
+    #Add optional parameter for user to be able to choose year, month and day
+    def get_taginsByHour(self, event):
+        currentYear = self.get_currentYearString()
+        currentMonth = self.get_currentMonthString()
+        currentDay = self.get_currentDayString()
+
+        timestamps = event.query.all()
+
+        hourArr = [0]*24
+
+        for timestamp in timestamps:
+
+            for x in range(1, 25):
+                if int(currentYear) == timestamp.timestamp.year:
+                  if int(currentMonth) == timestamp.timestamp.month:
+                    if int(currentDay) == timestamp.timestamp.day:
+                        if x == timestamp.timestamp.hour:
+                            hourArr[x-1] += 1
+
+        return hourArr
+
+
 
 
     def get_ageData(self, users):
@@ -110,6 +136,7 @@ class GenerateStats:
         currentYear = int(self.get_currentYearString())
         ageArr = [0, 0, 0, 0, 0, 0]
 
+#a_string[:4]
         for user in users:
 
             # "year" verkar inte finnas på user.birth_date.year. Hårdkodade in ett datum för att statistiksidan ska fungera! /Patrik
@@ -143,5 +170,10 @@ class GenerateStats:
          now = datetime.now()
          currentMonth = str(now.month)
 
-
          return currentMonth
+
+    def get_currentDayString(self):
+        now = datetime.now()
+        currentDay = str(now.day)
+
+        return currentDay
