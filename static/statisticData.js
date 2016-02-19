@@ -132,39 +132,7 @@ statistic.Main.prototype.tagsByDays = function(stats) {
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
             data: dataArr,
-            /*
-                [stats[4][0],
-                stats[4][1],
-                stats[4][2],
-                stats[4][3],
-                stats[4][4],
-                stats[4][5],
-                stats[4][6],
-                stats[4][7],
-                stats[4][8],
-                stats[4][9],
-                stats[4][10],
-                stats[4][11],
-                stats[4][12],
-                stats[4][13],
-                stats[4][14],
-                stats[4][15],
-                stats[4][16],
-                stats[4][17],
-                stats[4][18],
-                stats[4][19],
-                stats[4][20],
-                stats[4][21],
-                stats[4][22],
-                stats[4][23],
-                stats[4][24],
-                stats[4][25],
-                stats[4][26],
-                stats[4][27],
-                stats[4][28],
-                stats[4][29],
-                stats[4][30]]
-                */
+
         },
       ]
     };
@@ -174,6 +142,43 @@ statistic.Main.prototype.tagsByDays = function(stats) {
     }
 
      var chart1 = document.getElementById("tagChart2").getContext("2d");
+     new Chart(chart1).Bar(data, options);
+
+}
+
+statistic.Main.prototype.tagsByHours = function(stats) {
+    var arr = [];
+    var dataArr = [];
+
+    for(var i = 1; i < stats[5].length+1; i++)
+    {
+        arr.push(i);
+        dataArr.push(stats[5][i-1]);
+
+    }
+
+    var data = {
+    labels: arr,
+    datasets: [
+        {
+            label: "Tags by hour",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(0, 114, 255, 0.9)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: dataArr,
+
+        },
+      ]
+    };
+    var options = {
+	segmentShowStroke : false,
+	animateScale : true
+    }
+
+     var chart1 = document.getElementById("tagChart3").getContext("2d");
      new Chart(chart1).Bar(data, options);
 
 }
