@@ -485,7 +485,28 @@ def inactive_check():
 @app.route('/statistics', methods=['GET'])
 def statistics():
 
+
     gs = GenerateStats()
+    #Chosenyear, chosenmonth, chosenday
+
+    # Fetch the data from the database.
+    users = User.query.all()
+    event = Tagevent
+
+    # Send the data to a method who returns an multi dimensional array with statistics.
+    ret = gs.get_data(users, event)
+
+    return render_template('statistics.html',
+                           plot_paths='',
+                           data=ret)
+
+
+@app.route('/statistics/<date>', methods=['GET'])
+def statistics_by_date(date):
+
+
+    gs = GenerateStats()
+    #Chosenyear, chosenmonth, chosenday
 
     # Fetch the data from the database.
     users = User.query.all()

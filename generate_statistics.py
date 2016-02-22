@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from calendar import monthrange
+import calendar
 
 class GenerateStats:
 
@@ -13,8 +14,8 @@ class GenerateStats:
         data.append(self.get_genderTagData(users, one_month_events))
         data.append(self.get_taginsByMonth(tagevent))
         data.append(self.get_ageData(users))
-        data.append(self.get_taginsByDay(tagevent))
-        data.append(self.get_taginsByHour(tagevent))
+        data.append(self.get_taginsByDay(tagevent))#Send year and month
+        data.append(self.get_taginsByHour(tagevent))#send year, month and day
         return data
 
     def get_allGenderData(self, users):
@@ -74,13 +75,14 @@ class GenerateStats:
     def get_taginsByDay(self, event):
         currentYear = self.get_currentYearString()
         currentMonth = self.get_currentMonthString()
+        currentMonthName = calendar.month_name[int(currentMonth)]
+
 
         uselessTuple = monthrange(int(currentYear), int(currentMonth))
 
         daysInMonth = uselessTuple[1]
 
         dayArr = [0]*daysInMonth
-
 
         fulHack = "-"
         if int(currentMonth) < 10:
@@ -98,7 +100,6 @@ class GenerateStats:
 
                 if x == timestamp.timestamp.day:
                     dayArr[x-1] += 1
-        #dayArr.append(currentMonth)
         return dayArr
 
     #Add optional parameter for user to be able to choose year, month and day
@@ -139,8 +140,10 @@ class GenerateStats:
 #a_string[:4]
         for user in users:
 
+            #Riktiga medlemmar har 12-siffrigt pnummer.
+            #Företag har 10-siffrigt. VIKTIGT!
             # "year" verkar inte finnas på user.birth_date.year. Hårdkodade in ett datum för att statistiksidan ska fungera! /Patrik
-            userBirthYear = 1985 #user.birth_date.year
+            userBirthYear = 1985
 
             age = currentYear - userBirthYear
 

@@ -120,6 +120,8 @@ statistic.Main.prototype.tagsByDays = function(stats) {
         stats[4][i-1] = i;
     }
 
+
+
     var data = {
     labels: arr,
     datasets: [
@@ -154,7 +156,6 @@ statistic.Main.prototype.tagsByHours = function(stats) {
     {
         arr.push(i);
         dataArr.push(stats[5][i-1]);
-
     }
 
     var data = {

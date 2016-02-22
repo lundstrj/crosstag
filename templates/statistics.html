@@ -29,8 +29,36 @@
 
 </div>
 
+<div>
+<h4>Click box to choose date</h4>
+<input type="text" id="datepicker">
+
+<a onclick="postDate()">See</a>
+<script>
+    var picker = new Pikaday({field: document.getElementById('datepicker')})
+    picker.setDate(new Date());
 
 
+    postDate = function()
+    {
+       // var year = picker.getDate();
+        //indow.location.href="statistics"+"/"+year;
+        //return false;
+    }
+
+    /*document.getElementById('pickDateLink').onclick = function()
+    {
+        window.location = "statistics/";
+        //document.getElementById('pickDateLink').setAttribute.href =  "statistics/hej/";
+        return false;
+    }*/
+       // picker.toString();
+        //return picker.toString();
+
+
+
+</script>
+</div>
 
 
 
