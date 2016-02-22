@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../static/favicon.ico">
+
+    {% if title %}
+    <title>{{title}} - Crosstag</title>
+    {% else %}
+    <title>Crosstag</title>
+    {% endif %}
+    {% block scripts %}{% endblock%}
+    <!-- Bootstrap core CSS -->
+    <link href="../../static/bootstrap.css" rel="stylesheet">
+    <link href="../../static/jumbotron-narrow.css" rel="stylesheet">
+    <script type="text/javascript" src="../../static/ie-emulation-modes-warning.js"></script>
+    <script type="text/javascript" src="../../static/d3.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+   <script type="text/javascript" src="../../static/statisticData.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+          </ul>
+        </nav>
+        <!--<h3 class="text-muted">Crosstag</h3> -->
+      </div>
+
+
+        {% if hits %}
+
+        {% for hit in hits %}
+                {{hit}}
+        {% endfor %}
+
+        {% endif %}
+
+      <footer class="footer">
+        <p>&copy; Crosstag 2013-2016</p>
+      </footer>
+
+    </div> <!-- /container -->
+    <script src="../../static/ie10-viewport-bug-workaround.js"></script>
+  </body>
+</html>
