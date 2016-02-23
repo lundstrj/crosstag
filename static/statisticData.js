@@ -102,7 +102,21 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
 
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
+    showTooltips: false,
+    onAnimationComplete: function () {
+
+        var ctx = this.chart.ctx;
+        ctx.font = this.scale.font;
+        ctx.fillStyle = this.scale.textColor
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        this.datasets.forEach(function (dataset) {
+            dataset.bars.forEach(function (bar) {
+                ctx.fillText(bar.value, bar.x, bar.y - 5);
+            });
+        })
+    }
     }
 
      var chart1 = document.getElementById("tagChart").getContext("2d");
@@ -140,7 +154,22 @@ statistic.Main.prototype.tagsByDays = function(stats) {
     };
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
+    showTooltips: false,
+    onAnimationComplete: function () {
+
+        var ctx = this.chart.ctx;
+        ctx.font = this.scale.font;
+        ctx.fillStyle = this.scale.textColor
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        this.datasets.forEach(function (dataset) {
+            dataset.bars.forEach(function (bar) {
+                ctx.fillText(bar.value, bar.x, bar.y - 5);
+            });
+        })
+    }
+
     }
 
      var chart1 = document.getElementById("tagChart2").getContext("2d");
@@ -176,7 +205,21 @@ statistic.Main.prototype.tagsByHours = function(stats) {
     };
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
+    showTooltips: false,
+    onAnimationComplete: function () {
+
+        var ctx = this.chart.ctx;
+        ctx.font = this.scale.font;
+        ctx.fillStyle = this.scale.textColor
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        this.datasets.forEach(function (dataset) {
+            dataset.bars.forEach(function (bar) {
+                ctx.fillText(bar.value, bar.x, bar.y - 5);
+            });
+        })
+    }
     }
 
      var chart1 = document.getElementById("tagChart3").getContext("2d");
