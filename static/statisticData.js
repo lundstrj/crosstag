@@ -105,8 +105,81 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
 	animateScale : true
     }
 
-
      var chart1 = document.getElementById("tagChart").getContext("2d");
+     new Chart(chart1).Bar(data, options);
+}
+
+statistic.Main.prototype.tagsByDays = function(stats) {
+    //renders a bar chart with the tags per days
+    var arr = [];
+    var dataArr = [];
+    for(var i = 1; i < stats[4].length+1; i++)
+    {
+        arr.push(i);
+        dataArr.push(stats[4][i-1]);
+        stats[4][i-1] = i;
+    }
+
+
+
+    var data = {
+    labels: arr,
+    datasets: [
+        {
+            label: "Tags this month",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(0, 114, 255, 0.9)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: dataArr,
+
+        },
+      ]
+    };
+    var options = {
+	segmentShowStroke : false,
+	animateScale : true
+    }
+
+     var chart1 = document.getElementById("tagChart2").getContext("2d");
+     new Chart(chart1).Bar(data, options);
+
+}
+
+statistic.Main.prototype.tagsByHours = function(stats) {
+    var arr = [];
+    var dataArr = [];
+
+    for(var i = 1; i < stats[5].length+1; i++)
+    {
+        arr.push(i);
+        dataArr.push(stats[5][i-1]);
+    }
+
+    var data = {
+    labels: arr,
+    datasets: [
+        {
+            label: "Tags by hour",
+            fillColor: "rgba(220,220,220,0.2)",
+            strokeColor: "rgba(0, 114, 255, 0.9)",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: dataArr,
+
+        },
+      ]
+    };
+    var options = {
+	segmentShowStroke : false,
+	animateScale : true
+    }
+
+     var chart1 = document.getElementById("tagChart3").getContext("2d");
      new Chart(chart1).Bar(data, options);
 
 }

@@ -1,8 +1,6 @@
-fortnox = {'Authorization-Code': '',
-           'Client-Secret': ''}
+fortnox = { "Access-Token": '',
+            "Client-Secret": '',
+            "Content-Type": 'application/json',
+            "Accept": 'application/json'}
 
-preprocessing_queue = [preprocessing.scale_and_center,
-                       preprocessing.dot_reduction,
-                       preprocessing.connect_lines]
-use_anonymous = True
 

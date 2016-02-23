@@ -7,6 +7,9 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../static/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../static/datepicker.css">
+      <link href="../../static/bootstrap.css" rel="stylesheet">
+    <link href="../../static/jumbotron-narrow.css" rel="stylesheet">
 
     {% if title %}
     <title>{{title}} - Crosstag</title>
@@ -15,13 +18,19 @@
     {% endif %}
     {% block scripts %}{% endblock%}
     <!-- Bootstrap core CSS -->
-    <link href="../../static/bootstrap.css" rel="stylesheet">
-    <link href="../../static/jumbotron-narrow.css" rel="stylesheet">
+
+
+    <script type="text/javascript" src="../../static/bootstrap.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.js"></script>
     <script type="text/javascript" src="../../static/ie-emulation-modes-warning.js"></script> 
     <script type="text/javascript" src="../../static/d3.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-   <script type="text/javascript" src="../../static/statisticData.js"></script>
+    <script type="text/javascript" src="../../static/statisticData.js"></script>
+
+
   </head>
+
 
   <body>
     <div class="container">
@@ -35,7 +44,7 @@
             <li role="presentation"><a href="/all_tagevents">All tagevents</a></li>
             <li role="presentation"><a href="/last_tagins">Last tagins</a></li>
             <li role="presentation"><a href="/statistics">Statistics</a></li>
-            <li role="presentation"><a href="/tagin_user">Tagin</a></li>
+            <li role="presentation"><a href="/crosstag/v1.0/fortnox/">Sync database</a></li>
           </ul>
         </nav>
         <!--<h3 class="text-muted">Crosstag</h3> -->

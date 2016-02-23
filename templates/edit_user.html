@@ -7,6 +7,10 @@
 Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_tag/{{message[0]}}">YES</a>
 {% endif %}
 
+{% if error %}
+    {{error}}
+{% endif %}
+
 {% if data %}
 <h1>Edit user</h1>
 <form action="" method="post" name="new_user" class="form-horizontal" role="form">
@@ -64,9 +68,9 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                 </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Birth date</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">Social Security Number</label>
                 <div class="col-sm-10">
-                    {{form.birth_date(size=80, value=data.birth_date)}}
+                    {{form.ssn(size=80, value=data.ssn)}}
                 </div>
         </div>
         <div class="form-group">
@@ -74,6 +78,13 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                 <div class="col-sm-10">
                     {{form.expiry_date(size=80, value=data.expiry_date)}}
                 </div>
+        </div>
+
+        <label for="inputEmail3" class="col-sm-2 control-label">Membership Status</label>
+        <br>
+        <br>
+          <div class="radio">
+          {{form.status(size=80, value=data.gender)}}
         </div>
 
     <div class="form-group">
