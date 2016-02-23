@@ -25,12 +25,27 @@
         <h4>Age</h4>
         <canvas id="ageChart" width="250" height="215"></canvas>
     </div>
-
-
 </div>
+  <div class="container">
+            <div class="hero-unit">
+                <input  type="input" placeholder="click to show datepicker"  id="example1">
+            </div>
+        </div>
 
+<script type="text/javascript">
 
+    $('#example1').datepicker()
 
+        .on('changeDate', function(e)
+        {
+            //format: "dd/mm/yyyy"
+            var date = e.format();
+            window.location = "/" + date;
+            // alert(e.format());
+        });
+
+                    //format: "dd/mm/yyyy"
+</script>
 
 
 

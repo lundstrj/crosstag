@@ -493,14 +493,43 @@ def inactive_check():
 @app.route('/statistics', methods=['GET'])
 def statistics():
 
+    default_date = datetime.now()
+
+    defaultDateArray = {'year': str(default_date.year), 'month': str(default_date.month), 'day':str(default_date.day)}
+
+    #return defaultDateArray['month']
+    #return default_date
     gs = GenerateStats()
+    #Chosenyear, chosenmonth, chosenday
 
     # Fetch the data from the database.
     users = User.query.all()
     event = Tagevent
 
     # Send the data to a method who returns an multi dimensional array with statistics.
-    ret = gs.get_data(users, event)
+    ret = gs.get_data(users, event, defaultDateArray)
+
+    return render_template('statistics.html',
+                           plot_paths='',
+                           data=ret)
+
+
+@app.route('/<_month>/<_day>/<_year>', methods=['GET'])
+def statistics_by_date(_month, _day, _year):
+
+    chosenDateArray = {'year': _year, 'month': _month, 'day': _day}
+
+
+
+    gs = GenerateStats()
+    #Chosenyear, chosenmonth, chosenday
+
+    # Fetch the data from the database.
+    users = User.query.all()
+    event = Tagevent
+
+    # Send the data to a method who returns an multi dimensional array with statistics.
+    ret = gs.get_data(users, event, chosenDateArray)
 
     return render_template('statistics.html',
                            plot_paths='',

@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta
 from calendar import monthrange
+import calendar
 
 class GenerateStats:
 
-    def get_data(self, users, tagevent):
+    def get_data(self, users, tagevent, chosenDateArray):
         data = []
 
         one_month = datetime.now() - timedelta(weeks=4)
@@ -11,10 +12,10 @@ class GenerateStats:
 
         data.append(self.get_allGenderData(users))
         data.append(self.get_genderTagData(users, one_month_events))
-        data.append(self.get_taginsByMonth(tagevent))
+        data.append(self.get_taginsByMonth(tagevent, chosenDateArray))
         data.append(self.get_ageData(users))
-        data.append(self.get_taginsByDay(tagevent))
-        data.append(self.get_taginsByHour(tagevent))
+        data.append(self.get_taginsByDay(tagevent, chosenDateArray))#Send year and month
+        data.append(self.get_taginsByHour(tagevent, chosenDateArray))#send year, month and day
         return data
 
     def get_allGenderData(self, users):
@@ -54,12 +55,12 @@ class GenerateStats:
 
         return [maleCounter, femaleCounter, unknownCounter]
 
-    def get_taginsByMonth(self, event):
+    def get_taginsByMonth(self, event, chosenDateArray):
         yearArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        currentYear = self.get_currentYearString()
+        currentYear = chosenDateArray['year']
 
-        timestamps = event.query.filter(event.timestamp.contains(currentYear)).all()
+        timestamps = event.query.filter(event.timestamp.contains(currentYear))
 
         for timestamp in timestamps:
 
@@ -71,9 +72,11 @@ class GenerateStats:
         yearArr.append(int(currentYear))
         return yearArr
 
-    def get_taginsByDay(self, event):
-        currentYear = self.get_currentYearString()
-        currentMonth = self.get_currentMonthString()
+    def get_taginsByDay(self, event, chosenDateArray):
+
+        currentYear = chosenDateArray['year']
+        currentMonth = chosenDateArray['month']
+        currentDay = chosenDateArray['day']
 
         uselessTuple = monthrange(int(currentYear), int(currentMonth))
 
@@ -81,33 +84,28 @@ class GenerateStats:
 
         dayArr = [0]*daysInMonth
 
-
-        fulHack = "-"
-        if int(currentMonth) < 10:
-            fulHack += "0"
-
-        fulHack += currentMonth
-        fulHack += "-"
-
-        timestamps = event.query.filter(event.timestamp.contains(fulHack)).all()
+        timestamps = event.query.filter(event.timestamp.contains(currentYear))
 
         #timestamps = event.query.all()
         for timestamp in timestamps:
 
             for x in range(1, daysInMonth+1):
-
-                if x == timestamp.timestamp.day:
-                    dayArr[x-1] += 1
-        #dayArr.append(currentMonth)
+                if int(currentMonth) == timestamp.timestamp.month:
+                    if x == timestamp.timestamp.day:
+                        dayArr[x-1] += 1
         return dayArr
 
     #Add optional parameter for user to be able to choose year, month and day
-    def get_taginsByHour(self, event):
-        currentYear = self.get_currentYearString()
+    def get_taginsByHour(self, event, chosenDateArray):
+        '''currentYear = self.get_currentYearString()
         currentMonth = self.get_currentMonthString()
-        currentDay = self.get_currentDayString()
+        currentDay = self.get_currentDayString()'''
 
-        timestamps = event.query.all()
+        currentYear = chosenDateArray['year']
+        currentMonth = chosenDateArray['month']
+        currentDay = chosenDateArray['day']
+
+        timestamps = event.query.filter(event.timestamp.contains(currentYear))
 
         hourArr = [0]*24
 
@@ -139,8 +137,10 @@ class GenerateStats:
 #a_string[:4]
         for user in users:
 
+            #Riktiga medlemmar har 12-siffrigt pnummer.
+            #Företag har 10-siffrigt. VIKTIGT!
             # "year" verkar inte finnas på user.birth_date.year. Hårdkodade in ett datum för att statistiksidan ska fungera! /Patrik
-            userBirthYear = 1985 #user.birth_date.year
+            userBirthYear = 1985
 
             age = currentYear - userBirthYear
 
@@ -177,3 +177,12 @@ class GenerateStats:
         currentDay = str(now.day)
 
         return currentDay
+
+
+''' if len(currentMonth) < 2:
+fulHack = "-"
+if int(currentMonth) < 10:
+    fulHack += "0"
+
+fulHack += currentMonth
+fulHack += "-"'''
