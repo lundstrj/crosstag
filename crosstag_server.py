@@ -351,6 +351,14 @@ def add_new_user():
 
 
 
+@app.route('/tagevent', methods=['GET'])
+def tagevents():
+
+        return render_template('tagevent.html',
+                               title='Tagevents',
+                                )
+
+
 
 @app.route('/tagin_user', methods=['GET', 'POST'])
 def tagin_user():
