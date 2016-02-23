@@ -14,13 +14,16 @@
     <title>Crosstag</title>
     {% endif %}
     {% block scripts %}{% endblock%}
+
     <!-- Bootstrap core CSS -->
     <link href="../../static/bootstrap.css" rel="stylesheet">
     <link href="../../static/jumbotron-narrow.css" rel="stylesheet">
     <script type="text/javascript" src="../../static/ie-emulation-modes-warning.js"></script>
     <script type="text/javascript" src="../../static/d3.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-   <script type="text/javascript" src="../../static/statisticData.js"></script>
+    <script type="text/javascript" src="../../static/statisticData.js"></script>
+    <script type="text/javascript" src="../../static/static_page.js"></script>
+
   </head>
   <body>
     <div class="container">
@@ -31,6 +34,8 @@
         </nav>
         <!--<h3 class="text-muted">Crosstag</h3> -->
       </div>
+
+        <div id="tagins"></div>
 
 
         {% if hits %}
