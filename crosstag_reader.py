@@ -56,6 +56,9 @@ class CrosstagReader(object):
                     res = requests.get("http://%s:%d/crosstag/v1.0/tagevent/%s"
                                        % (server, port, tag_nbr), timeout=3)
                     now = datetime.now()
+
+
+
                     logging.info("%s reader tagging result: [%s]" % (now, res.text))
                 except:  # catch *all* exceptions
                     e = sys.exc_info()[0]

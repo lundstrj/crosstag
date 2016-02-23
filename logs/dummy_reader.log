@@ -807,3 +807,285 @@ INFO:root:2016-02-12 11:35:30.344633 reader tagging result: [2016-02-12 11:35:30
 INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
 DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11112222 HTTP/1.1" 200 49
 INFO:root:2016-02-12 11:36:02.496632 reader tagging result: [2016-02-12 11:36:02.471554 server tagged 11112222]
+INFO:urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:urllib3.connectionpool:Setting read timeout to 3
+DEBUG:urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
+INFO:root:2016-02-22 13:29:23.503823 reader tagging result: [2016-02-22 13:29:23.379072 server tagged 11111111]
+INFO:urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:urllib3.connectionpool:Setting read timeout to 3
+DEBUG:urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/22224444 HTTP/1.1" 200 49
+INFO:root:2016-02-22 13:29:37.852550 reader tagging result: [2016-02-22 13:29:37.639530 server tagged 22224444]
+INFO:root:2016-02-22 14:31:39.054765 reader exiting due to user command
+INFO:urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:urllib3.connectionpool:Setting read timeout to 3
+DEBUG:urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
+INFO:root:2016-02-22 14:32:07.581100 reader tagging result: [2016-02-22 14:32:07.345637 server tagged 11111111]
+INFO:urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:urllib3.connectionpool:Setting read timeout to 3
+DEBUG:urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 500 None
+INFO:root:2016-02-22 14:33:07.397849 reader tagging result: [<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>TypeError: 'User' object is not iterable // Werkzeug Debugger</title>
+    <link rel="stylesheet" href="?__debugger__=yes&amp;cmd=resource&amp;f=style.css" type="text/css">
+    <!-- We need to make sure this has a favicon so that the debugger does not by
+         accident trigger a request to /favicon.ico which might change the application
+         state. -->
+    <link rel="shortcut icon" href="?__debugger__=yes&amp;cmd=resource&amp;f=console.png">
+    <script type="text/javascript" src="?__debugger__=yes&amp;cmd=resource&amp;f=jquery.js"></script>
+    <script type="text/javascript" src="?__debugger__=yes&amp;cmd=resource&amp;f=debugger.js"></script>
+    <script type="text/javascript">
+      var TRACEBACK = 139620560043368,
+          CONSOLE_MODE = false,
+          EVALEX = true,
+          SECRET = "HCwHm6iZKkFUd94AyD2z";
+    </script>
+  </head>
+  <body>
+    <div class="debugger">
+<h1>builtins.TypeError</h1>
+<div class="detail">
+  <p class="errormsg">TypeError: 'User' object is not iterable</p>
+</div>
+<h2 class="traceback">Traceback <em>(most recent call last)</em></h2>
+<div class="traceback">
+  
+  <ul><li><div class="frame" id="frame-139620560043816">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1836</em>,
+      in <code class="function">__call__</code></h4>
+  <pre>return self.wsgi_app(environ, start_response)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620560043480">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1820</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <pre>response = self.make_response(self.handle_exception(e))</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890696">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1403</em>,
+      in <code class="function">handle_exception</code></h4>
+  <pre>reraise(exc_type, exc_value, tb)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890416">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/_compat.py"</cite>,
+      line <em class="line">33</em>,
+      in <code class="function">reraise</code></h4>
+  <pre>raise value</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559892208">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1817</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <pre>response = self.full_dispatch_request()</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559892376">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1477</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <pre>rv = self.handle_user_exception(e)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890248">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1381</em>,
+      in <code class="function">handle_user_exception</code></h4>
+  <pre>reraise(exc_type, exc_value, tb)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559891088">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/_compat.py"</cite>,
+      line <em class="line">33</em>,
+      in <code class="function">reraise</code></h4>
+  <pre>raise value</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559891312">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1475</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <pre>rv = self.dispatch_request()</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559891256">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1461</em>,
+      in <code class="function">dispatch_request</code></h4>
+  <pre>return self.view_functions[rule.endpoint](**req.view_args)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559889520">
+  <h4>File <cite class="filename">"/home/filip/Documents/crosstag/crosstag_server.py"</cite>,
+      line <em class="line">229</em>,
+      in <code class="function">tagevent</code></h4>
+  <pre>static_tagin(event.uid)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559891424">
+  <h4>File <cite class="filename">"/home/filip/Documents/crosstag/crosstag_server.py"</cite>,
+      line <em class="line">277</em>,
+      in <code class="function">static_tagin</code></h4>
+  <pre>hits=user)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559889800">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/templating.py"</cite>,
+      line <em class="line">128</em>,
+      in <code class="function">render_template</code></h4>
+  <pre>context, ctx.app)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559891816">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/templating.py"</cite>,
+      line <em class="line">110</em>,
+      in <code class="function">_render</code></h4>
+  <pre>rv = template.render(context)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890024">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/jinja2/environment.py"</cite>,
+      line <em class="line">969</em>,
+      in <code class="function">render</code></h4>
+  <pre>return self.environment.handle_exception(exc_info, True)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890584">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/jinja2/environment.py"</cite>,
+      line <em class="line">742</em>,
+      in <code class="function">handle_exception</code></h4>
+  <pre>reraise(exc_type, exc_value, tb)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890752">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/jinja2/_compat.py"</cite>,
+      line <em class="line">36</em>,
+      in <code class="function">reraise</code></h4>
+  <pre>raise value.with_traceback(tb)</pre>
+</div>
+
+<li><div class="frame" id="frame-139620559890472">
+  <h4>File <cite class="filename">"/home/filip/Documents/crosstag/templates/static_tagin.html"</cite>,
+      line <em class="line">38</em>,
+      in <code class="function">&lt;module&gt;</code></h4>
+  <pre>{% for hit in hits %}</pre>
+</div>
+</ul>
+  <blockquote>TypeError: 'User' object is not iterable</blockquote>
+</div>
+
+<div class="plain">
+  <form action="/?__debugger__=yes&amp;cmd=paste" method="post">
+    <p>
+      <input type="hidden" name="language" value="pytb">
+      This is the Copy/Paste friendly version of the traceback.  <span
+      class="pastemessage">You can also paste this traceback into
+      a <a href="https://gist.github.com/">gist</a>:
+      <input type="submit" value="create paste"></span>
+    </p>
+    <textarea cols="50" rows="10" name="code" readonly>Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1836, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1820, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1403, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/filip/Documents/crosstag/crosstag_server.py", line 229, in tagevent
+    static_tagin(event.uid)
+  File "/home/filip/Documents/crosstag/crosstag_server.py", line 277, in static_tagin
+    hits=user)
+  File "/usr/local/lib/python3.4/dist-packages/flask/templating.py", line 128, in render_template
+    context, ctx.app)
+  File "/usr/local/lib/python3.4/dist-packages/flask/templating.py", line 110, in _render
+    rv = template.render(context)
+  File "/usr/local/lib/python3.4/dist-packages/jinja2/environment.py", line 969, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/usr/local/lib/python3.4/dist-packages/jinja2/environment.py", line 742, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/jinja2/_compat.py", line 36, in reraise
+    raise value.with_traceback(tb)
+  File "/home/filip/Documents/crosstag/templates/static_tagin.html", line 38, in <module>
+    {% for hit in hits %}
+TypeError: 'User' object is not iterable</textarea>
+  </form>
+</div>
+<div class="explanation">
+  The debugger caught an exception in your WSGI application.  You can now
+  look at the traceback which led to the error.  <span class="nojavascript">
+  If you enable JavaScript you can also use additional features such as code
+  execution (if the evalex feature is enabled), automatic pasting of the
+  exceptions and much more.</span>
+</div>
+      <div class="footer">
+        Brought to you by <strong class="arthur">DON'T PANIC</strong>, your
+        friendly Werkzeug powered traceback interpreter.
+      </div>
+    </div>
+  </body>
+</html>
+
+<!--
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1836, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1820, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1403, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/filip/Documents/crosstag/crosstag_server.py", line 229, in tagevent
+    static_tagin(event.uid)
+  File "/home/filip/Documents/crosstag/crosstag_server.py", line 277, in static_tagin
+    hits=user)
+  File "/usr/local/lib/python3.4/dist-packages/flask/templating.py", line 128, in render_template
+    context, ctx.app)
+  File "/usr/local/lib/python3.4/dist-packages/flask/templating.py", line 110, in _render
+    rv = template.render(context)
+  File "/usr/local/lib/python3.4/dist-packages/jinja2/environment.py", line 969, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "/usr/local/lib/python3.4/dist-packages/jinja2/environment.py", line 742, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/jinja2/_compat.py", line 36, in reraise
+    raise value.with_traceback(tb)
+  File "/home/filip/Documents/crosstag/templates/static_tagin.html", line 38, in <module>
+    {% for hit in hits %}
+TypeError: 'User' object is not iterable
+
+-->
+]
+INFO:urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:urllib3.connectionpool:Setting read timeout to 3
