@@ -8,15 +8,35 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 {% endif %}
 
 {% if error %}
-    {{error}}
+
+{% if error["name"] %}
+    <p style="color:red;">Not a valid Name.</p>
+{% endif %}
+{% if error["address"] %}
+    <p style="color:red;">You need to enter an Address.</p>
+{% endif %}
+{% if error["city"] %}
+    <p style="color:red;">You need to enter a City.</p>
+{% endif %}
+{% if error["gender"] %}
+    <p style="color:red;">Choose a gender.</p>
+{% endif %}
+{% if error["expiry_date"] %}
+    <p style="color:red;">Enter a valid Expiry date ex:[2018-06-25]</p>
+{% endif %}
+{% if error["status"] %}
+    <p style="color:red;">Choose a Membership status</p>
+{% endif %}
 {% endif %}
 
 {% if data %}
 <h1>Edit user</h1>
 <form action="" method="post" name="new_user" class="form-horizontal" role="form">
     {{form.hidden_tag()}}
+        <p>* Required Fields</p>
+
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">Name*</label>
                 <div class="col-sm-10">
                     {{form.name(size=80, value=data.name)}}
                 </div>
@@ -35,7 +55,7 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
         </div>
 
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Address</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">Address*</label>
                 <div class="col-sm-10">
                     {{form.address(size=80, value=data.address)}}
                 </div>
@@ -47,7 +67,7 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                 </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">City</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">City*</label>
                 <div class="col-sm-10">
                     {{form.city(size=80, value=data.city)}}
                 </div>
@@ -67,20 +87,15 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                     {{form.tag_id(size=80, value=data.tag_id)}}
                 </div>
         </div>
+
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Social Security Number</label>
-                <div class="col-sm-10">
-                    {{form.ssn(size=80, value=data.ssn)}}
-                </div>
-        </div>
-        <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">Expiry date</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">Expiry date*</label>
                 <div class="col-sm-10">
                     {{form.expiry_date(size=80, value=data.expiry_date)}}
                 </div>
         </div>
 
-        <label for="inputEmail3" class="col-sm-2 control-label">Membership Status</label>
+        <label for="inputEmail3" class="col-sm-2 control-label">Membership Status*</label>
         <br>
         <br>
           <div class="radio">

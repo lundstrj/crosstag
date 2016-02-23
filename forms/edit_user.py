@@ -4,7 +4,7 @@ from wtforms.validators import Required
 
 
 class EditUser(Form):
-    name = TextField('name', [validators.Length(max=80, message='hej'), validators.DataRequired()])
+    name = TextField('name', [validators.Length(max=80), validators.DataRequired()])
     email = TextField('email', [validators.Length(max=120), validators.Email()])
     phone = TextField('phone', validators=[])
     address = TextField('address', [validators.Length(max=50), validators.DataRequired()])
@@ -13,12 +13,11 @@ class EditUser(Form):
     zip_code = TextField('zip_code', validators=[])
     tag_id = TextField('tag_id', validators=[])
     expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d', description="DESC1")
-    ssn = TextField('ssn', [validators.Length(max=13), validators.DataRequired()])
     gender = RadioField('gender', [validators.DataRequired()], choices=[('male', 'male'), ('female', 'female'),
                                                                       ('unknown', 'unknown')])
     status = RadioField(
         'status',
         [Required()],
-        choices=[('active', 'active'), ('inactive', 'inactive'), ('frozen', 'frozen'),
-                 ('free', 'free'), ('special', 'special')]
+        choices=[('Active', 'active'), ('Inactive', 'inactive'), ('Frozen', 'frozen'),
+                 ('Free', 'free'), ('Special', 'special')]
     )
