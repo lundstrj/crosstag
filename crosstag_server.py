@@ -689,7 +689,6 @@ def edit_user(user_index=None):
         user.zip_code = form.zip_code.data
         user.tag_id = form.tag_id.data
         user.gender = form.gender.data
-        user.ssn = form.ssn.data
         user.expiry_date = form.expiry_date.data
         user.status = form.status.data
 
@@ -700,20 +699,6 @@ def edit_user(user_index=None):
         fortnoxData.update_customer(user)
         return redirect("/user_page/"+str(user.index))
 
-        flash('Updated user: %s with id: %s' % (form.name.data, user.index))
-        tagevent = get_last_tag_event()
-        msg = None
-        if tagevent is None:
-            msg = None
-        else:
-            msg = (user.index, tagevent.tag_id)
-        user = User.query.filter_by(index=user_index).first()
-        return render_template('edit_user.html',
-                               title='Edit User',
-                               form=form,
-                               data=user.dict(),
-                               message=msg,
-                               tags=tagevents)
     if user:
         return render_template('edit_user.html',
                                title='Edit User',
