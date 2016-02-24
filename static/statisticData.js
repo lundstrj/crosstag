@@ -30,7 +30,7 @@ statistic.Main.prototype.genderStats = function(stats) {
 ]
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
     }
     var chart1 = document.getElementById("genderChart").getContext("2d");
     new Chart(chart1).Pie(data1, options);
@@ -62,7 +62,7 @@ statistic.Main.prototype.genderTags = function(stats) {
 ]
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
     }
     var chart1 = document.getElementById("genderChart1").getContext("2d");
     new Chart(chart1).Pie(data, options);
@@ -104,6 +104,9 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
@@ -159,6 +162,9 @@ statistic.Main.prototype.tagsByDays = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
@@ -213,6 +219,9 @@ statistic.Main.prototype.tagsByHours = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
@@ -265,6 +274,9 @@ statistic.Main.prototype.ageOfMembers = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
