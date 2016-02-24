@@ -1119,3 +1119,27 @@ INFO:root:2016-02-24 16:30:46.462871 reader tagging result: [2016-02-24 16:30:46
 INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
 DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
 INFO:root:2016-02-24 16:30:50.252781 reader tagging result: [2016-02-24 16:30:50.237096 server tagged 11111111]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
+INFO:root:2016-02-24 16:37:40.734991 reader tagging result: [2016-02-24 16:37:40.704575 server tagged 11111111]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/22222222 HTTP/1.1" 200 49
+INFO:root:2016-02-24 16:37:44.868220 reader tagging result: [2016-02-24 16:37:44.853199 server tagged 22222222]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
+INFO:root:2016-02-24 17:15:25.577833 reader tagging result: [2016-02-24 17:15:25.515704 server tagged 11111111]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/22222222 HTTP/1.1" 200 49
+INFO:root:2016-02-24 17:15:36.801718 reader tagging result: [2016-02-24 17:15:36.779876 server tagged 22222222]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/22222222 HTTP/1.1" 200 49
+INFO:root:2016-02-24 17:16:29.481626 reader tagging result: [2016-02-24 17:16:29.463253 server tagged 22222222]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/11111111 HTTP/1.1" 200 49
+INFO:root:2016-02-24 17:18:32.982644 reader tagging result: [2016-02-24 17:18:32.961437 server tagged 11111111]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/%20%092%20%092%20%092%20%092%20%092%20%092%20%092%20%092 HTTP/1.1" 200 65
+INFO:root:2016-02-24 17:24:29.604724 reader tagging result: [2016-02-24 17:24:29.588799 server tagged  	2 	2 	2 	2 	2 	2 	2 	2]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/22222222 HTTP/1.1" 200 49
+INFO:root:2016-02-24 17:24:40.468952 reader tagging result: [2016-02-24 17:24:40.449426 server tagged 22222222]
