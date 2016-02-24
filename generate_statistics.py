@@ -41,17 +41,20 @@ class GenerateStats:
         femaleCounter = 0
         unknownCounter = 0
 
+        year = datetime.now().year
+
         for event in one_month_events:
 
-            for user in users:
+            if year == event.timestamp.year:
+                for user in users:
 
-                if str(user.tag_id) == str(event.tag_id):
-                    if user.gender == "male":
-                        maleCounter += 1
-                    if user.gender == "female":
-                        femaleCounter += 1
-                    if user.gender == "unknown":
-                        unknownCounter += 1
+                    if str(user.tag_id) == str(event.tag_id):
+                        if user.gender == "male":
+                            maleCounter += 1
+                        if user.gender == "female":
+                            femaleCounter += 1
+                        if user.gender == "unknown":
+                            unknownCounter += 1
 
         return [maleCounter, femaleCounter, unknownCounter]
 

@@ -3,7 +3,6 @@ from flask import Flask, jsonify, render_template, flash, redirect
 import json
 from io import StringIO
 from generate_statistics import GenerateStats
-#ta bort fortnox här sen
 from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
@@ -40,12 +39,12 @@ class User(db.Model):
     fortnox_id = db.Column(db.Integer)
     name = db.Column(db.String(80))
     email = db.Column(db.String(120))
-    phone = db.Column(db.Integer)
+    phone = db.Column(db.String(20))
     address = db.Column(db.String(50))
     address2 = db.Column(db.String(50))
     city = db.Column(db.String(120))
     zip_code = db.Column(db.Integer)
-    tag_id = db.Column(db.String(12))
+    tag_id = db.Column(db.String(20))
     gender = db.Column(db.String(10))
     ssn = db.Column(db.String(13))
     expiry_date = db.Column(db.Date)
@@ -88,7 +87,7 @@ class User(db.Model):
 
 class Tagevent(db.Model):
     index = db.Column(db.Integer, primary_key=True)
-    tag_id = db.Column(db.Integer)
+    tag_id = db.Column(db.String(20))
     timestamp = db.Column(db.DateTime)
     uid = db.Column(db.Integer, db.ForeignKey('user.index'))
 
@@ -160,8 +159,10 @@ def sync_from_fortnox():
 
     customers = fortnox_data.get_all_customers()
     ret = []
+    gender = None
 
     for customer in customers:
+
         cust = {'FortnoxID': customer["CustomerNumber"],
                 'OrganisationNumber': customer['OrganisationNumber'],
                 'Name': customer["Name"],
@@ -194,8 +195,8 @@ def update_user_in_local_db_from_fortnox(customer):
         user.address2 = customer['Address2']
         user.city = customer['City']
         user.zip_code = customer['Zipcode']
-        user.gender = user.gender
-        user.ssn = customer['OrganisationNumber']
+        user.gender = get_gender_from_ssn(customer)
+        user.ssn = strip_ssn(customer)
         user.expiry_date = user.expiry_date
         user.create_date = user.create_date
 
@@ -204,13 +205,37 @@ def update_user_in_local_db_from_fortnox(customer):
 
 # Adding a fortnox user to the local DB
 def add_user_to_local_db_from_fortnox(customer):
+
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
                        customer['Address1'], customer['Address2'], customer['City'],
                        customer['Zipcode'], None, customer['FortnoxID'],
-                        None, customer['OrganisationNumber'],
-                       None, None)
+                       None, strip_ssn(customer),
+                       get_gender_from_ssn(customer), None)
     db.session.add(tmp_usr)
     db.session.commit()
+
+
+def strip_ssn(customer):
+    return customer['OrganisationNumber'][:-5]
+
+def get_gender_from_ssn(customer):
+
+    ssn_gender_number = customer['OrganisationNumber'][-2:]
+
+    try:
+        gender_number = int(ssn_gender_number[:1])
+        if gender_number % 2 == 0:
+            return 'female'
+        elif int(gender_number) % 2 == 1:
+            return 'male'
+        else:
+            return 'unknown'
+    except:
+        return None
+
+
+
+
 
 
 @app.route('/')
@@ -220,10 +245,24 @@ def index():
     return render_template('index.html')
 
 
+# Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
-    return  render_template('static_tagin.html',
+    return render_template('static_tagin.html',
                             title='Static tagins')
+
+
+# Gets all tags last month, just one event per day.
+@app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
+def get_events_from_user_by_tag_id(tag_id):
+    try:
+        #gs = GenerateStats()
+        #current_year = gs.get_currentYearString()
+        #current_month = gs.get_currentMonthString()
+
+        return Tagevent.query.all().json()
+    except:
+        return jsonify({"error": tag_id})
 
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
@@ -278,6 +317,12 @@ def all_users():
     ret = []
     users = User.query.all()
     for hit in users:
+
+        if hit.tag_id is None or hit.tag_id is "None" or hit.tag_id is "":
+            hit.tag_id = "No"
+        else:
+            hit.tag_id = "Yes"
+
         js = hit.dict()
         ret.append(js)
     return render_template('all_users.html',
@@ -411,10 +456,6 @@ def search_user():
         if form.phone.data:
             phone = form.phone.data
             users = User.query.filter_by(phone=phone)
-            hits.extend(users)
-        if form.tag.data:
-            tag = form.tag.data
-            users = User.query.filter_by(tag=tag)
             hits.extend(users)
         ret = []
         for hit in hits:
