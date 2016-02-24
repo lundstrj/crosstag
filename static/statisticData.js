@@ -113,7 +113,10 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
             dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
+                if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
             });
         })
     }
@@ -165,7 +168,10 @@ statistic.Main.prototype.tagsByDays = function(stats) {
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
             dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
+                if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
             });
         })
     }
@@ -216,7 +222,10 @@ statistic.Main.prototype.tagsByHours = function(stats) {
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
             dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
+                  if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
             });
         })
     }
@@ -254,7 +263,24 @@ statistic.Main.prototype.ageOfMembers = function(stats) {
 
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
+    showTooltips: false,
+    onAnimationComplete: function () {
+
+        var ctx = this.chart.ctx;
+        ctx.font = this.scale.font;
+        ctx.fillStyle = this.scale.textColor
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        this.datasets.forEach(function (dataset) {
+            dataset.bars.forEach(function (bar) {
+                  if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
+            });
+        })
+    }
     }
 
 
