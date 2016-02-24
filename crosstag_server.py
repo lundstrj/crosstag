@@ -256,13 +256,24 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
 def get_events_from_user_by_tag_id(tag_id):
     try:
-        #gs = GenerateStats()
-        #current_year = gs.get_currentYearString()
-        #current_month = gs.get_currentMonthString()
+        gs = GenerateStats()
+        current_year = gs.get_currentYearString()
+        counter = 0
+        now = datetime.now()
 
-        return Tagevent.query.all().json()
+        users_tagins = Tagevent.query.filter(Tagevent.tag_id.contains(tag_id)).\
+            filter(Tagevent.timestamp.contains(current_year)).all()
+
+        for days in range(1, 32):
+            for tag_event in users_tagins:
+                if tag_event.timestamp.month == now.month:
+                    if tag_event.timestamp.day == days:
+                        counter += 1
+                        break
+
+        return jsonify({"value": counter})
     except:
-        return jsonify({"error": tag_id})
+        return jsonify({})
 
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
