@@ -193,10 +193,14 @@ statistic.Main.prototype.tagsByHours = function(stats) {
     var arr = [];
     var dataArr = [];
 
-    for(var i = 1; i < stats[5].length+1; i++)
+
+    ''
+    for(var i = 1; i < stats[5].length; i++)
     {
-        arr.push(i);
-        dataArr.push(stats[5][i-1]);
+
+            arr.push(i);
+           // dataArr.push(stats[5][i-1]);
+
     }
 
     var data = {
@@ -210,9 +214,33 @@ statistic.Main.prototype.tagsByHours = function(stats) {
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
             pointHighlightStroke: "rgba(220,220,220,1)",
-            data: dataArr,
+            data:
+                [stats[5][0],
+                stats[5][1],
+                stats[5][2],
+                stats[5][3],
+                stats[5][4],
+                stats[5][5],
+                stats[5][6],
+                stats[5][7],
+                stats[5][8],
+                stats[5][9],
+                stats[5][10],
+                stats[5][11],
+                stats[5][12],
+                stats[5][13],
+                stats[5][14],
+                stats[5][15],
+                stats[5][16],
+                stats[5][17],
+                stats[5][18],
+                stats[5][19],
+                stats[5][20],
+                stats[5][21],
+                stats[5][22],
+                stats[5][23]]
 
-        },
+        }
       ]
     };
     var options = {
