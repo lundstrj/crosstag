@@ -318,11 +318,10 @@ def all_users():
     users = User.query.all()
     for hit in users:
 
-        if hit.tag_id is not None:
-            hit.tag_id = "Yes"
-        else:
+        if hit.tag_id is None or hit.tag_id is "None" or hit.tag_id is "":
             hit.tag_id = "No"
-
+        else:
+            hit.tag_id = "Yes"
 
         js = hit.dict()
         ret.append(js)
