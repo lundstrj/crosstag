@@ -3,7 +3,6 @@ from flask import Flask, jsonify, render_template, flash, redirect
 import json
 from io import StringIO
 from generate_statistics import GenerateStats
-#ta bort fortnox här sen
 from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
@@ -278,6 +277,13 @@ def all_users():
     ret = []
     users = User.query.all()
     for hit in users:
+
+        if hit.tag_id is not None:
+            hit.tag_id = "Yes"
+        else:
+            hit.tag_id = "No"
+
+
         js = hit.dict()
         ret.append(js)
     return render_template('all_users.html',
@@ -411,10 +417,6 @@ def search_user():
         if form.phone.data:
             phone = form.phone.data
             users = User.query.filter_by(phone=phone)
-            hits.extend(users)
-        if form.tag.data:
-            tag = form.tag.data
-            users = User.query.filter_by(tag=tag)
             hits.extend(users)
         ret = []
         for hit in hits:
