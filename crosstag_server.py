@@ -512,12 +512,20 @@ def statistics():
     users = User.query.all()
     event = Tagevent
 
+    weekDayName = default_date.strftime('%A')
+    monthName = default_date.strftime('%B')
+    customDateDay = {'weekday': weekDayName + ' '     + str(default_date.day) + '/' + str(default_date.month) + '/' + str(default_date.year)}
+
+    customDateMonth = {'month': monthName + ' '  + str(default_date.year)}
+
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, defaultDateArray)
 
     return render_template('statistics.html',
                            plot_paths='',
-                           data=ret)
+                           data=ret,
+                           data2=customDateDay,
+                           data3=customDateMonth)
 
 
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
@@ -534,12 +542,24 @@ def statistics_by_date(_month, _day, _year):
     users = User.query.all()
     event = Tagevent
 
+    default_date = datetime.now()
+
+    selected_date = default_date.replace(day=int(_day), month=int(_month), year=int(_year))
+
+    weekDayName = selected_date.strftime('%A')
+    monthName = selected_date.strftime('%B')
+    customDateDay = {'weekday': weekDayName + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
+
+    customDateMonth = {'month': monthName + ' '  + str(selected_date.year)}
+
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, chosenDateArray)
 
     return render_template('statistics.html',
                            plot_paths='',
-                           data=ret)
+                           data=ret,
+                           data2=customDateDay,
+                           data3=customDateMonth)
 
 
 # Syncs the local database with customers from fortnox
