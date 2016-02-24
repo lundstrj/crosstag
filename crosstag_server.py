@@ -160,8 +160,10 @@ def sync_from_fortnox():
 
     customers = fortnox_data.get_all_customers()
     ret = []
+    gender = None
 
     for customer in customers:
+
         cust = {'FortnoxID': customer["CustomerNumber"],
                 'OrganisationNumber': customer['OrganisationNumber'],
                 'Name': customer["Name"],
@@ -194,8 +196,8 @@ def update_user_in_local_db_from_fortnox(customer):
         user.address2 = customer['Address2']
         user.city = customer['City']
         user.zip_code = customer['Zipcode']
-        user.gender = user.gender
-        user.ssn = customer['OrganisationNumber']
+        user.gender = get_gender_from_ssn(customer)
+        user.ssn = strip_ssn(customer)
         user.expiry_date = user.expiry_date
         user.create_date = user.create_date
 
@@ -204,13 +206,37 @@ def update_user_in_local_db_from_fortnox(customer):
 
 # Adding a fortnox user to the local DB
 def add_user_to_local_db_from_fortnox(customer):
+
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
                        customer['Address1'], customer['Address2'], customer['City'],
                        customer['Zipcode'], None, customer['FortnoxID'],
-                        None, customer['OrganisationNumber'],
-                       None, None)
+                       None, strip_ssn(customer),
+                       get_gender_from_ssn(customer), None)
     db.session.add(tmp_usr)
     db.session.commit()
+
+
+def strip_ssn(customer):
+    return customer['OrganisationNumber'][:-5]
+
+def get_gender_from_ssn(customer):
+
+    ssn_gender_number = customer['OrganisationNumber'][-2:]
+
+    try:
+        gender_number = int(ssn_gender_number[:1])
+        if gender_number % 2 == 0:
+            return 'female'
+        elif int(gender_number) % 2 == 1:
+            return 'male'
+        else:
+            return 'unknown'
+    except:
+        return None
+
+
+
+
 
 
 @app.route('/')
