@@ -406,10 +406,6 @@ def search_user():
             phone = form.phone.data
             users = User.query.filter_by(phone=phone)
             hits.extend(users)
-        if form.tag.data:
-            tag = form.tag.data
-            users = User.query.filter_by(tag=tag)
-            hits.extend(users)
         ret = []
         for hit in hits:
             js = hit.dict()
