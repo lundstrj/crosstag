@@ -51,7 +51,7 @@ window.onload = function() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_user_data_tag/" + tag_nbr, true);
             xhr.addEventListener("load", function(){
-                callback(JSON.parse(xhr.response));
+                callback(get_user_tagins, JSON.parse(xhr.response));
             });
             xhr.send(null);
         }
@@ -60,8 +60,23 @@ window.onload = function() {
         }
     }
 
-    function set_user_data(data){
+    function set_user_data(callback, data){
         user_data = data;
+        callback(user_data);
+    }
+
+    function get_user_tagins(user_data){
+       try{
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_events_from_user_by_tag_id/" + user_data.tag_id, true);
+           xhr.addEventListener("load", function(){
+               console.log(JSON.parse(xhr.response));
+           });
+           xhr.send(null);
+       }
+        catch(exception){
+            return null;
+        }
     }
 
     function is_not_empty(object){
@@ -73,13 +88,15 @@ window.onload = function() {
         return false;
     }
 
-
     function print_user(user_data, user_tagins){
         if(is_not_empty(user_data)){
             console.log(user_data)
-            document.getElementById("tagins").innerHTML = user_data.name;
+            document.getElementById("tagins").style.visibility = 'visible';
+            document.getElementById("user_name").innerHTML = user_data.name;
+            document.getElementById("status_member").innerHTML = "<strong>Din medlemsskap är:</strong> " + user_data.status;
+            document.getElementById("expire_date").innerHTML = "<strong>Ditt medlemskap går ut:</strong> " + user_data.expiry_date;
+            document.getElementById("create_date").innerHTML = "<strong>Du blev medlem:</strong> " + user_data.create_date;
         }
-
     }
 
     function CheckTagins() {
@@ -102,7 +119,7 @@ window.onload = function() {
             counter = 0;
             display_user = false;
             user_data = null;
-            document.getElementById("tagins").innerHTML = "ingen tag";
+            document.getElementById("tagins").style.visibility = 'hidden';
             //this.print_clear_screen("online")
         }
     }
