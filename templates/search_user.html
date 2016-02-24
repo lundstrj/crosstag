@@ -51,7 +51,7 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 {% if hits %}
 
 {% for hit in hits %}
-        <li>{{hit.id}} {{hit.name}} {{hit.fortnox_id}} {{hit.email}} {{hit.phone}} {{hit.tag}} <a href='/user_page/{{hit.index}}'>Info</a></li>
+        <li>{{hit.name}} {{hit.email}}  <a href='/user_page/{{hit.index}}'>Info</a></li>
 {% endfor %}
 
 {% endif %}
