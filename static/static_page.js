@@ -15,7 +15,7 @@ window.onload = function() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:80/crosstag/v1.0/last_tagin", true);
             xhr.addEventListener("load", function(){
-                callback(CheckTagins, JSON.parse(xhr.response));
+                callback(display_user_after_user_data_set, JSON.parse(xhr.response));
             });
             xhr.send(null);
         }
@@ -24,11 +24,26 @@ window.onload = function() {
         }
     }
 
-    function print_user(user_data, user_tagins){
-        if(is_not_empty(user_data)){
-            document.getElementById("tagins").innerHTML = user_data.name;
+    function check_if_tagevent_exists(callback, current){
+        if (current == null) {
+            display_user = false;
+            console.log("current = null")
         }
+        else if(is_not_empty(current)){
+            if (current['index'] != last_event) {
+                last_event = current['index'];
+                display_user = true;
+                counter = 0;
+                current_user = current;
+                callback();
+            }
+        }
+    }
 
+    function display_user_after_user_data_set(){
+        if (display_user && counter >= 0) {
+            get_user_data(set_user_data, current_user['tag_id'])
+        }
     }
 
     function get_user_data(callback, tag_nbr) {
@@ -49,22 +64,6 @@ window.onload = function() {
         user_data = data;
     }
 
-    function check_if_tagevent_exists(callback, current){
-        if (current == null) {
-            display_user = false;
-            console.log("current = null")
-        }
-        else if(is_not_empty(current)){
-            if (current['index'] != last_event) {
-                last_event = current['index'];
-                display_user = true;
-                counter = 0;
-                current_user = current;
-            }
-            callback()
-        }
-    }
-
     function is_not_empty(object){
         for(var key in object){
             if(object.hasOwnProperty(key)){
@@ -74,11 +73,16 @@ window.onload = function() {
         return false;
     }
 
-    function CheckTagins() {
-        if (display_user && counter >= 0) {
-            get_user_data(set_user_data, current_user['tag_id'])
+
+    function print_user(user_data, user_tagins){
+        if(is_not_empty(user_data)){
+            console.log(user_data)
+            document.getElementById("tagins").innerHTML = user_data.name;
         }
 
+    }
+
+    function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
             display_user = false
@@ -92,7 +96,6 @@ window.onload = function() {
 
         if (display_user && user_data && counter != 0) {
             counter += 1;
-            //#print this.display_time - this.counter * this.sleep_time
         }
 
         if (counter >= display_time / sleep_time) {
@@ -104,8 +107,11 @@ window.onload = function() {
         }
     }
 
+    setInterval(function(){
+        CheckTagins();
+    }, 1000)
 
     setInterval(function(){
         poll_server(check_if_tagevent_exists);
-    }, 1000)
+    }, 2500)
 }

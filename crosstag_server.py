@@ -220,6 +220,12 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/crosstag/v1.0/static_tagin_page')
+def static_tagin_page():
+    return  render_template('static_tagin.html',
+                            title='Static tagins')
+
+
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
     event = Tagevent(tag_id)
