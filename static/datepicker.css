@@ -484,5 +484,36 @@
   background-color:#8AE2FF;
   width: 250px;
   height: 40px;
-  cursor:pointer
+  cursor:pointer;
+  border: 1px solid black;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.container {
+  text-align: center;
+}
+
+.hero-unit {
+  margin-right: 25px;
+}
+
+#mainStatHeader{
+  margin-bottom: 40px;
+  text-decoration: underline;
+}
+
+.statAndCalender {
+  padding-bottom: 20px;
+  border-bottom: 2px dashed black;
+}
+
+.statisticsHeader {
+  text-align: center;
+}
+
+#memberStat {
+  border-top:2px dashed black;
+  margin-top: 20px;
 }
