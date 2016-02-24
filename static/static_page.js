@@ -15,38 +15,13 @@ window.onload = function() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:80/crosstag/v1.0/last_tagin", true);
             xhr.addEventListener("load", function(){
-                callback(CheckTagins, JSON.parse(xhr.response));
+                callback(display_user_after_user_data_set, JSON.parse(xhr.response));
             });
             xhr.send(null);
         }
         catch (exception){
             return null
         }
-    }
-
-    function print_user(user_data, user_tagins){
-        if(is_not_empty(user_data)){
-            document.getElementById("tagins").innerHTML = user_data.name;
-        }
-
-    }
-
-    function get_user_data(callback, tag_nbr) {
-        try {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_user_data_tag/" + tag_nbr, true);
-            xhr.addEventListener("load", function(){
-                callback(JSON.parse(xhr.response));
-            });
-            xhr.send(null);
-        }
-        catch(exception) {
-            return null
-        }
-    }
-
-    function set_user_data(data){
-        user_data = data;
     }
 
     function check_if_tagevent_exists(callback, current){
@@ -60,8 +35,47 @@ window.onload = function() {
                 display_user = true;
                 counter = 0;
                 current_user = current;
+                callback();
             }
-            callback()
+        }
+    }
+
+    function display_user_after_user_data_set(){
+        if (display_user && counter >= 0) {
+            get_user_data(set_user_data, current_user['tag_id'])
+        }
+    }
+
+    function get_user_data(callback, tag_nbr) {
+        try {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_user_data_tag/" + tag_nbr, true);
+            xhr.addEventListener("load", function(){
+                callback(get_user_tagins, JSON.parse(xhr.response));
+            });
+            xhr.send(null);
+        }
+        catch(exception) {
+            return null
+        }
+    }
+
+    function set_user_data(callback, data){
+        user_data = data;
+        callback(user_data);
+    }
+
+    function get_user_tagins(user_data){
+       try{
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_events_from_user_by_tag_id/" + user_data.tag_id, true);
+           xhr.addEventListener("load", function(){
+               console.log(JSON.parse(xhr.response));
+           });
+           xhr.send(null);
+       }
+        catch(exception){
+            return null;
         }
     }
 
@@ -74,11 +88,18 @@ window.onload = function() {
         return false;
     }
 
-    function CheckTagins() {
-        if (display_user && counter >= 0) {
-            get_user_data(set_user_data, current_user['tag_id'])
+    function print_user(user_data, user_tagins){
+        if(is_not_empty(user_data)){
+            console.log(user_data)
+            document.getElementById("tagins").style.visibility = 'visible';
+            document.getElementById("user_name").innerHTML = user_data.name;
+            document.getElementById("status_member").innerHTML = "<strong>Din medlemsskap är:</strong> " + user_data.status;
+            document.getElementById("expire_date").innerHTML = "<strong>Ditt medlemskap går ut:</strong> " + user_data.expiry_date;
+            document.getElementById("create_date").innerHTML = "<strong>Du blev medlem:</strong> " + user_data.create_date;
         }
+    }
 
+    function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
             display_user = false
@@ -92,20 +113,22 @@ window.onload = function() {
 
         if (display_user && user_data && counter != 0) {
             counter += 1;
-            //#print this.display_time - this.counter * this.sleep_time
         }
 
         if (counter >= display_time / sleep_time) {
             counter = 0;
             display_user = false;
             user_data = null;
-            document.getElementById("tagins").innerHTML = "ingen tag";
+            document.getElementById("tagins").style.visibility = 'hidden';
             //this.print_clear_screen("online")
         }
     }
 
+    setInterval(function(){
+        CheckTagins();
+    }, 1000)
 
     setInterval(function(){
         poll_server(check_if_tagevent_exists);
-    }, 1000)
+    }, 2500)
 }

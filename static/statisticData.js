@@ -30,7 +30,7 @@ statistic.Main.prototype.genderStats = function(stats) {
 ]
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
     }
     var chart1 = document.getElementById("genderChart").getContext("2d");
     new Chart(chart1).Pie(data1, options);
@@ -62,7 +62,7 @@ statistic.Main.prototype.genderTags = function(stats) {
 ]
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
     }
     var chart1 = document.getElementById("genderChart1").getContext("2d");
     new Chart(chart1).Pie(data, options);
@@ -104,6 +104,9 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
@@ -113,7 +116,10 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
             dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
+                if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
             });
         })
     }
@@ -156,6 +162,9 @@ statistic.Main.prototype.tagsByDays = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
@@ -165,7 +174,10 @@ statistic.Main.prototype.tagsByDays = function(stats) {
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
             dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
+                if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
             });
         })
     }
@@ -207,6 +219,9 @@ statistic.Main.prototype.tagsByHours = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
     onAnimationComplete: function () {
 
         var ctx = this.chart.ctx;
@@ -216,7 +231,10 @@ statistic.Main.prototype.tagsByHours = function(stats) {
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
             dataset.bars.forEach(function (bar) {
-                ctx.fillText(bar.value, bar.x, bar.y - 5);
+                  if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
             });
         })
     }
@@ -254,7 +272,27 @@ statistic.Main.prototype.ageOfMembers = function(stats) {
 
     var options = {
 	segmentShowStroke : false,
-	animateScale : true
+	animateScale : true,
+    showTooltips: false,
+    animationSteps: 60,
+    animationEasing: 'easeInCubic',
+    scaleFontStyle: "bold",
+    onAnimationComplete: function () {
+
+        var ctx = this.chart.ctx;
+        ctx.font = this.scale.font;
+        ctx.fillStyle = this.scale.textColor
+        ctx.textAlign = "center";
+        ctx.textBaseline = "bottom";
+        this.datasets.forEach(function (dataset) {
+            dataset.bars.forEach(function (bar) {
+                  if (bar.value !== 0)
+                {
+                    ctx.fillText(bar.value, bar.x, bar.y);
+                }
+            });
+        })
+    }
     }
 
 
