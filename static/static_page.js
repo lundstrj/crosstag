@@ -70,9 +70,10 @@ window.onload = function() {
            var xhr = new XMLHttpRequest();
            xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_events_from_user_by_tag_id/" + user_data.tag_id, true);
            xhr.addEventListener("load", function(){
-               console.log(JSON.parse(xhr.response));
+               user_tagins = JSON.parse(xhr.response);
            });
-           xhr.send(null);
+
+           xhr.send();
        }
         catch(exception){
             return null;
@@ -96,6 +97,7 @@ window.onload = function() {
             document.getElementById("status_member").innerHTML = "<strong>Din medlemsskap är:</strong> " + user_data.status;
             document.getElementById("expire_date").innerHTML = "<strong>Ditt medlemskap går ut:</strong> " + user_data.expiry_date;
             document.getElementById("create_date").innerHTML = "<strong>Du blev medlem:</strong> " + user_data.create_date;
+            document.getElementById("tagin_month").innerHTML = "<strong>Antalet taggningar denna månad: </strong> " + user_tagins.value
         }
     }
 

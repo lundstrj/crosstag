@@ -91,7 +91,7 @@ class Tagevent(db.Model):
     timestamp = db.Column(db.DateTime)
     uid = db.Column(db.Integer, db.ForeignKey('user.index'))
 
-    def __init__(self, tag):
+    def __init__(self, tag=None):
         self.tag_id = tag
         self.timestamp = datetime.now()
         users = User.query.filter_by(tag_id=self.tag_id)
@@ -99,9 +99,9 @@ class Tagevent(db.Model):
         for user in users:
             js = user.dict()
 
-        if js != None:#Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
+        # Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
+        if js is not None:
             self.uid = js['index']
-
 
     def dict(self):
         return {'index': self.index, 'timestamp': str(self.timestamp),
@@ -230,13 +230,24 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
 def get_events_from_user_by_tag_id(tag_id):
     try:
-        #gs = GenerateStats()
-        #current_year = gs.get_currentYearString()
-        #current_month = gs.get_currentMonthString()
+        gs = GenerateStats()
+        current_year = gs.get_currentYearString()
+        counter = 0
+        now = datetime.now()
+        
+        users_tagins = Tagevent.query.filter(Tagevent.tag_id.contains(tag_id)).\
+            filter(Tagevent.timestamp.contains(current_year)).all()
 
-        return Tagevent.query.all().json()
+        for days in range(1, 32):
+            for tag_event in users_tagins:
+                if tag_event.timestamp.month == now.month:
+                    if tag_event.timestamp.day == days:
+                        counter += 1
+                        break
+
+        return jsonify({"value": counter})
     except:
-        return jsonify({"error": tag_id})
+        return jsonify({})
 
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
@@ -296,7 +307,6 @@ def all_users():
             hit.tag_id = "Yes"
         else:
             hit.tag_id = "No"
-
 
         js = hit.dict()
         ret.append(js)
