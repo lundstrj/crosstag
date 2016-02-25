@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../static/statisticData.js"></script>
     <script type="text/javascript" src="../../static/static_page.js"></script>
 
+
   </head>
   <body>
     <div class="container">
@@ -35,14 +36,87 @@
         <!--<h3 class="text-muted">Crosstag</h3> -->
       </div>
 
-        <h1 id="whalecum">Välkommen till den rosa boxen</h1>
-        <div id="tagins">
-            <h3 id="user_name"></h3>
-            <p id="status_member"</p>
-            <p id="expire_date"></p>
-            <p id="create_date"></p>
+        <div class="page-header">
+            <h1>Välkommen till Crossfit Kalmar <small>Den rosa boxen</small></h1>
         </div>
 
+    {# Added some css to the tagged in user #}
+    <div id="tagins" style="visibility: hidden">
+        <div class="container bootstrap snippet">
+            <div class="panel-body inf-content">
+                <div class="row">
+                <div class="col-md-6">
+                    <div class="table-responsive">
+                        <div class="panel panel-info">
+                            <div class="panel-heading">
+                                  <h1 class="panel-title" id="user_name"></h1>
+                            </div>
+                        </div>
+                        <table class="table table-condensed table-responsive table-user-information">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-asterisk text-primary"></span>
+                                        Membership:
+                                    </strong>
+                                </td>
+                                <td class="text-primary" id="status_member">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-envelope text-primary"></span>
+                                        Email
+                                    </strong>
+                                </td>
+                                <td class="text-primary" id="user_email">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                        Member since:
+                                    </strong>
+                                </td>
+                                <td class="text-primary" id="create_date">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                        Membership expires:
+                                    </strong>
+                                </td>
+                                <td class="text-primary" id="expire_date">
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <strong>
+                                        <span class="glyphicon glyphicon-calendar text-primary"></span>
+                                        Tags this month:
+                                    </strong>
+                                </td>
+                                <td class="text-primary" id="tagin_month">
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
       <footer class="footer">
         <p>&copy; Crosstag 2013-2016</p>
       </footer>

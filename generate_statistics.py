@@ -108,6 +108,7 @@ class GenerateStats:
         currentMonth = chosenDateArray['month']
         currentDay = chosenDateArray['day']
 
+
         timestamps = event.query.filter(event.timestamp.contains(currentYear))
 
         hourArr = [0]*24

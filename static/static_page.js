@@ -9,7 +9,7 @@ window.onload = function() {
     var sleep_time = 2;
     var current_user = null;
 
-
+    //Asks the server if there's a new tagevent
     function poll_server(callback) {
         try {
             var xhr = new XMLHttpRequest();
@@ -24,6 +24,7 @@ window.onload = function() {
         }
     }
 
+    //Controls if a tag exists with a user
     function check_if_tagevent_exists(callback, current){
         if (current == null) {
             display_user = false;
@@ -40,12 +41,14 @@ window.onload = function() {
         }
     }
 
+    //controls if user should be shown and if the counter is 0
     function display_user_after_user_data_set(){
         if (display_user && counter >= 0) {
             get_user_data(set_user_data, current_user['tag_id'])
         }
     }
 
+    //Collects the user data
     function get_user_data(callback, tag_nbr) {
         try {
             var xhr = new XMLHttpRequest();
@@ -60,25 +63,29 @@ window.onload = function() {
         }
     }
 
+    //Defines the user_data object
     function set_user_data(callback, data){
         user_data = data;
         callback(user_data);
     }
 
+    //Collects users all tagins
     function get_user_tagins(user_data){
        try{
            var xhr = new XMLHttpRequest();
            xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_events_from_user_by_tag_id/" + user_data.tag_id, true);
            xhr.addEventListener("load", function(){
-               console.log(JSON.parse(xhr.response));
+               user_tagins = JSON.parse(xhr.response);
            });
-           xhr.send(null);
+
+           xhr.send();
        }
         catch(exception){
             return null;
         }
     }
 
+    //Controls if a object is empty or not
     function is_not_empty(object){
         for(var key in object){
             if(object.hasOwnProperty(key)){
@@ -88,17 +95,21 @@ window.onload = function() {
         return false;
     }
 
+    //Displays the user on the static page
     function print_user(user_data, user_tagins){
         if(is_not_empty(user_data)){
-            console.log(user_data)
+            //console.log(user_data);
             document.getElementById("tagins").style.visibility = 'visible';
             document.getElementById("user_name").innerHTML = user_data.name;
-            document.getElementById("status_member").innerHTML = "<strong>Din medlemsskap är:</strong> " + user_data.status;
-            document.getElementById("expire_date").innerHTML = "<strong>Ditt medlemskap går ut:</strong> " + user_data.expiry_date;
-            document.getElementById("create_date").innerHTML = "<strong>Du blev medlem:</strong> " + user_data.create_date;
+            document.getElementById("status_member").innerHTML = user_data.status;
+            document.getElementById("expire_date").innerHTML = user_data.expiry_date;
+            document.getElementById("create_date").innerHTML = user_data.create_date;
+            document.getElementById("user_email").innerHTML = user_data.email;
+            document.getElementById("tagin_month").innerHTML = user_tagins.value
         }
     }
 
+    //Controls if the user should be shown, for how long and removes the diaplyes user from the page
     function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
@@ -126,9 +137,9 @@ window.onload = function() {
 
     setInterval(function(){
         CheckTagins();
-    }, 1000)
+    }, 1000);
 
     setInterval(function(){
         poll_server(check_if_tagevent_exists);
-    }, 2500)
-}
+    }, 2500);
+};

@@ -256,13 +256,24 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
 def get_events_from_user_by_tag_id(tag_id):
     try:
-        #gs = GenerateStats()
-        #current_year = gs.get_currentYearString()
-        #current_month = gs.get_currentMonthString()
+        gs = GenerateStats()
+        current_year = gs.get_currentYearString()
+        counter = 0
+        now = datetime.now()
 
-        return Tagevent.query.all().json()
+        users_tagins = Tagevent.query.filter(Tagevent.tag_id.contains(tag_id)).\
+            filter(Tagevent.timestamp.contains(current_year)).all()
+
+        for days in range(1, 32):
+            for tag_event in users_tagins:
+                if tag_event.timestamp.month == now.month:
+                    if tag_event.timestamp.day == days:
+                        counter += 1
+                        break
+
+        return jsonify({"value": counter})
     except:
-        return jsonify({"error": tag_id})
+        return jsonify({})
 
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
@@ -318,11 +329,10 @@ def all_users():
     users = User.query.all()
     for hit in users:
 
-        if hit.tag_id is not None:
-            hit.tag_id = "Yes"
-        else:
+        if hit.tag_id is None or hit.tag_id is "None" or hit.tag_id is "":
             hit.tag_id = "No"
-
+        else:
+            hit.tag_id = "Yes"
 
         js = hit.dict()
         ret.append(js)
@@ -554,12 +564,20 @@ def statistics():
     users = User.query.all()
     event = Tagevent
 
+    weekDayName = default_date.strftime('%A')
+    monthName = default_date.strftime('%B')
+    customDateDay = {'weekday': weekDayName + ' '     + str(default_date.day) + '/' + str(default_date.month) + '/' + str(default_date.year)}
+
+    customDateMonth = {'month': monthName + ' '  + str(default_date.year)}
+
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, defaultDateArray)
 
     return render_template('statistics.html',
                            plot_paths='',
-                           data=ret)
+                           data=ret,
+                           data2=customDateDay,
+                           data3=customDateMonth)
 
 
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
@@ -576,12 +594,24 @@ def statistics_by_date(_month, _day, _year):
     users = User.query.all()
     event = Tagevent
 
+    default_date = datetime.now()
+
+    selected_date = default_date.replace(day=int(_day), month=int(_month), year=int(_year))
+
+    weekDayName = selected_date.strftime('%A')
+    monthName = selected_date.strftime('%B')
+    customDateDay = {'weekday': weekDayName + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
+
+    customDateMonth = {'month': monthName + ' '  + str(selected_date.year)}
+
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, chosenDateArray)
 
     return render_template('statistics.html',
                            plot_paths='',
-                           data=ret)
+                           data=ret,
+                           data2=customDateDay,
+                           data3=customDateMonth)
 
 
 # Syncs the local database with customers from fortnox
