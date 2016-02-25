@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash, redirect
 import json
-from io import StringIO
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -99,9 +98,9 @@ class Tagevent(db.Model):
         for user in users:
             js = user.dict()
 
-        if js != None:#Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
+        #Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
+        if js != None:
             self.uid = js['index']
-
 
     def dict(self):
         return {'index': self.index, 'timestamp': str(self.timestamp),
@@ -144,7 +143,6 @@ class Exercise(db.Model):
 
     def json(self):
         return jsonify(self.dict())
-
 
 
 def get_last_tag_event():
@@ -205,7 +203,6 @@ def update_user_in_local_db_from_fortnox(customer):
 
 # Adding a fortnox user to the local DB
 def add_user_to_local_db_from_fortnox(customer):
-
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
                        customer['Address1'], customer['Address2'], customer['City'],
                        customer['Zipcode'], None, customer['FortnoxID'],
@@ -218,8 +215,8 @@ def add_user_to_local_db_from_fortnox(customer):
 def strip_ssn(customer):
     return customer['OrganisationNumber'][:-5]
 
-def get_gender_from_ssn(customer):
 
+def get_gender_from_ssn(customer):
     ssn_gender_number = customer['OrganisationNumber'][-2:]
 
     try:
@@ -232,10 +229,6 @@ def get_gender_from_ssn(customer):
             return 'unknown'
     except:
         return None
-
-
-
-
 
 
 @app.route('/')
@@ -411,15 +404,10 @@ def add_new_user():
                            form=form)
 
 
-
-
 @app.route('/tagevent', methods=['GET'])
 def tagevents():
-
         return render_template('tagevent.html',
-                               title='Tagevents',
-                                )
-
+                               title='Tagevents')
 
 
 @app.route('/tagin_user', methods=['GET', 'POST'])
@@ -437,9 +425,8 @@ def tagin_user():
         return render_template('tagin_user.html',
                                title='New tag',
                                form=form)
-    return render_template('tagin_user.html',
-                               title='New tag',
-                               form=form)
+    return render_template('tagin_user.html', title='New tag', form=form)
+
 
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
@@ -512,7 +499,6 @@ def get_tagevents_user_dict(user_index):
 
 @app.route('/inactive_check', methods=['GET'])
 def inactive_check():
-
     users = User.query.all()
     arr = []
     testarr = []
@@ -521,8 +507,8 @@ def inactive_check():
 
     for user in users:
 
-        valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()
-        valid_tagevent.reverse()
+        valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()[-1:]
+        #valid_tagevent.reverse()
         for event in valid_tagevent:
 
             if event.timestamp < two_weeks:
@@ -535,22 +521,15 @@ def inactive_check():
 
                     temp = str(99) + "+"
 
-
                 testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': temp}
                 arr.append(testarr)
-
-                break
-
-
     return render_template('inactive_check.html',
                            title='Check',
                            hits=arr)
 
 
-
 @app.route('/statistics', methods=['GET'])
 def statistics():
-
     default_date = datetime.now()
 
     defaultDateArray = {'year': str(default_date.year), 'month': str(default_date.month), 'day':str(default_date.day)}
@@ -583,9 +562,7 @@ def statistics():
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
 def statistics_by_date(_month, _day, _year):
 
-    chosenDateArray = {'year': _year, 'month': _month, 'day': _day}
-
-
+    chosen_date_array = {'year': _year, 'month': _month, 'day': _day}
 
     gs = GenerateStats()
     #Chosenyear, chosenmonth, chosenday
@@ -605,7 +582,7 @@ def statistics_by_date(_month, _day, _year):
     customDateMonth = {'month': monthName + ' '  + str(selected_date.year)}
 
     # Send the data to a method who returns an multi dimensional array with statistics.
-    ret = gs.get_data(users, event, chosenDateArray)
+    ret = gs.get_data(users, event, chosen_date_array)
 
     return render_template('statistics.html',
                            plot_paths='',
@@ -637,46 +614,38 @@ def fortnox_specific_user(fortnox_id):
 # TEST FUNKTION!!!!!
 @app.route('/pb/<user_id>', methods=['GET'])
 def pb(user_id):
+    '''OLD SHIT, Save for future reference--------------------------------|
+    tag_id = get_tag(1)
+    events = Statistics.query.filter_by(tag_id=tag_id)[-20:]
+    userList = users.query.join(friendships, users.id==friendships.user_id)
+    .add_columns(users.userId, users.name, users.email, friends.userId, friendId)
+    .filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
 
-### OLD SHIT, Save for future reference--------------------------------|
-    #tag_id = get_tag(1)
-    #events = Statistics.query.filter_by(tag_id=tag_id)[-20:]
-    #userList = users.query.join(friendships, users.id==friendships.user_id)
-    # .add_columns(users.userId, users.name, users.email, friends.userId, friendId)
-    # .filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-
-    '''results = User.query.join(Statistics, User.index == Statistics.uid).add_columns(User.name, User.tag_id, Statistics.exercise, Statistics.record, Statistics.unit, Statistics.record_date, Statistics.uid).filter(User.index == user_id).filter(Statistics.uid == user_id)
+    results = User.query.join(Statistics, User.index == Statistics.uid).add_columns(User.name, User.tag_id, Statistics.exercise, Statistics.record, Statistics.unit, Statistics.record_date, Statistics.uid).filter(User.index == user_id).filter(Statistics.uid == user_id)
     ret = []
-    logging.debug("hello")'''
-### END OF OLD SHIT----------------------------------------------------|
-
+    logging.debug("hello")
+    END OF OLD SHIT----------------------------------------------------|'''
 
     users = User.query.filter_by(index=user_id)
     personalstats = Records.query.filter_by(uid=user_id)
-
 
     ret = []
     userret = []
     exerciseret = []
 
-    #name = User.name
     for hit in personalstats:
         pbjs = hit.dict()
         ret.append(pbjs)
 
-   #  exercise = Exercise.query.filter_by(index=pbjs['exercise_id'])
-    #exercisejs = exercise[0].dict()
-    #exerciseret.append(exercisejs)
+    '''exercise = Exercise.query.filter_by(index=pbjs['exercise_id'])
+    exercisejs = exercise[0].dict()
+    exerciseret.append(exercisejs)'''
 
     for hit in users:
         js = hit.dict()
         userret.append(js)
 
-   # ret.append(name)
     return render_template('PB.html', plot_paths='', data=ret, users=userret, exercises=exerciseret)
-
-   # return render_template('PB.html', plot_paths='', data=ret, users=userret, exercisetypes=exercisearr)
-#-----------------------------------------------------------------------------------------------------
 
 
 @app.route('/getrecenteventsgender', methods=['GET'])
@@ -701,7 +670,7 @@ def get_recent_events_gender():
         else:
             events_json[current] = 1
     
-   #[{datestamp: ["2014-12-22", "2014-12-23"], unknown: [0,0], male: [9, 5], female: [0,0]}]
+    # [{datestamp: ["2014-12-22", "2014-12-23"], unknown: [0,0], male: [9, 5], female: [0,0]}]
     res = [{'datestamp': male.keys(), 'male': male.values(), 'female': female.values(), 'unknown': unknown.values()} ]
     return json.dumps(res)
 
@@ -749,7 +718,6 @@ def user_page(user_index=None):
                                tags=tagevents)
 
 
-
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
     user = User.query.filter_by(index=user_index).first()
@@ -770,7 +738,6 @@ def edit_user(user_index=None):
         user.expiry_date = form.expiry_date.data
         user.status = form.status.data
 
-
         db.session.commit()
         ##If we successfully edited the user, redirect back to userpage.
         fortnoxData = Fortnox()
@@ -786,7 +753,6 @@ def edit_user(user_index=None):
                                error=form.errors)
     else:
         return "she wrote upon it; no such number, no such zone"
-
 
 
 @app.route('/%s/v1.0/link_user_to_tag/<user_index>/<tag_id>' % app_name,
@@ -821,5 +787,3 @@ if __name__ == '__main__':
     #if options.debug:
     app.logger.propagate = False
     app.run(host='0.0.0.0', port=app.config["PORT"], debug=True)
-
-
