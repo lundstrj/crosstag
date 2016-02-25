@@ -195,7 +195,7 @@ statistic.Main.prototype.tagsByHours = function(stats) {
 
 
     ''
-    for(var i = 1; i < stats[5].length; i++)
+    for(var i = 1; i < stats[5].length+1; i++)
     {
 
             arr.push(i);
