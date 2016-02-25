@@ -374,7 +374,7 @@ def remove_user(index):
         user = User.query.filter_by(index=index).first()
         db.session.delete(user)
         db.session.commit()
-        return "removed user"
+        return redirect("/all_users")
 
 
 @app.route('/add_new_user', methods=['GET', 'POST'])
@@ -488,7 +488,7 @@ def link_user_to_last_tag(user_id):
     user = User.query.filter_by(index=user_id).first()
     user.tag_id = tagevent.tag_id
     db.session.commit()
-    return "OK"
+    return redirect("/edit_user/"+str(user.index))
 
 
 @app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])
@@ -754,7 +754,7 @@ def user_page(user_index=None):
 def edit_user(user_index=None):
     user = User.query.filter_by(index=user_index).first()
     if user is None:
-        return "she wrote upon it; no such number, no such zone"
+        return "No user have this ID"
     form = EditUser(obj=user)
     tagevents = get_tagevents_user_dict(user_index)
     if form.validate_on_submit():
