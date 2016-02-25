@@ -264,8 +264,8 @@ def get_events_from_user_by_tag_id(tag_id):
         users_tagins = Tagevent.query.filter(Tagevent.tag_id.contains(tag_id)).\
             filter(Tagevent.timestamp.contains(current_year)).all()
 
-        for days in range(1, 32):
-            for tag_event in users_tagins:
+        for tag_event in users_tagins:
+            for days in range(1, 32):
                 if tag_event.timestamp.month == now.month:
                     if tag_event.timestamp.day == days:
                         counter += 1

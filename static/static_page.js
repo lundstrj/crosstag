@@ -98,7 +98,7 @@ window.onload = function() {
     //Displays the user on the static page
     function print_user(user_data, user_tagins){
         if(is_not_empty(user_data)){
-            //console.log(user_data);
+            console.log(user_tagins);
             document.getElementById("tagins").style.visibility = 'visible';
             document.getElementById("user_name").innerHTML = user_data.name;
             document.getElementById("status_member").innerHTML = user_data.status;
