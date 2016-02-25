@@ -491,11 +491,9 @@
   font-weight: bold;
 }
 
-.container {
-  text-align: center;
-}
 
 .hero-unit {
+  text-align: center;
   margin-right: 25px;
 }
 
