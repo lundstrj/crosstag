@@ -495,6 +495,13 @@
 .hero-unit {
   text-align: center;
   margin-right: 25px;
+  margin-top: 30px;
+}
+
+#example1:hover {
+  background-color: #2aabd2;
+  width: 255px;
+  height: 43px;
 }
 
 #mainStatHeader{
