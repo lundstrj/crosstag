@@ -113,9 +113,9 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 <form action="/crosstag/v1.0/link_user_to_last_tag/{{data.index}}" method="post" name="Link tag">
 <p><input type="submit" value="Link user to last system tagevent"></p>
 </form>
-<br><br><br><br><br><br>
+<br>
 <form action="/crosstag/v1.0/remove_user/{{data.index}}" method="post" name="remove_user">
-<p><input type="submit" value="Delete user (forever ever). No additional warnings given"></p>
+<p><input type="submit" value="Delete user locally (Not in Fortnox)"></p>
 </form>
 
 {% else %}
