@@ -254,7 +254,7 @@ statistic.Main.prototype.tagsByHours = function(stats) {
 
         var ctx = this.chart.ctx;
         ctx.font = this.scale.font;
-        ctx.fillStyle = this.scale.textColor
+        ctx.fillStyle = this.scale.textColor;
         ctx.textAlign = "center";
         ctx.textBaseline = "bottom";
         this.datasets.forEach(function (dataset) {
