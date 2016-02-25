@@ -1,0 +1,2 @@
+INFO:root:Attempting to set up the reader on: localhost:80
+ERROR:root:2016-02-25 12:46:16.688118 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
