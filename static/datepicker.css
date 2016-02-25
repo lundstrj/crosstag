@@ -119,7 +119,7 @@
 }
 .datepicker table tr td.old,
 .datepicker table tr td.new {
-  color: #999999;
+  color: #000000;
 }
 .datepicker table tr td.disabled,
 .datepicker table tr td.disabled:hover {
@@ -481,8 +481,8 @@
 }
 
 #example1 {
-  background-color:#8AE2FF;
-  width: 250px;
+  background-color: #ffffff;
+  width: 30%;
   height: 40px;
   cursor:pointer;
   border: 1px solid black;
@@ -499,9 +499,7 @@
 }
 
 #example1:hover {
-  background-color: #2aabd2;
-  width: 255px;
-  height: 43px;
+  background-color: #f6c9f7;
 }
 
 #mainStatHeader{
@@ -511,7 +509,7 @@
 
 .statAndCalender {
   padding-bottom: 20px;
-  border-bottom: 2px dashed black;
+  border-bottom: 1px solid black;
 }
 
 .statisticsHeader {
@@ -519,6 +517,6 @@
 }
 
 #memberStat {
-  border-top:2px dashed black;
+  border-top:1px solid black;
   margin-top: 20px;
 }
