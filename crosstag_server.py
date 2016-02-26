@@ -499,7 +499,7 @@ def get_tagevents_user_dict(user_index):
 
 @app.route('/inactive_check', methods=['GET'])
 def inactive_check():
-    users = User.query.all()
+    users = User.query.filter(User.status == "Active").all()
     arr = []
     testarr = []
 
