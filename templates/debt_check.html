@@ -1,0 +1,26 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Debts</h2>
+
+{% if hits %}
+	<table class="table table-hover">
+        <tbody>
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            {% for hit in hits %}
+                <tr>
+                    <td>{{hit['debt'].amount}}</td><td>{{hit['user'].name}}</td>
+                    <td><a href='/user_page/{{hit['debt'].uid}}'>Go to member</a> </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+{% endblock %}

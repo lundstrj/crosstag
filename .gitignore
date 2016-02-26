@@ -4,4 +4,3 @@ config.py~
 fortnox_cfg.py~
 __pycache__/
 forms/__pycache__/
-dev_db.db
