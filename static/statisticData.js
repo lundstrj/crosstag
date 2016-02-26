@@ -77,8 +77,8 @@ statistic.Main.prototype.tagsByMonths = function(stats) {
     datasets: [
         {
             label: "Tags this year",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(0, 114, 255, 0.9)",
+            fillColor: "rgba(255,105,180,0.2)",
+            strokeColor: "rgba(255,105,180,0.9)",
             pointColor: "rgba(220,220,220,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
@@ -147,8 +147,8 @@ statistic.Main.prototype.tagsByDays = function(stats) {
     datasets: [
         {
             label: "Tags this month",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(0, 114, 255, 0.9)",
+            fillColor: "rgba(255,105,180,0.2)",
+            strokeColor: "rgba(255,105,180,0.9)",
             pointColor: "rgba(220,220,220,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
@@ -208,8 +208,8 @@ statistic.Main.prototype.tagsByHours = function(stats) {
     datasets: [
         {
             label: "Tags by hour",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(0, 114, 255, 0.9)",
+            fillColor: "rgba(255,105,180,0.2)",
+            strokeColor: "rgba(255,105,180,0.9)",
             pointColor: "rgba(220,220,220,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
@@ -280,8 +280,8 @@ statistic.Main.prototype.ageOfMembers = function(stats) {
     datasets: [
         {
             label: "Age",
-            fillColor: "rgba(220,220,220,0.2)",
-            strokeColor: "rgba(0, 114, 255, 0.9)",
+            fillColor: "rgba(255,105,180,0.2)",
+            strokeColor: "rgba(255,105,180,0.9)",
             pointColor: "rgba(220,220,220,1)",
             pointStrokeColor: "#fff",
             pointHighlightFill: "#fff",
