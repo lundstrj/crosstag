@@ -3,20 +3,20 @@
 
 {% block content %}
 
-<h2>Debts</h2>
+<h2>Debts</h2><a href='#' onclick="alert('Ska länka till en create new debt sida')">Create new debt</a>
 
 {% if hits %}
 	<table class="table table-hover">
         <tbody>
             <thead>
                 <tr>
-                    <th>Amount</th>
+                    <th>Amount</th><th>Member</th>
                 </tr>
             </thead>
             {% for hit in hits %}
                 <tr>
-                    <td>{{hit['debt'].amount}}</td><td>{{hit['user'].name}}</td>
-                    <td><a href='/user_page/{{hit['debt'].uid}}'>Go to member</a> </td>
+                    <td>{{hit['debt'].amount}} </td><td>{{hit['user'].name}}</td>
+                    <td><a href='#'onclick="confirm('Delete this debt?')">Delete debt</a> </td>
                 </tr>
             {% endfor %}
         </tbody>
