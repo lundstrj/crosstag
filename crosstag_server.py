@@ -145,6 +145,21 @@ class Exercise(db.Model):
         return jsonify(self.dict())
 
 
+class Debt(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Numeric)
+    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
+
+    def __init__(self):
+        self.amount = None
+
+    def dict(self):
+        return {'index': self.id, 'amount': self.amount}
+
+    def json(self):
+        return jsonify(self.dict())
+
+
 def get_last_tag_event():
     top_index = db.session.query(db.func.max(Tagevent.index)).scalar()
     tagevent = Tagevent.query.filter_by(index=top_index).first()
@@ -250,7 +265,7 @@ def static_tagin_page():
 def get_events_from_user_by_tag_id(tag_id):
     try:
         gs = GenerateStats()
-        current_year = gs.get_currentYearString()
+        current_year = gs.get_current_year_string()
         counter = 0
         now = datetime.now()
 
@@ -524,6 +539,23 @@ def inactive_check():
                 testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': temp}
                 arr.append(testarr)
     return render_template('inactive_check.html',
+                           title='Check',
+                           hits=arr)
+
+
+@app.route('/debt_check', methods=['GET'])
+def debt_check():
+    users = User.query.all()
+    debts = Debt.query.all()
+    arr = []
+    testarr = []
+
+    for user in users:
+        for debt in debts:
+            if user.index == debt.uid:
+                testarr = {'debt': debt, 'user': user}
+                arr.append(testarr)
+    return render_template('debt_check.html',
                            title='Check',
                            hits=arr)
 
