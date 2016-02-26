@@ -100,9 +100,9 @@ class GenerateStats:
 
     #Add optional parameter for user to be able to choose year, month and day
     def get_taginsByHour(self, event, chosenDateArray):
-        '''currentYear = self.get_currentYearString()
-        currentMonth = self.get_currentMonthString()
-        currentDay = self.get_currentDayString()'''
+        '''currentYear = self.get_current_year_string()
+        currentMonth = self.get_current_month_string()
+        currentDay = self.get_current_day_string()'''
 
         currentYear = chosenDateArray['year']
         currentMonth = chosenDateArray['month']
@@ -135,48 +135,50 @@ class GenerateStats:
     #56-65
     #65+
 
-        currentYear = int(self.get_currentYearString())
+        currentYear = int(self.get_current_year_string())
         ageArr = [0, 0, 0, 0, 0, 0]
 
-#a_string[:4]
+    # a_string[:4]
         for user in users:
 
             #Riktiga medlemmar har 12-siffrigt pnummer.
             #Företag har 10-siffrigt. VIKTIGT!
             # "year" verkar inte finnas på user.birth_date.year. Hårdkodade in ett datum för att statistiksidan ska fungera! /Patrik
-            userBirthYear = 1985
+            temp_ssn = 0
+            if len(user.ssn) == 8:
+                temp_ssn = user.ssn[:-4]
+                if int(temp_ssn[:-2]) == 19 or int(temp_ssn[:-2]) == 20:
 
-            age = currentYear - userBirthYear
+                    age = currentYear - int(temp_ssn)
 
-            if age >= 15 and age <= 25:
-                ageArr[0] += 1
-            if age >= 26 and age <= 35:
-                ageArr[1] += 1
-            if age >= 36 and age <= 45:
-                ageArr[2] += 1
-            if age >= 46 and age <= 55:
-                ageArr[3] += 1
-            if age >= 56 and age <= 64:
-                ageArr[4] += 1
-            if age >= 65:
-                ageArr[5] += 1
+                    if age >= 15 and age <= 25:
+                        ageArr[0] += 1
+                    if age >= 26 and age <= 35:
+                        ageArr[1] += 1
+                    if age >= 36 and age <= 45:
+                        ageArr[2] += 1
+                    if age >= 46 and age <= 55:
+                        ageArr[3] += 1
+                    if age >= 56 and age <= 64:
+                        ageArr[4] += 1
+                    if age >= 65:
+                        ageArr[5] += 1
 
         return ageArr
 
-
-    def get_currentYearString(self):
+    def get_current_year_string(self):
          now = datetime.now()
          currentYear = str(now.year)
 
          return currentYear
 
-    def get_currentMonthString(self):
+    def get_current_month_string(self):
          now = datetime.now()
          currentMonth = str(now.month)
 
          return currentMonth
 
-    def get_currentDayString(self):
+    def get_current_day_string(self):
         now = datetime.now()
         currentDay = str(now.day)
 
