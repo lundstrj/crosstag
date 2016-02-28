@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash, redirect
 import json
+
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -10,6 +11,7 @@ from forms.new_tag import NewTag
 from forms.new_user import NewUser
 from forms.edit_user import EditUser
 from forms.search_user import SearchUser
+from forms.new_debt import NewDebt
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
@@ -150,11 +152,12 @@ class Debt(db.Model):
     amount = db.Column(db.Numeric)
     uid = db.Column(db.Integer, db.ForeignKey('user.index'))
 
-    def __init__(self):
-        self.amount = None
+    def __init__(self, amount=None, uid=None):
+        self.amount = amount
+        self.uid = uid
 
     def dict(self):
-        return {'index': self.id, 'amount': self.amount}
+        return {'id': self.id, 'amount': self.amount, 'uid': self.uid}
 
     def json(self):
         return jsonify(self.dict())
@@ -558,6 +561,21 @@ def debt_check():
     return render_template('debt_check.html',
                            title='Check',
                            hits=arr)
+
+
+@app.route('/debt_create', methods=['GET', 'POST'])
+def debt_create():
+    form = NewDebt()
+    print("errors", form.errors)
+    if form.validate_on_submit():
+        tmp_debt = Debt(form.amount.data, form.uid.data)
+        db.session.add(tmp_debt)
+        db.session.commit()
+        flash('Created new debt: %s for member %s' % (form.amount.data,
+                                                    tmp_debt.id))
+    return render_template('debt_create.html',
+                           title='Debt Create',
+                           form=form)
 
 
 @app.route('/statistics', methods=['GET'])
