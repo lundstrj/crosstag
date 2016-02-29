@@ -176,20 +176,20 @@ def sync_from_fortnox():
     customers = fortnox_data.get_all_customers()
     ret = []
     gender = None
+    for element in customers:
+        for customer in element:
 
-    for customer in customers:
+            cust = {'FortnoxID': customer["CustomerNumber"],
+                    'OrganisationNumber': customer['OrganisationNumber'],
+                    'Name': customer["Name"],
+                    'Email': customer['Email'],
+                    'Phone': customer['Phone'],
+                    'Address1': customer['Address1'],
+                    'Address2': customer['Address2'],
+                    'City': customer['City'],
+                    'Zipcode': customer['ZipCode']}
 
-        cust = {'FortnoxID': customer["CustomerNumber"],
-                'OrganisationNumber': customer['OrganisationNumber'],
-                'Name': customer["Name"],
-                'Email': customer['Email'],
-                'Phone': customer['Phone'],
-                'Address1': customer['Address1'],
-                'Address2': customer['Address2'],
-                'City': customer['City'],
-                'Zipcode': customer['ZipCode']}
-
-        ret.append(cust)
+            ret.append(cust)
 
     for customer in ret:
         if User.query.filter_by(fortnox_id=customer['FortnoxID']).first() is not None:
