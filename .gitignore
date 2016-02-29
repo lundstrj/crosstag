@@ -4,4 +4,5 @@ config.py~
 fortnox_cfg.py~
 __pycache__/
 forms/__pycache__/
+crosstag_db.db
 dev_db.db
