@@ -51,7 +51,7 @@ window.onload = function() {
     //Collects the user data
     function get_user_data(callback, tag_nbr) {
         try {
-            var xhr = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest();c
             xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_user_data_tag/" + tag_nbr, true);
             xhr.addEventListener("load", function(){
                 callback(get_user_tagins, JSON.parse(xhr.response));
