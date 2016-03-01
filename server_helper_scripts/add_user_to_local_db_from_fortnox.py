@@ -7,9 +7,9 @@ def add_user_to_local_db_from_fortnox(customer):
     from crosstag_server import User, db
 
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
-                       customer['Address1'], customer['Address2'], customer['City'],
-                       customer['Zipcode'], None, customer['FortnoxID'],
-                       None, strip_ssn(customer),
-                       get_gender_from_ssn(customer), None)
+                   customer['Address1'], customer['Address2'], customer['City'],
+                   customer['Zipcode'], None, customer['FortnoxID'],
+                   None, strip_ssn(customer),
+                   get_gender_from_ssn(customer), None)
     db.session.add(tmp_usr)
     db.session.commit()
