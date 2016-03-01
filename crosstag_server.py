@@ -334,22 +334,35 @@ def all_tagevents():
                            hits=ret)
 
 
-@app.route('/all_users', methods=['GET'])
-def all_users():
+@app.route('/all_users/<filter>', methods=['GET', 'POST'])
+def all_users(filter=None):
     ret = []
-    users = User.query.all()
+    counter = 0;
+    #Lists all users
+    if filter == "all":
+        users = User.query.all()
+    #List users depending on the membership
+    elif filter:
+        users = User.query.filter(User.status == filter.title())
+
     for hit in users:
 
-        if hit.tag_id is None or hit.tag_id is "None" or hit.tag_id is "":
+        if hit.tag_id is None or hit.tag_id == "None" or hit.tag_id == "":
             hit.tag_id = "No"
         else:
             hit.tag_id = "Yes"
 
+        counter += 1
         js = hit.dict()
         ret.append(js)
     return render_template('all_users.html',
                            title='All Users',
-                           hits=ret)
+                           hits=ret,
+                           filter=filter,
+                           count=counter)
+
+
+
 
 
 @app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>',
@@ -385,7 +398,7 @@ def remove_user(index):
         user = User.query.filter_by(index=index).first()
         db.session.delete(user)
         db.session.commit()
-        return redirect("/all_users")
+        return redirect("/all_users/all")
 
 
 @app.route('/add_new_user', methods=['GET', 'POST'])
