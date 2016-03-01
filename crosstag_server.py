@@ -150,14 +150,14 @@ class Exercise(db.Model):
 class Debt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric)
-    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
+    name = db.Column(db.String(50))
 
-    def __init__(self, amount=None, uid=None):
+    def __init__(self, amount=None, name=None):
         self.amount = amount
-        self.uid = uid
+        self.name = name
 
     def dict(self):
-        return {'id': self.id, 'amount': self.amount, 'uid': self.uid}
+        return {'id': self.id, 'amount': self.amount, 'name': self.name}
 
     def json(self):
         return jsonify(self.dict())
@@ -546,18 +546,41 @@ def inactive_check():
                            hits=arr)
 
 
+
+@app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
+def debt_delete(id):
+
+    debts = Debt.query.filter_by(id=id).first()
+    db.session.delete(debts)
+    db.session.commit()
+    flash('Deleted debt: %s from member %s' % (debts.amount,
+                                                    debts.name))
+    return redirect("/debt_check")
+
+
+
+@app.route('/debt_delete_confirm/<id>', methods=['GET'])
+def debt_delete_confirm(id):
+
+    debts = Debt.query.filter_by(id=id).first()
+
+    return render_template('debt_delete_confirm.html',
+                           title='Delete',
+                           hits=debts)
+
+
+
 @app.route('/debt_check', methods=['GET'])
 def debt_check():
-    users = User.query.all()
     debts = Debt.query.all()
+
     arr = []
     testarr = []
 
-    for user in users:
-        for debt in debts:
-            if user.index == debt.uid:
-                testarr = {'debt': debt, 'user': user}
-                arr.append(testarr)
+    for hit in debts:
+        testarr = { 'debt': hit}
+        arr.append(testarr)
+
     return render_template('debt_check.html',
                            title='Check',
                            hits=arr)
@@ -568,11 +591,13 @@ def debt_create():
     form = NewDebt()
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_debt = Debt(form.amount.data, form.uid.data)
+        tmp_debt = Debt(form.amount.data, form.name.data)
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
-                                                    tmp_debt.id))
+                                                    form.name.data))
+        return redirect("/debt_check")
+
     return render_template('debt_create.html',
                            title='Debt Create',
                            form=form)
