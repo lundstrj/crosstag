@@ -150,14 +150,14 @@ class Exercise(db.Model):
 class Debt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric)
-    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
+    name = db.Column(db.String(50))
 
-    def __init__(self, amount=None, uid=None):
+    def __init__(self, amount=None, name=None):
         self.amount = amount
-        self.uid = uid
+        self.name = name
 
     def dict(self):
-        return {'id': self.id, 'amount': self.amount, 'uid': self.uid}
+        return {'id': self.id, 'amount': self.amount, 'name': self.name}
 
     def json(self):
         return jsonify(self.dict())
@@ -176,20 +176,20 @@ def sync_from_fortnox():
     customers = fortnox_data.get_all_customers()
     ret = []
     gender = None
+    for element in customers:
+        for customer in element:
 
-    for customer in customers:
+            cust = {'FortnoxID': customer["CustomerNumber"],
+                    'OrganisationNumber': customer['OrganisationNumber'],
+                    'Name': customer["Name"],
+                    'Email': customer['Email'],
+                    'Phone': customer['Phone'],
+                    'Address1': customer['Address1'],
+                    'Address2': customer['Address2'],
+                    'City': customer['City'],
+                    'Zipcode': customer['ZipCode']}
 
-        cust = {'FortnoxID': customer["CustomerNumber"],
-                'OrganisationNumber': customer['OrganisationNumber'],
-                'Name': customer["Name"],
-                'Email': customer['Email'],
-                'Phone': customer['Phone'],
-                'Address1': customer['Address1'],
-                'Address2': customer['Address2'],
-                'City': customer['City'],
-                'Zipcode': customer['ZipCode']}
-
-        ret.append(cust)
+            ret.append(cust)
 
     for customer in ret:
         if User.query.filter_by(fortnox_id=customer['FortnoxID']).first() is not None:
@@ -334,22 +334,35 @@ def all_tagevents():
                            hits=ret)
 
 
-@app.route('/all_users', methods=['GET'])
-def all_users():
+@app.route('/all_users/<filter>', methods=['GET', 'POST'])
+def all_users(filter=None):
     ret = []
-    users = User.query.all()
+    counter = 0;
+    #Lists all users
+    if filter == "all":
+        users = User.query.all()
+    #List users depending on the membership
+    elif filter:
+        users = User.query.filter(User.status == filter.title())
+
     for hit in users:
 
-        if hit.tag_id is None or hit.tag_id is "None" or hit.tag_id is "":
+        if hit.tag_id is None or hit.tag_id == "None" or hit.tag_id == "":
             hit.tag_id = "No"
         else:
             hit.tag_id = "Yes"
 
+        counter += 1
         js = hit.dict()
         ret.append(js)
     return render_template('all_users.html',
                            title='All Users',
-                           hits=ret)
+                           hits=ret,
+                           filter=filter,
+                           count=counter)
+
+
+
 
 
 @app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>',
@@ -385,7 +398,7 @@ def remove_user(index):
         user = User.query.filter_by(index=index).first()
         db.session.delete(user)
         db.session.commit()
-        return redirect("/all_users")
+        return redirect("/all_users/all")
 
 
 @app.route('/add_new_user', methods=['GET', 'POST'])
@@ -546,18 +559,41 @@ def inactive_check():
                            hits=arr)
 
 
+
+@app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
+def debt_delete(id):
+
+    debts = Debt.query.filter_by(id=id).first()
+    db.session.delete(debts)
+    db.session.commit()
+    flash('Deleted debt: %s from member %s' % (debts.amount,
+                                                    debts.name))
+    return redirect("/debt_check")
+
+
+
+@app.route('/debt_delete_confirm/<id>', methods=['GET'])
+def debt_delete_confirm(id):
+
+    debts = Debt.query.filter_by(id=id).first()
+
+    return render_template('debt_delete_confirm.html',
+                           title='Delete',
+                           hits=debts)
+
+
+
 @app.route('/debt_check', methods=['GET'])
 def debt_check():
-    users = User.query.all()
     debts = Debt.query.all()
+
     arr = []
     testarr = []
 
-    for user in users:
-        for debt in debts:
-            if user.index == debt.uid:
-                testarr = {'debt': debt, 'user': user}
-                arr.append(testarr)
+    for hit in debts:
+        testarr = { 'debt': hit}
+        arr.append(testarr)
+
     return render_template('debt_check.html',
                            title='Check',
                            hits=arr)
@@ -568,11 +604,13 @@ def debt_create():
     form = NewDebt()
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_debt = Debt(form.amount.data, form.uid.data)
+        tmp_debt = Debt(form.amount.data, form.name.data)
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
-                                                    tmp_debt.id))
+                                                    form.name.data))
+        return redirect("/debt_check")
+
     return render_template('debt_create.html',
                            title='Debt Create',
                            form=form)

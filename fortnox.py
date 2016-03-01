@@ -10,13 +10,22 @@ class Fortnox:
 
     def get_all_customers(self):
         try:
-            r = requests.get(
-                url = 'https://api.fortnox.se/3/customers',
-                headers=cfg.fortnox
-            )
-            print('Response status: {status_code}'.format(status_code=r.status_code))
-            content = json.loads(r.text)
-            return content["Customers"]
+            page = 1
+            customer_array = []
+            while True:
+                r = requests.get(
+                    url='https://api.fortnox.se/3/customers/?page='+str(page),
+                    headers=cfg.fortnox
+                )
+                print('Response status: {status_code}'.format(status_code=r.status_code))
+                content = json.loads(r.text)
+                customer_array.append(content["Customers"])
+                page += 1
+
+                if content["MetaInformation"]["@TotalPages"] == content["MetaInformation"]["@CurrentPage"]:
+                    break
+
+            return customer_array
         except http.client.HTTPException:
             # Exception
             print('Exception during request')
