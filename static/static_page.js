@@ -104,7 +104,7 @@ window.onload = function() {
            xhr.addEventListener("load", function(){
                var data_arr = JSON.parse(xhr.response);
                console.log(data_arr);
-               print_top_five(data_arr);
+               //print_top_five(data_arr);
            });
 
            xhr.send();
