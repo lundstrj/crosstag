@@ -103,6 +103,7 @@ window.onload = function() {
            xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
            xhr.addEventListener("load", function(){
                var data_arr = JSON.parse(xhr.response);
+               console.log(data_arr);
                print_top_five(data_arr);
            });
 
@@ -117,7 +118,6 @@ window.onload = function() {
         // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
         var test = document.createElement("label");
         test.innerHTML = user_data['name'];
-        console.log(user_data);
         document.getElementById("top-five").appendChild(test);
 
         //document.getElementById("top_five_user_name").innerHTML = user_data.name;

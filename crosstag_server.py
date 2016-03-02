@@ -167,7 +167,7 @@ def static_tagin_page():
 def static_top_five():
     users = User.query.all()
     arr = []
-    test_arr = []
+
     one_week = datetime.now() - timedelta(weeks=1)
 
     for user in users:
@@ -178,11 +178,11 @@ def static_top_five():
             counter += 1
 
         if counter > 0:
-            test_arr = {'name': user.name, 'amount': counter}
+            test_arr = {"name": user.name, "amount": counter}
             arr.append(test_arr)
 
-    #arr.sort(test_arr['amount'], reverse=true)
-
+    sorted(arr, key=lambda user: user['amount'])
+    print(arr)
     return jsonify(arr)
 
 # Gets all tags last month, just one event per day.
