@@ -587,7 +587,6 @@ def user_page(user_index=None):
         return "No user Found"
 
     else:
-
         tagevents = get_tagevents_user_dict(user_index)
         return render_template('user_page.html',
                                title='User Page',
