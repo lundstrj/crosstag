@@ -4,7 +4,8 @@ from server_helper_scripts.get_gender_from_ssn import get_gender_from_ssn
 
 # Adding a fortnox user to the local DB
 def add_user_to_local_db_from_fortnox(customer):
-    from crosstag_server import User, db
+    from crosstag_server import db
+    from db_models.user import User
 
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
                    customer['Address1'], customer['Address2'], customer['City'],
