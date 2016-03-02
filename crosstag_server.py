@@ -177,11 +177,11 @@ def static_top_five():
             counter += 1
 
         if counter > 0:
-            test_arr = {'name': user.name, 'amount': counter}
+            test_arr = {'name': user.name}
             arr.append(test_arr)
 
-            print(jsonify(arr))
-    #arr.sort(test_arr['amount'], reverse=true)
+
+
 
     return jsonify(arr)
 
