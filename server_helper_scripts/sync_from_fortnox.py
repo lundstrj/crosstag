@@ -4,7 +4,7 @@ from server_helper_scripts.add_user_to_local_db_from_fortnox import add_user_to_
 
 # Syncs the fortnox database with the local DB
 def sync_from_fortnox():
-    from crosstag_server import User
+    from db_models.user import User
     from fortnox import Fortnox
 
     fortnox_data = Fortnox()
