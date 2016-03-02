@@ -34,8 +34,10 @@ def static_tagin_page():
     return render_template('static_tagin.html',
                            title='Static tagins')
 
+
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
+    from db_models.user import User
     users = User.query.all()
     arr = []
     test_arr = []
@@ -51,9 +53,6 @@ def static_top_five():
         if counter > 0:
             test_arr = {'name': user.name}
             arr.append(test_arr)
-
-
-
 
     return jsonify(arr)
 

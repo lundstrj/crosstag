@@ -93,6 +93,8 @@ window.onload = function() {
            xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
            xhr.addEventListener("load", function(){
 
+
+
            });
 
            xhr.send();
