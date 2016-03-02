@@ -37,6 +37,7 @@ window.onload = function() {
                 counter = 0;
                 current_user = current;
                 callback();
+                top_five_tag();
             }
         }
     }
@@ -51,7 +52,7 @@ window.onload = function() {
     //Collects the user data
     function get_user_data(callback, tag_nbr) {
         try {
-            var xhr = new XMLHttpRequest();c
+            var xhr = new XMLHttpRequest();
             xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_user_data_tag/" + tag_nbr, true);
             xhr.addEventListener("load", function(){
                 callback(get_user_tagins, JSON.parse(xhr.response));
@@ -95,6 +96,35 @@ window.onload = function() {
         return false;
     }
 
+    function top_five_tag() {
+        try{
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
+           xhr.addEventListener("load", function(){
+               print_top_five(JSON.parse(xhr.response));
+           });
+
+           xhr.send();
+       }
+        catch(exception){
+            return null;
+        }
+    }
+
+    function print_top_five(user_data) {
+        // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
+        var name = user_data[0].name;
+        var amount = user_data[0].amount;
+
+        var test = document.createElement("Label");
+        test.innerHTML = name;
+        console.log(user_data);
+        document.getElementById("top-five").appendChild(test);
+
+        //document.getElementById("top_five_user_name").innerHTML = user_data.name;
+        //document.getElementById("tag_amount").innerHTML = user_data.amount;
+    }
+
     //Displays the user on the static page
     function print_user(user_data, user_tagins){
         if(is_not_empty(user_data)){
@@ -105,7 +135,7 @@ window.onload = function() {
             document.getElementById("expire_date").innerHTML = user_data.expiry_date;
             document.getElementById("create_date").innerHTML = user_data.create_date;
             document.getElementById("user_email").innerHTML = user_data.email;
-            document.getElementById("tagin_month").innerHTML = user_tagins.value
+            document.getElementById("tagin_month").innerHTML = user_tagins.value;
         }
     }
 
@@ -134,6 +164,7 @@ window.onload = function() {
             //this.print_clear_screen("online")
         }
     }
+
 
     setInterval(function(){
         CheckTagins();
