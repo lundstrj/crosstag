@@ -4,26 +4,27 @@ from server_helper_scripts.add_user_to_local_db_from_fortnox import add_user_to_
 
 # Syncs the fortnox database with the local DB
 def sync_from_fortnox():
-    from crosstag_server import Fortnox, User
-    fortnox_data = Fortnox()
+    from crosstag_server import User
+    from fortnox import Fortnox
 
+    fortnox_data = Fortnox()
     customers = fortnox_data.get_all_customers()
     ret = []
-    gender = None
 
-    for customer in customers:
+    for element in customers:
+        for customer in element:
 
-        cust = {'FortnoxID': customer["CustomerNumber"],
-                'OrganisationNumber': customer['OrganisationNumber'],
-                'Name': customer["Name"],
-                'Email': customer['Email'],
-                'Phone': customer['Phone'],
-                'Address1': customer['Address1'],
-                'Address2': customer['Address2'],
-                'City': customer['City'],
-                'Zipcode': customer['ZipCode']}
+            cust = {'FortnoxID': customer["CustomerNumber"],
+                    'OrganisationNumber': customer['OrganisationNumber'],
+                    'Name': customer["Name"],
+                    'Email': customer['Email'],
+                    'Phone': customer['Phone'],
+                    'Address1': customer['Address1'],
+                    'Address2': customer['Address2'],
+                    'City': customer['City'],
+                    'Zipcode': customer['ZipCode']}
 
-        ret.append(cust)
+            ret.append(cust)
 
     for customer in ret:
         if User.query.filter_by(fortnox_id=customer['FortnoxID']).first() is not None:
