@@ -167,7 +167,7 @@ def static_tagin_page():
 def static_top_five():
     users = User.query.all()
     arr = []
-
+    test_arr = []
     one_week = datetime.now() - timedelta(weeks=1)
 
     for user in users:
