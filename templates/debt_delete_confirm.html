@@ -1,0 +1,30 @@
+<!-- extend from base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<br>
+<h3>Do you really want to delete this debt?</h3>
+
+<table class="table table-hover">
+    <tbody>
+         <thead>
+                <tr>
+                    <th>Amount</th><th>Member</th>
+                </tr>
+            </thead>
+
+            <tr>
+                <td>{{ hits.amount }}</td> <td>{{ hits.name }} </td>
+                <td>
+                    <form action="debt_delete/{{ hits.id }}" method="post">
+
+                    <input type="submit"  value="Confirm Delete" >
+                    </form>
+                </td>
+            </tr>
+    </tbody>
+</table>
+{% endblock %}
+

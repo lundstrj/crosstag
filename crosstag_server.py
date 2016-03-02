@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, jsonify, render_template, flash, redirect
 import json
-
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -12,27 +11,13 @@ from forms.new_user import NewUser
 from forms.edit_user import EditUser
 from forms.search_user import SearchUser
 from forms.new_debt import NewDebt
+from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
+from server_helper_scripts.get_last_tag_event import get_last_tag_event
 
 app = Flask(__name__)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 app_name = 'crosstag'
-
-
-#Implementerade status i user, skriver bara ut siffra atm. // Rydberg 2016-02-10.
-class Member_status(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    status = db.Column(db.String(12))
-
-    def __init__(self, id, status):
-        self.id = id
-        self.status = status
-
-    def dict(self):
-        return {'id': self.id, 'status': self.status}
-
-    def json(self):
-        return jsonify(self.dict())
 
 
 class User(db.Model):
@@ -100,8 +85,8 @@ class Tagevent(db.Model):
         for user in users:
             js = user.dict()
 
-        #Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
-        if js != None:
+        # Vi får ut tag id så att man enklare kan lägga till det på en ny medlem!
+        if js is not None:
             self.uid = js['index']
 
     def dict(self):
@@ -127,7 +112,8 @@ class Records(db.Model):
         self.record_date = datetime.now()
 
     def dict(self):
-        return {'id': self.id, 'exercise_id': self.exercise_id, 'record': self.record, 'unit': self.unit, 'record_date': self.record_date, 'uid':self.uid}
+        return {'id': self.id, 'exercise_id': self.exercise_id, 'record': self.record, 'unit': self.unit,
+                'record_date': self.record_date, 'uid': self.uid}
 
     def json(self):
         return jsonify(self.dict())
@@ -150,103 +136,17 @@ class Exercise(db.Model):
 class Debt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric)
-    uid = db.Column(db.Integer, db.ForeignKey('user.index'))
+    name = db.Column(db.String(50))
 
-    def __init__(self, amount=None, uid=None):
+    def __init__(self, amount=None, name=None):
         self.amount = amount
-        self.uid = uid
+        self.name = name
 
     def dict(self):
-        return {'id': self.id, 'amount': self.amount, 'uid': self.uid}
+        return {'id': self.id, 'amount': self.amount, 'name': self.name}
 
     def json(self):
         return jsonify(self.dict())
-
-
-def get_last_tag_event():
-    top_index = db.session.query(db.func.max(Tagevent.index)).scalar()
-    tagevent = Tagevent.query.filter_by(index=top_index).first()
-    return tagevent
-
-
-# Syncs the fortnox database with the local DB
-def sync_from_fortnox():
-    fortnox_data = Fortnox()
-
-    customers = fortnox_data.get_all_customers()
-    ret = []
-    gender = None
-    for element in customers:
-        for customer in element:
-
-            cust = {'FortnoxID': customer["CustomerNumber"],
-                    'OrganisationNumber': customer['OrganisationNumber'],
-                    'Name': customer["Name"],
-                    'Email': customer['Email'],
-                    'Phone': customer['Phone'],
-                    'Address1': customer['Address1'],
-                    'Address2': customer['Address2'],
-                    'City': customer['City'],
-                    'Zipcode': customer['ZipCode']}
-
-            ret.append(cust)
-
-    for customer in ret:
-        if User.query.filter_by(fortnox_id=customer['FortnoxID']).first() is not None:
-            update_user_in_local_db_from_fortnox(customer)
-        else:
-            add_user_to_local_db_from_fortnox(customer)
-
-
-# Updating an existing user in local DB from fortnox.
-def update_user_in_local_db_from_fortnox(customer):
-    user = User.query.filter_by(fortnox_id=customer['FortnoxID']).first()
-    if user is None:
-        return "she wrote upon it; no such number, no such zone"
-    else:
-        user.name = customer['Name']
-        user.email = customer['Email']
-        user.phone = customer['Phone']
-        user.address = customer['Address1']
-        user.address2 = customer['Address2']
-        user.city = customer['City']
-        user.zip_code = customer['Zipcode']
-        user.gender = get_gender_from_ssn(customer)
-        user.ssn = strip_ssn(customer)
-        user.expiry_date = user.expiry_date
-        user.create_date = user.create_date
-
-        db.session.commit()
-
-
-# Adding a fortnox user to the local DB
-def add_user_to_local_db_from_fortnox(customer):
-    tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
-                       customer['Address1'], customer['Address2'], customer['City'],
-                       customer['Zipcode'], None, customer['FortnoxID'],
-                       None, strip_ssn(customer),
-                       get_gender_from_ssn(customer), None)
-    db.session.add(tmp_usr)
-    db.session.commit()
-
-
-def strip_ssn(customer):
-    return customer['OrganisationNumber'][:-5]
-
-
-def get_gender_from_ssn(customer):
-    ssn_gender_number = customer['OrganisationNumber'][-2:]
-
-    try:
-        gender_number = int(ssn_gender_number[:1])
-        if gender_number % 2 == 0:
-            return 'female'
-        elif int(gender_number) % 2 == 1:
-            return 'male'
-        else:
-            return 'unknown'
-    except:
-        return None
 
 
 @app.route('/')
@@ -261,7 +161,7 @@ def index():
 def static_tagin_page():
 
     return render_template('static_tagin.html',
-                            title='Static tagins')
+                           title='Static tagins')
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
@@ -356,22 +256,32 @@ def all_tagevents():
                            hits=ret)
 
 
-@app.route('/all_users', methods=['GET'])
-def all_users():
+@app.route('/all_users/<filter>', methods=['GET', 'POST'])
+def all_users(filter=None):
     ret = []
-    users = User.query.all()
+    counter = 0;
+    # Lists all users
+    if filter == "all":
+        users = User.query.all()
+    # List users depending on the membership
+    elif filter:
+        users = User.query.filter(User.status == filter.title())
+
     for hit in users:
 
-        if hit.tag_id is None or hit.tag_id is "None" or hit.tag_id is "":
+        if hit.tag_id is None or hit.tag_id == "None" or hit.tag_id == "":
             hit.tag_id = "No"
         else:
             hit.tag_id = "Yes"
 
+        counter += 1
         js = hit.dict()
         ret.append(js)
     return render_template('all_users.html',
                            title='All Users',
-                           hits=ret)
+                           hits=ret,
+                           filter=filter,
+                           count=counter)
 
 
 @app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>',
@@ -407,7 +317,7 @@ def remove_user(index):
         user = User.query.filter_by(index=index).first()
         db.session.delete(user)
         db.session.commit()
-        return redirect("/all_users")
+        return redirect("/all_users/all")
 
 
 @app.route('/add_new_user', methods=['GET', 'POST'])
@@ -426,8 +336,8 @@ def add_new_user():
                                                     tmp_usr.index))
         tagevent = get_last_tag_event()
 
-        fortnoxData = Fortnox()
-        fortnoxData.insert_customer(tmp_usr)
+        fortnox_data = Fortnox()
+        fortnox_data.insert_customer(tmp_usr)
 
         msg = None
         if tagevent is None:
@@ -548,7 +458,7 @@ def inactive_check():
     for user in users:
 
         valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()[-1:]
-        #valid_tagevent.reverse()
+        # valid_tagevent.reverse()
         for event in valid_tagevent:
 
             if event.timestamp < two_weeks:
@@ -568,18 +478,38 @@ def inactive_check():
                            hits=arr)
 
 
+@app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
+def debt_delete(id):
+
+    debts = Debt.query.filter_by(id=id).first()
+    db.session.delete(debts)
+    db.session.commit()
+    flash('Deleted debt: %s from member %s' % (debts.amount,
+                                               debts.name))
+    return redirect("/debt_check")
+
+
+@app.route('/debt_delete_confirm/<id>', methods=['GET'])
+def debt_delete_confirm(id):
+
+    debts = Debt.query.filter_by(id=id).first()
+
+    return render_template('debt_delete_confirm.html',
+                           title='Delete',
+                           hits=debts)
+
+
 @app.route('/debt_check', methods=['GET'])
 def debt_check():
-    users = User.query.all()
     debts = Debt.query.all()
+
     arr = []
     testarr = []
 
-    for user in users:
-        for debt in debts:
-            if user.index == debt.uid:
-                testarr = {'debt': debt, 'user': user}
-                arr.append(testarr)
+    for hit in debts:
+        testarr = {'debt': hit}
+        arr.append(testarr)
+
     return render_template('debt_check.html',
                            title='Check',
                            hits=arr)
@@ -590,11 +520,13 @@ def debt_create():
     form = NewDebt()
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_debt = Debt(form.amount.data, form.uid.data)
+        tmp_debt = Debt(form.amount.data, form.name.data)
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
-                                                    tmp_debt.id))
+                                                    form.name.data))
+        return redirect("/debt_check")
+
     return render_template('debt_create.html',
                            title='Debt Create',
                            form=form)
@@ -604,31 +536,32 @@ def debt_create():
 def statistics():
     default_date = datetime.now()
 
-    defaultDateArray = {'year': str(default_date.year), 'month': str(default_date.month), 'day':str(default_date.day)}
+    default_date_array = {'year': str(default_date.year), 'month': str(default_date.month), 'day':str(default_date.day)}
 
-    #return defaultDateArray['month']
-    #return default_date
+    # return default_date_array['month']
+    # return default_date
     gs = GenerateStats()
-    #Chosenyear, chosenmonth, chosenday
+    # Chosenyear, chosenmonth, chosenday
 
     # Fetch the data from the database.
     users = User.query.all()
     event = Tagevent
 
-    weekDayName = default_date.strftime('%A')
-    monthName = default_date.strftime('%B')
-    customDateDay = {'weekday': weekDayName + ' '     + str(default_date.day) + '/' + str(default_date.month) + '/' + str(default_date.year)}
+    week_day_name = default_date.strftime('%A')
+    month_name = default_date.strftime('%B')
+    custom_date_day = {'weekday': week_day_name + ' ' + str(default_date.day) + '/' + str(default_date.month) + '/' +
+                       str(default_date.year)}
 
-    customDateMonth = {'month': monthName + ' '  + str(default_date.year)}
+    custom_date_month = {'month': month_name + ' ' + str(default_date.year)}
 
     # Send the data to a method who returns an multi dimensional array with statistics.
-    ret = gs.get_data(users, event, defaultDateArray)
+    ret = gs.get_data(users, event, default_date_array)
 
     return render_template('statistics.html',
                            plot_paths='',
                            data=ret,
-                           data2=customDateDay,
-                           data3=customDateMonth)
+                           data2=custom_date_day,
+                           data3=custom_date_month)
 
 
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
@@ -637,7 +570,7 @@ def statistics_by_date(_month, _day, _year):
     chosen_date_array = {'year': _year, 'month': _month, 'day': _day}
 
     gs = GenerateStats()
-    #Chosenyear, chosenmonth, chosenday
+    # Chosenyear, chosenmonth, chosenday
 
     # Fetch the data from the database.
     users = User.query.all()
@@ -647,11 +580,11 @@ def statistics_by_date(_month, _day, _year):
 
     selected_date = default_date.replace(day=int(_day), month=int(_month), year=int(_year))
 
-    weekDayName = selected_date.strftime('%A')
-    monthName = selected_date.strftime('%B')
-    customDateDay = {'weekday': weekDayName + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
+    week_day_name = selected_date.strftime('%A')
+    month_name = selected_date.strftime('%B')
+    custom_date_day = {'weekday': week_day_name + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
 
-    customDateMonth = {'month': monthName + ' '  + str(selected_date.year)}
+    custom_date_month = {'month': month_name + ' '  + str(selected_date.year)}
 
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, chosen_date_array)
@@ -659,8 +592,8 @@ def statistics_by_date(_month, _day, _year):
     return render_template('statistics.html',
                            plot_paths='',
                            data=ret,
-                           data2=customDateDay,
-                           data3=customDateMonth)
+                           data2=custom_date_day,
+                           data3=custom_date_month)
 
 
 # Syncs the local database with customers from fortnox
@@ -675,13 +608,14 @@ def fortnox_users():
 @app.route('/fortnox/<fortnox_id>', methods=['GET'])
 def fortnox_specific_user(fortnox_id):
 
-    fortnoxData = Fortnox()
+    fortnox_data = Fortnox()
 
-    ret = fortnoxData.get_customer_by_id(fortnox_id)
+    ret = fortnox_data.get_customer_by_id(fortnox_id)
 
     return render_template('fortnox.html',
                            plot_paths='',
                            data=ret)
+
 
 # TEST FUNKTION!!!!!
 @app.route('/pb/<user_id>', methods=['GET'])
@@ -720,33 +654,6 @@ def pb(user_id):
     return render_template('PB.html', plot_paths='', data=ret, users=userret, exercises=exerciseret)
 
 
-@app.route('/getrecenteventsgender', methods=['GET'])
-def get_recent_events_gender():
-    three_months_ago = datetime.now() - timedelta(weeks=8)
-    events = Tagevent.query.filter(Tagevent.timestamp>three_months_ago).all()
-    
-    events_json={}
-    genders = []
-
-    for event in events:
-        current=str(event.timestamp.date())
-        try:
-            gender=User.query.filter_by(tag_id=event.tag_id).first().gender
-        except: 
-            gender='unknown'
-        
-        genders.append(gender)
-
-        if current in events_json:
-            events_json[current] += 1
-        else:
-            events_json[current] = 1
-    
-    # [{datestamp: ["2014-12-22", "2014-12-23"], unknown: [0,0], male: [9, 5], female: [0,0]}]
-    res = [{'datestamp': male.keys(), 'male': male.values(), 'female': female.values(), 'unknown': unknown.values()} ]
-    return json.dumps(res)
-
-
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
     three_months_ago = datetime.now() - timedelta(weeks=8)
@@ -776,7 +683,6 @@ def get_recent_events():
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
     user = User.query.filter_by(index=user_index).first()
-
 
     if user is None:
         return "No user Found"
@@ -811,9 +717,9 @@ def edit_user(user_index=None):
         user.status = form.status.data
 
         db.session.commit()
-        ##If we successfully edited the user, redirect back to userpage.
-        fortnoxData = Fortnox()
-        fortnoxData.update_customer(user)
+        # If we successfully edited the user, redirect back to userpage.
+        fortnox_data = Fortnox()
+        fortnox_data.update_customer(user)
         return redirect("/user_page/"+str(user.index))
 
     if user:
@@ -851,11 +757,12 @@ def get_all_users():
 if __name__ == '__main__':
     parser = OptionParser(usage="usage: %prog [options] arg \nTry this: " +
                           "python crosstag_server.py", version="%prog 1.0")
-    parser.add_option('--debug', dest='debug', default=False, action='store_true', help="Do you want to run this thing with debug output?")
+    parser.add_option('--debug', dest='debug', default=False, action='store_true',
+                      help="Do you want to run this thing with debug output?")
     (options, args) = parser.parse_args()
-    #config['database_file'] = options.database
-    #config['secret_key'] = options.secret
+    # config['database_file'] = options.database
+    # config['secret_key'] = options.secret
     db.create_all()
-    #if options.debug:
+    # if options.debug:
     app.logger.propagate = False
     app.run(host='0.0.0.0', port=app.config["PORT"], debug=True)

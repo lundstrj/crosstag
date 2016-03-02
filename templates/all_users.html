@@ -8,7 +8,28 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 {% endif %}
 
 <h1>All users</h1>
+
+    <select onChange="window.location.href=this.value">
+        <option>Choose Filter</option>
+    <option value="/all_users/all">All</option>
+    <option value="/all_users/active">Active Membership</option>
+    <option value="/all_users/inactive">Inactive Membership</option>
+    <option value="/all_users/free">Free Membership</option>
+    <option value="/all_users/frozen">Frozen Membership</option>
+    </select>
+
+
+{% if count %}
+<p>Listed {{ count }} users.</p>
+{% endif %}
+
+
+
+
 {% if hits %}
+
+
+
 	<table class="table table-hover">
 	<tbody>
 		<thead>
