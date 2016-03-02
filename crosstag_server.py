@@ -117,9 +117,11 @@ def all_users(filter=None):
     from db_models.user import User
     ret = []
     counter = 0;
+
     # Lists all users
     if filter == "all":
-        users = User.query.all()
+        users = User.query.order_by("expiry_date desc").all()
+
     # List users depending on the membership
     elif filter:
         users = User.query.filter(User.status == filter.title())
