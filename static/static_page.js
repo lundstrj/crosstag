@@ -9,6 +9,8 @@ window.onload = function() {
     var sleep_time = 2;
     var current_user = null;
 
+    top_five_tag();
+
     //Asks the server if there's a new tagevent
     function poll_server(callback) {
         try {
@@ -84,6 +86,30 @@ window.onload = function() {
             return null;
         }
     }
+
+    function top_five_tag() {
+        try{
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
+           xhr.addEventListener("load", function(){
+               var data_arr = JSON.parse(xhr.response);
+               print_top_five(data_arr);
+           });
+
+           xhr.send();
+       }
+        catch(exception){
+            return null;
+        }
+    }
+
+    function print_top_five(user_data) {
+        // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
+
+
+
+        //document.getElementById("top_five_user_name").innerHTML = user_data.name;
+        //document.getElementById("tag_amount").innerHTML = user_data.amount;
 
     //Controls if a object is empty or not
     function is_not_empty(object){
