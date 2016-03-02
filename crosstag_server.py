@@ -31,9 +31,31 @@ def index():
 # Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
+
     return render_template('static_tagin.html',
                            title='Static tagins')
 
+@app.route('/crosstag/v1.0/static_top_five')
+def static_top_five():
+    users = User.query.all()
+    arr = []
+
+    one_week = datetime.now() - timedelta(weeks=1)
+
+    for user in users:
+        counter = 0
+        user_tagevents = Tagevent.query.filter(Tagevent.uid == user.index).filter(Tagevent.timestamp > one_week).all()
+
+        for event in user_tagevents:
+            counter += 1
+
+        if counter > 0:
+            test_arr = {"name": user.name, "amount": counter}
+            arr.append(test_arr)
+
+    sorted(arr, key=lambda user: user['amount'])
+    print(arr)
+    return jsonify(arr)
 
 # Gets all tags last month, just one event per day.
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])

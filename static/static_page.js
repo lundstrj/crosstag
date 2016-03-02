@@ -9,6 +9,8 @@ window.onload = function() {
     var sleep_time = 2;
     var current_user = null;
 
+    top_five_tag();
+
     //Asks the server if there's a new tagevent
     function poll_server(callback) {
         try {
@@ -95,6 +97,33 @@ window.onload = function() {
         return false;
     }
 
+    function top_five_tag() {
+        try{
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
+           xhr.addEventListener("load", function(){
+               var data_arr = JSON.parse(xhr.response);
+               console.log(data_arr);
+               //print_top_five(data_arr);
+           });
+
+           xhr.send();
+       }
+        catch(exception){
+            return null;
+        }
+    }
+
+    function print_top_five(user_data) {
+        // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
+        var test = document.createElement("label");
+        test.innerHTML = user_data['name'];
+        document.getElementById("top-five").appendChild(test);
+
+        //document.getElementById("top_five_user_name").innerHTML = user_data.name;
+        //document.getElementById("tag_amount").innerHTML = user_data.amount;
+    }
+
     //Displays the user on the static page
     function print_user(user_data, user_tagins){
         if(is_not_empty(user_data)){
@@ -105,11 +134,13 @@ window.onload = function() {
             document.getElementById("expire_date").innerHTML = user_data.expiry_date;
             document.getElementById("create_date").innerHTML = user_data.create_date;
             document.getElementById("user_email").innerHTML = user_data.email;
-            document.getElementById("tagin_month").innerHTML = user_tagins.value
+            if (user_tagins != null) {
+                document.getElementById("tagin_month").innerHTML = user_tagins.value;
+            }
         }
     }
 
-    //Controls if the user should be shown, for how long and removes the diaplyes user from the page
+    //Controls if the user should be shown, for how long and removes the diaplyed user from the page
     function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
@@ -134,6 +165,7 @@ window.onload = function() {
             //this.print_clear_screen("online")
         }
     }
+
 
     setInterval(function(){
         CheckTagins();
