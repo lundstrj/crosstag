@@ -35,8 +35,11 @@ def static_tagin_page():
     return render_template('static_tagin.html',
                            title='Static tagins')
 
+
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
+    from db_models.tagevent import Tagevent
+    from db_models.user import User
     users = User.query.all()
     arr = []
 
@@ -56,6 +59,7 @@ def static_top_five():
     sorted(arr, key=lambda user: user['amount'])
     print(arr)
     return jsonify(arr)
+
 
 # Gets all tags last month, just one event per day.
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
@@ -138,23 +142,16 @@ def all_tagevents():
 def all_users(filter=None):
     from db_models.user import User
     ret = []
-    counter = 0;
+    counter = 0
 
     # Lists all users
     if filter == "all":
         users = User.query.order_by("expiry_date desc").all()
-
     # List users depending on the membership
     elif filter:
         users = User.query.filter(User.status == filter.title())
 
     for hit in users:
-
-        if hit.tag_id is None or hit.tag_id == "None" or hit.tag_id == "":
-            hit.tag_id = "No"
-        else:
-            hit.tag_id = "Yes"
-
         counter += 1
         js = hit.dict()
         ret.append(js)
