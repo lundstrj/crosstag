@@ -31,6 +31,8 @@ def index():
 
 @app.route('/stream')
 def stream():
+    from db_models.user import User
+
     def up_stream():
         while True:
             global last_tag_events
