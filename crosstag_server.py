@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, render_template, flash, redirect
+from flask import Flask, jsonify, render_template, flash, redirect, Response
 import json
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
@@ -18,6 +18,7 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 app_name = 'crosstag'
+last_tag_events = None
 
 
 class User(db.Model):
@@ -156,6 +157,33 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/stream')
+def stream():
+    def up_stream():
+        while True:
+            global last_tag_events
+            tag = get_last_tag_event()
+            user = None
+
+            if last_tag_events is None or last_tag_events != tag.tag_id:
+                last_tag_events = tag.tag_id
+
+                try:
+                    user = User.query.filter_by(tag_id=tag.tag_id).first().dict()
+                except:
+                    user = None
+
+                if user is not None:
+                    user_tagins = get_events_from_user_by_tag_id(tag.tag_id)
+                    user['tagins'] = user_tagins['value']
+
+                    return 'data: %s\n\n' % json.dumps(user)
+
+            return 'data: %s\n\n' % user
+
+    return Response(up_stream(), mimetype='text/event-stream')
+
+
 # Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
@@ -182,9 +210,9 @@ def get_events_from_user_by_tag_id(tag_id):
                         counter += 1
                         break
 
-        return jsonify({"value": counter})
+        return {"value": counter}
     except:
-        return jsonify({})
+        return {"value": 0}
 
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
@@ -237,7 +265,7 @@ def all_tagevents():
 @app.route('/all_users/<filter>', methods=['GET', 'POST'])
 def all_users(filter=None):
     ret = []
-    counter = 0;
+    counter = 0
 
     # Lists all users
     if filter == "all":

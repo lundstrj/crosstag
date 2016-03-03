@@ -8,6 +8,24 @@ window.onload = function() {
     var display_time = 20;
     var sleep_time = 2;
     var current_user = null;
+    var testID = null;
+
+    var eventSource = new EventSource("/stream");
+    eventSource.onmessage = function(e){
+        if(e.data != 'None'){
+            user_data = JSON.parse(e.data);
+            display_user = true;
+            counter = 0;
+            document.getElementById("tagins").style.visibility = 'visible';
+            document.getElementById("user_name").innerHTML = user_data.name;
+            document.getElementById("status_member").innerHTML = user_data.status;
+            document.getElementById("expire_date").innerHTML = user_data.expiry_date;
+            document.getElementById("create_date").innerHTML = user_data.create_date;
+            document.getElementById("user_email").innerHTML = user_data.email;
+            document.getElementById("tagin_month").innerHTML = user_data.tagins;
+        }
+    };
+
 
     //Asks the server if there's a new tagevent
     function poll_server(callback) {
@@ -118,7 +136,7 @@ window.onload = function() {
 
         if (display_user && user_data && counter == 0) {
             //this.print_user(this.user_data, this.user_tagins);
-            print_user(user_data, user_tagins);
+            //print_user(user_data, user_tagins);
             counter += 1
         }
 
@@ -139,7 +157,7 @@ window.onload = function() {
         CheckTagins();
     }, 1000);
 
-    setInterval(function(){
-        poll_server(check_if_tagevent_exists);
-    }, 2500);
+    //setInterval(function(){
+    //    poll_server(check_if_tagevent_exists);
+    //}, 2500);
 };
