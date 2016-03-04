@@ -15,10 +15,16 @@ body {
 }
 
 .debt{
+  margin-top: 30px;
   font-size: 16px;
-  margin-left:10px;
   font-weight: bold;
-  font-style: italic;
+}
+
+.debtlink{
+  margin-left: 20px;
+  margin-top: 30px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 article,

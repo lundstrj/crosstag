@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>{{data.name}}<span class="debt"><a href='/debt_create/{{data.index}}'>Create a debt</a></span></h2>
+<h2>{{data.name}}</h2>
 
     <p>E-mail : {{ data.email }}</p>
     <p>Phone : {{ data.phone }}</p>
@@ -19,6 +19,29 @@
 
 
     <h3><a href='/edit_user/{{data.index}}'>Edit user</a></h3>
+
+
+{% if debts %}
+    <p class="debt">Debts for {{ data.name }}<span class="debtlink"><a href='/debt_create/{{data.index}}'>Create new debt</a></span></p>
+        <table class="table table-hover">
+        <tbody>
+            <thead>
+
+            </thead>
+                    {% for debt in debts %}
+                    <tr>
+                        <td>{{debt.amount}}</td>
+                        <td>
+                            <form id="tjuue" action="../debt_delete_confirm/{{ debt.id }}" method="get" >
+                            <input type="submit"  value="Delete Debt" onclick="">
+                            </form>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+        </tbody>
+        </table>
+{% endif %}
 
 {% if tags %}
     <hr>
@@ -38,7 +61,6 @@
     </tbody>
     </table>
 {% endif %}
-
 
 
 {% endblock %}

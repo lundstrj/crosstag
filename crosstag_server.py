@@ -391,14 +391,13 @@ def debt_delete(id):
     db.session.commit()
     flash('Deleted debt: %s from member %s' % (debts.amount,
                                                users.name))
-    return redirect("/debt_check")
+    return redirect("/user_page/"+str(users.index))
 
 
 @app.route('/debt_delete_confirm/<id>', methods=['GET'])
 def debt_delete_confirm(id):
     debts = Debt.query.filter_by(id=id).first()
     users = User.query.filter_by(index=debts.uid).first()
-
 
     return render_template('debt_delete_confirm.html',
                            title='Delete',
@@ -436,7 +435,7 @@ def debt_create(id_test):
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
                                                     user.name))
-        return redirect("/debt_check")
+        return redirect("/user_page/"+id_test)
 
     return render_template('debt_create.html',
                            title='Debt Create',
@@ -594,6 +593,7 @@ def get_recent_events():
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
     user = User.query.filter_by(index=user_index).first()
+    debts = Debt.query.filter_by(uid=user.index)
 
     if user is None:
         return "No user Found"
@@ -603,7 +603,8 @@ def user_page(user_index=None):
         return render_template('user_page.html',
                                title='User Page',
                                data=user.dict(),
-                               tags=tagevents)
+                               tags=tagevents,
+                               debts=debts)
 
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
