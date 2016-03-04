@@ -71,37 +71,29 @@ def static_tagin_page():
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
-    users = User.query.all()
-    arr = []
-    test_arr = []
-    hello = None
-
-    from db_models.tagevent import Tagevent
     from db_models.user import User
-    users = User.query.all()
-    arr = []
+    from db_models.tagevent import Tagevent
+    try:
+        users = User.query.all()
+        arr = []
+        one_week = datetime.now() - timedelta(weeks=1)
 
-    one_week = datetime.now() - timedelta(weeks=1)
+        if users is not None:
+            for user in users:
+                counter = 0
+                user_tagevents = Tagevent.query.filter(Tagevent.uid == user.index).filter(Tagevent.timestamp > one_week).all()
 
-    for user in users:
-        counter = 0
-        user_tagevents = Tagevent.query.filter(Tagevent.uid == user.index).filter(Tagevent.timestamp > one_week).all()
+                if user_tagevents is not None:
+                    for event in user_tagevents:
+                        counter += 1
 
-        for event in user_tagevents:
-            counter += 1
+                    if counter > 0:
+                        person_obj = {'name': user.name, 'amount': counter}
+                        arr.append(person_obj)
 
-        if counter > 0:
-
-            hi = 'hi'
-
-    return jsonify({"value": 'hej'})
-            #test_arr = {"name": user.name, "amount": counter}
-            #arr.append(test_arr)
-
-    #sorted(arr, key=lambda user: user['amount'])
-    ##print(arr)
-    #return jsonify(arr)
-
+            return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
+    except:
+        return jsonify({})
 
 
 # Gets all tags last month, just one event per day.

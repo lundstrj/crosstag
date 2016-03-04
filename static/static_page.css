@@ -1,0 +1,26 @@
+.container{
+    max-width: 70%;
+
+}
+
+
+img {
+    float:right;
+    margin-top:-8%
+}
+
+
+#top-five {
+    margin-top:-30%;
+    margin-left:50%;
+}
+
+.col-md-6 {
+    width:80%;
+    margin-left:-30%;
+}
+
+.footer {
+    position: absolute;
+}
+
