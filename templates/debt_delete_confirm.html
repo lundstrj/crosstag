@@ -11,12 +11,12 @@
     <tbody>
          <thead>
                 <tr>
-                    <th>Amount</th><th>Member</th>
+                    <th>Member</th><th>Amount</th>
                 </tr>
             </thead>
 
             <tr>
-                <td>{{ hits.amount }}</td> <td>{{ hits2.name }} </td>
+                <td><a href='/user_page/{{hits2.index}}'>{{ hits2.name }}</a></td><td>{{ hits.amount }}</td>
                 <td>
                     <form action="debt_delete/{{ hits.id }}" method="post">
 
