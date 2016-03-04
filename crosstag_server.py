@@ -433,16 +433,17 @@ def debt_check():
                            hits=multiArray)
 
 
-@app.route('/debt_create', methods=['GET', 'POST'])
-def debt_create():
+@app.route('/debt_create/<id_test>', methods=['GET', 'POST'])
+def debt_create(id_test):
+    user = User.query.filter_by(index=id_test).first()
     form = NewDebt()
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_debt = Debt(form.amount.data, form.name.data)
+        tmp_debt = Debt(form.amount.data, user.index)
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
-                                                    form.name.data))
+                                                    user.name))
         return redirect("/debt_check")
 
     return render_template('debt_create.html',
