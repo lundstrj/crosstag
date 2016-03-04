@@ -13,6 +13,7 @@ from forms.search_user import SearchUser
 from forms.new_debt import NewDebt
 from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
 from server_helper_scripts.get_last_tag_event import get_last_tag_event
+from server_helper_scripts.latecomers_mail import latecomers_mail
 # from db_models.exercise import Exercise
 
 app = Flask(__name__)
@@ -373,13 +374,10 @@ def inactive_check():
     two_weeks = datetime.now() - timedelta(weeks=2)
 
     for user in users:
-
         valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()[-1:]
         # valid_tagevent.reverse()
         for event in valid_tagevent:
-
             if event.timestamp < two_weeks:
-
                 day_intervall = datetime.now() - event.timestamp
 
                 temp = int(str(day_intervall)[:3])
@@ -390,6 +388,9 @@ def inactive_check():
 
                 testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': temp}
                 arr.append(testarr)
+    # If latcomer exist send mail TODO: Send with time interval
+    if arr:
+        latecomers_mail(arr)
     return render_template('inactive_check.html',
                            title='Check',
                            hits=arr)
