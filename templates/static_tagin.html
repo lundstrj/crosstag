@@ -18,6 +18,7 @@
     <!-- Bootstrap core CSS -->
     <link href="../../static/bootstrap.css" rel="stylesheet">
     <link href="../../static/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../../static/static_page.css" rel="stylesheet">
     <script type="text/javascript" src="../../static/ie-emulation-modes-warning.js"></script>
     <script type="text/javascript" src="../../static/d3.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
@@ -39,7 +40,7 @@
         <div class="page-header">
 
             <h1>Välkommen till Crossfit Kalmar <br><small>Den <span style="color:magenta;">rosa</span> boxen</small>
-            <img style="float:right; margin-top:-13% " src="/static/crosslogo.png" alt="Crosstag Logo" height="150" width="200"></h1>
+            <img src="/static/crosslogo.png" alt="Crosstag Logo" height="150" width="200"></h1>
         </div>
 
     {# Added some css to the tagged in user #}
@@ -121,6 +122,8 @@
         </div>
     </div>
     <div id="top-five">
+        <h2>Topp 5 taggningar denna vecka</h2>
+        <canvas id="top-five-chart" width="400" height="300"></canvas>
     </div>
 
       <footer class="footer">
