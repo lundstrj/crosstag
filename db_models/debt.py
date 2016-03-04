@@ -1,5 +1,5 @@
 from flask import jsonify
-from crosstag_server import db
+from crosstag_init import db
 
 
 class Debt(db.Model):

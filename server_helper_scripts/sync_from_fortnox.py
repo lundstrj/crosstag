@@ -1,11 +1,12 @@
 from server_helper_scripts.update_user_in_local_db_from_fortnox import update_user_in_local_db_from_fortnox
 from server_helper_scripts.add_user_to_local_db_from_fortnox import add_user_to_local_db_from_fortnox
+from db_models.user import User
+from fortnox import Fortnox
 
 
 # Syncs the fortnox database with the local DB
 def sync_from_fortnox():
-    from db_models.user import User
-    from fortnox import Fortnox
+
 
     fortnox_data = Fortnox()
     customers = fortnox_data.get_all_customers()
