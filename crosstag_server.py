@@ -394,36 +394,43 @@ def inactive_check():
 @app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
 def debt_delete(id):
     debts = Debt.query.filter_by(id=id).first()
+    users = User.query.filter_by(index=debts.uid).first()
     db.session.delete(debts)
     db.session.commit()
     flash('Deleted debt: %s from member %s' % (debts.amount,
-                                               debts.name))
+                                               users.name))
     return redirect("/debt_check")
 
 
 @app.route('/debt_delete_confirm/<id>', methods=['GET'])
 def debt_delete_confirm(id):
     debts = Debt.query.filter_by(id=id).first()
+    users = User.query.filter_by(index=debts.uid).first()
+
 
     return render_template('debt_delete_confirm.html',
                            title='Delete',
-                           hits=debts)
+                           hits=debts,
+                           hits2=users)
 
 
 @app.route('/debt_check', methods=['GET'])
 def debt_check():
     debts = Debt.query.all()
+    users = User.query.all()
 
-    arr = []
-    testarr = []
+    debtAndUserArray = []
+    multiArray = []
 
-    for hit in debts:
-        testarr = {'debt': hit}
-        arr.append(testarr)
+    for debt in debts:
+        for user in users:
+            if debt.uid == user.index:
+                debtAndUserArray = {'debt': debt, 'user': user}
+                multiArray.append(debtAndUserArray)
 
     return render_template('debt_check.html',
                            title='Check',
-                           hits=arr)
+                           hits=multiArray)
 
 
 @app.route('/debt_create', methods=['GET', 'POST'])
