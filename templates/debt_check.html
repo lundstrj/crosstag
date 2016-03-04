@@ -3,7 +3,7 @@
 
 {% block content %}
 
-<h2>Debts</h2><a href="/debt_create">Create new debt</a>
+<h2>Debts</h2>
 
 
 {% if hits %}
@@ -16,7 +16,7 @@
             </thead>
             {% for hit in hits %}
                 <tr>
-                    <td>{{ hit['debt'].amount }} </td><td>{{ hit['debt'].name }}</td>
+                    <td>{{ hit['debt'].amount }} </td><td>{{ hit['user'].name }}</td>
                     <td>
                         <form id="tjuue" action="debt_delete_confirm/{{ hit['debt'].id }}" method="get" >
                         <input type="submit"  value="Delete Debt" onclick="">

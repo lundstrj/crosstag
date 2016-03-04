@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>{{data.name}}</h2>
+<h2>{{data.name}}<span class="debt"><a href='/debt_create/{{data.index}}'>Create a debt</a></span></h2>
 
     <p>E-mail : {{ data.email }}</p>
     <p>Phone : {{ data.phone }}</p>
