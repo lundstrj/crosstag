@@ -5,7 +5,6 @@ window.onload = function() {
     var user_data = null;
     var display_time = 20;
     var sleep_time = 2;
-<<<<<<< HEAD
     var current_user = null;
 
     
@@ -24,9 +23,6 @@ window.onload = function() {
             return null
         }
     }
-=======
->>>>>>> 8360843e917631a2ceb53e721ba4f847dc6e5ec1
-
     var eventSource = new EventSource("/stream");
     eventSource.onmessage = function(e){
         if(e.data != 'None'){
@@ -63,7 +59,6 @@ window.onload = function() {
         }
     }
 
-<<<<<<< HEAD
     function top_five_tag() {
         try{
            var xhr = new XMLHttpRequest();
@@ -97,13 +92,12 @@ window.onload = function() {
         }
         return false;
     }
-=======
+
     function print_top_five(user_data) {
         // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
         var test = document.createElement("label");
         test.innerHTML = user_data['name'];
         document.getElementById("top-five").appendChild(test);
->>>>>>> 8360843e917631a2ceb53e721ba4f847dc6e5ec1
 
         //document.getElementById("top_five_user_name").innerHTML = user_data.name;
         //document.getElementById("tag_amount").innerHTML = user_data.amount;
