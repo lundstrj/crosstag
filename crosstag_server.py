@@ -41,6 +41,7 @@ def static_top_five():
     users = User.query.all()
     arr = []
     test_arr = []
+    hello = None
     one_week = datetime.now() - timedelta(weeks=1)
 
     for user in users:
@@ -51,10 +52,9 @@ def static_top_five():
             counter += 1
 
         if counter > 0:
-            test_arr = {'name': user.name}
-            arr.append(test_arr)
+            hi = 'hi'
 
-    return jsonify(arr)
+    return jsonify({"value": 'hej'})
 
 
 # Gets all tags last month, just one event per day.

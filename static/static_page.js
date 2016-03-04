@@ -9,7 +9,7 @@ window.onload = function() {
     var sleep_time = 2;
     var current_user = null;
 
-    top_five_tag();
+    
 
     //Asks the server if there's a new tagevent
     function poll_server(callback) {
@@ -93,7 +93,7 @@ window.onload = function() {
            xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
            xhr.addEventListener("load", function(){
 
-
+                var r = JSON.parse(xhr.response);
 
            });
 
