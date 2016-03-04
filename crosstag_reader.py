@@ -87,6 +87,7 @@ class CrosstagReader(object):
             now = datetime.now()
             logging.info("%s reader tagging result: [%s]" % (now, res.text))
 
+
 if __name__ == '__main__':
     parser = OptionParser(usage="usage: %prog [options] arg \nTry this: python crosstag_reader.py", version="%prog 1.0")
     parser.add_option("-s", "--server",

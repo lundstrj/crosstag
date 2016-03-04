@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, render_template, flash, redirect
+from flask import Flask, jsonify, render_template, flash, redirect, Response
 import json
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
@@ -19,6 +19,7 @@ app = Flask(__name__)
 app.config.from_pyfile('config.py')
 db = SQLAlchemy(app)
 app_name = 'crosstag'
+last_tag_events = None
 
 
 @app.route('/')
@@ -28,20 +29,58 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/stream')
+def stream():
+    from db_models.user import User
+
+    def up_stream():
+        while True:
+            global last_tag_events
+            tag = get_last_tag_event()
+            user = None
+
+            if last_tag_events is None or last_tag_events != tag.tag_id:
+                last_tag_events = tag.tag_id
+
+                try:
+                    user = User.query.filter_by(tag_id=tag.tag_id).first().dict()
+                except:
+                    user = None
+
+                if user is not None:
+                    user_tagins = get_events_from_user_by_tag_id(tag.tag_id)
+                    user['tagins'] = user_tagins['value']
+
+                    return 'data: %s\n\n' % json.dumps(user)
+
+            return 'data: %s\n\n' % user
+
+    return Response(up_stream(), mimetype='text/event-stream')
+
+
 # Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
+
     return render_template('static_tagin.html',
                            title='Static tagins')
 
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
+<<<<<<< HEAD
     from db_models.user import User
     users = User.query.all()
     arr = []
     test_arr = []
     hello = None
+=======
+    from db_models.tagevent import Tagevent
+    from db_models.user import User
+    users = User.query.all()
+    arr = []
+
+>>>>>>> 8360843e917631a2ceb53e721ba4f847dc6e5ec1
     one_week = datetime.now() - timedelta(weeks=1)
 
     for user in users:
@@ -52,9 +91,18 @@ def static_top_five():
             counter += 1
 
         if counter > 0:
+<<<<<<< HEAD
             hi = 'hi'
 
     return jsonify({"value": 'hej'})
+=======
+            test_arr = {"name": user.name, "amount": counter}
+            arr.append(test_arr)
+
+    sorted(arr, key=lambda user: user['amount'])
+    print(arr)
+    return jsonify(arr)
+>>>>>>> 8360843e917631a2ceb53e721ba4f847dc6e5ec1
 
 
 # Gets all tags last month, just one event per day.
@@ -77,9 +125,9 @@ def get_events_from_user_by_tag_id(tag_id):
                         counter += 1
                         break
 
-        return jsonify({"value": counter})
+        return {"value": counter}
     except:
-        return jsonify({})
+        return {"value": 0}
 
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
@@ -138,23 +186,16 @@ def all_tagevents():
 def all_users(filter=None):
     from db_models.user import User
     ret = []
-    counter = 0;
+    counter = 0
 
     # Lists all users
     if filter == "all":
         users = User.query.order_by("expiry_date desc").all()
-
     # List users depending on the membership
     elif filter:
         users = User.query.filter(User.status == filter.title())
 
     for hit in users:
-
-        if hit.tag_id is None or hit.tag_id == "None" or hit.tag_id == "":
-            hit.tag_id = "No"
-        else:
-            hit.tag_id = "Yes"
-
         counter += 1
         js = hit.dict()
         ret.append(js)

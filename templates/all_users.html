@@ -27,8 +27,6 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 
 {% if hits %}
 
-
-
 	<table class="table table-hover">
 	<tbody>
 		<thead>
@@ -38,7 +36,15 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 		</thead>
 				{% for hit in hits %}
 				<tr>
-					<td>{{hit.name}}</td> <td>{{hit.status}}</td> <td>{{hit.email}}</td> <td>{{hit.expiry_date}}</td>  <td>{{hit.tag_id}}</td> <td><a href='/user_page/{{hit.index}}'>Info</a> </td>
+					<td>{{hit.name}}</td> <td>{{hit.status}}</td> <td>{{hit.email}}</td> <td>{{hit.expiry_date}}</td>
+                    <td>
+                        {% if hit.tag_id == "None" or hit.tag_id == ""  or not hit.tag_id %}
+                            No
+                        {% else %}
+                            Yes
+                        {% endif %}
+                    </td>
+                    <td><a href='/user_page/{{hit.index}}'>Info</a> </td>
 				</tr>
 				{% endfor %}
 	</tbody>

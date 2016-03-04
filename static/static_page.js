@@ -1,12 +1,11 @@
 window.onload = function() {
-
-    var last_event = null;
+    
     var counter = 0;
     var display_user = false;
     var user_data = null;
-    var user_tagins = null;
     var display_time = 20;
     var sleep_time = 2;
+<<<<<<< HEAD
     var current_user = null;
 
     
@@ -25,59 +24,36 @@ window.onload = function() {
             return null
         }
     }
+=======
+>>>>>>> 8360843e917631a2ceb53e721ba4f847dc6e5ec1
 
-    //Controls if a tag exists with a user
-    function check_if_tagevent_exists(callback, current){
-        if (current == null) {
-            display_user = false;
-            console.log("current = null")
+    var eventSource = new EventSource("/stream");
+    eventSource.onmessage = function(e){
+        if(e.data != 'None'){
+            user_data = JSON.parse(e.data);
+            display_user = true;
+            counter = 0;
+            document.getElementById("tagins").style.visibility = 'visible';
+            document.getElementById("user_name").innerHTML = user_data.name;
+            document.getElementById("status_member").innerHTML = user_data.status;
+            document.getElementById("expire_date").innerHTML = user_data.expiry_date;
+            document.getElementById("create_date").innerHTML = user_data.create_date;
+            document.getElementById("user_email").innerHTML = user_data.email;
+            document.getElementById("tagin_month").innerHTML = user_data.tagins;
         }
-        else if(is_not_empty(current)){
-            if (current['index'] != last_event) {
-                last_event = current['index'];
-                display_user = true;
-                counter = 0;
-                current_user = current;
-                callback();
-            }
-        }
-    }
+    };
 
-    //controls if user should be shown and if the counter is 0
-    function display_user_after_user_data_set(){
-        if (display_user && counter >= 0) {
-            get_user_data(set_user_data, current_user['tag_id'])
-        }
-    }
 
-    //Collects the user data
-    function get_user_data(callback, tag_nbr) {
-        try {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_user_data_tag/" + tag_nbr, true);
-            xhr.addEventListener("load", function(){
-                callback(get_user_tagins, JSON.parse(xhr.response));
-            });
-            xhr.send(null);
-        }
-        catch(exception) {
-            return null
-        }
-    }
+    top_five_tag();
 
-    //Defines the user_data object
-    function set_user_data(callback, data){
-        user_data = data;
-        callback(user_data);
-    }
-
-    //Collects users all tagins
-    function get_user_tagins(user_data){
-       try{
+    function top_five_tag() {
+        try{
            var xhr = new XMLHttpRequest();
-           xhr.open("GET", "http://localhost:80/crosstag/v1.0/get_events_from_user_by_tag_id/" + user_data.tag_id, true);
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
            xhr.addEventListener("load", function(){
-               user_tagins = JSON.parse(xhr.response);
+               var data_arr = JSON.parse(xhr.response);
+               console.log(data_arr);
+               //print_top_five(data_arr);
            });
 
            xhr.send();
@@ -87,6 +63,7 @@ window.onload = function() {
         }
     }
 
+<<<<<<< HEAD
     function top_five_tag() {
         try{
            var xhr = new XMLHttpRequest();
@@ -120,22 +97,19 @@ window.onload = function() {
         }
         return false;
     }
+=======
+    function print_top_five(user_data) {
+        // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
+        var test = document.createElement("label");
+        test.innerHTML = user_data['name'];
+        document.getElementById("top-five").appendChild(test);
+>>>>>>> 8360843e917631a2ceb53e721ba4f847dc6e5ec1
 
-    //Displays the user on the static page
-    function print_user(user_data, user_tagins){
-        if(is_not_empty(user_data)){
-            console.log(user_tagins);
-            document.getElementById("tagins").style.visibility = 'visible';
-            document.getElementById("user_name").innerHTML = user_data.name;
-            document.getElementById("status_member").innerHTML = user_data.status;
-            document.getElementById("expire_date").innerHTML = user_data.expiry_date;
-            document.getElementById("create_date").innerHTML = user_data.create_date;
-            document.getElementById("user_email").innerHTML = user_data.email;
-            document.getElementById("tagin_month").innerHTML = user_tagins.value
-        }
+        //document.getElementById("top_five_user_name").innerHTML = user_data.name;
+        //document.getElementById("tag_amount").innerHTML = user_data.amount;
     }
 
-    //Controls if the user should be shown, for how long and removes the diaplyes user from the page
+    //Controls if the user should be shown, for how long and removes the diaplyed user from the page
     function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
@@ -144,7 +118,7 @@ window.onload = function() {
 
         if (display_user && user_data && counter == 0) {
             //this.print_user(this.user_data, this.user_tagins);
-            print_user(user_data, user_tagins);
+            //print_user(user_data, user_tagins);
             counter += 1
         }
 
@@ -161,11 +135,8 @@ window.onload = function() {
         }
     }
 
+
     setInterval(function(){
         CheckTagins();
     }, 1000);
-
-    setInterval(function(){
-        poll_server(check_if_tagevent_exists);
-    }, 2500);
 };
