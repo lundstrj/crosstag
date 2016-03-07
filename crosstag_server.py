@@ -71,8 +71,6 @@ def static_tagin_page():
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
-    from db_models.user import User
-    from db_models.tagevent import Tagevent
     try:
         users = User.query.all()
         arr = []
@@ -91,9 +89,12 @@ def static_top_five():
                         person_obj = {'name': user.name, 'amount': counter}
                         arr.append(person_obj)
 
-            return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
+            newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
+            print(newArr)
+
+            return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
     except:
-        return jsonify({})
+        return jsonify({'json_arr': None})
 
 
 # Gets all tags last month, just one event per day.

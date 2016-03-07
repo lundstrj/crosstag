@@ -33,7 +33,7 @@ window.onload = function() {
         if (display_user && user_data && counter == 0) {
             //this.print_user(this.user_data, this.user_tagins);
             //print_user(user_data, user_tagins);
-            counter += 1
+            counter += 1;
             top_five_tag();
         }
 
@@ -63,10 +63,15 @@ window.onload = function() {
            xhr.addEventListener("load", function(){
                var data_arr = JSON.parse(xhr.response);
 
-               data_arr['json_arr'].sort(function(a, b) {
-                    return parseFloat(b.amount) - parseFloat(a.amount);
-               });
-               print_top_five(data_arr);
+               console.log(data_arr);
+               if(data_arr['json_arr'] != null) {
+                   if (data_arr['json_arr'].length == 5) {
+                       //data_arr['json_arr'].sort(function (a, b) {
+                       //    return parseFloat(b.amount) - parseFloat(a.amount);
+                       //});
+                       print_top_five(data_arr);
+                   }
+               }
            });
 
            xhr.send();
@@ -120,7 +125,7 @@ window.onload = function() {
                      });
                  })
              }
-         }
+         };
 
          var chart1 = document.getElementById("top-five-chart").getContext("2d");
          new Chart(chart1).Bar(data, options);
