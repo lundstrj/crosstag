@@ -71,37 +71,29 @@ def static_tagin_page():
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
-    users = User.query.all()
-    arr = []
-    test_arr = []
-    hello = None
-
-    from db_models.tagevent import Tagevent
     from db_models.user import User
-    users = User.query.all()
-    arr = []
+    from db_models.tagevent import Tagevent
+    try:
+        users = User.query.all()
+        arr = []
+        one_week = datetime.now() - timedelta(weeks=1)
 
-    one_week = datetime.now() - timedelta(weeks=1)
+        if users is not None:
+            for user in users:
+                counter = 0
+                user_tagevents = Tagevent.query.filter(Tagevent.uid == user.index).filter(Tagevent.timestamp > one_week).all()
 
-    for user in users:
-        counter = 0
-        user_tagevents = Tagevent.query.filter(Tagevent.uid == user.index).filter(Tagevent.timestamp > one_week).all()
+                if user_tagevents is not None:
+                    for event in user_tagevents:
+                        counter += 1
 
-        for event in user_tagevents:
-            counter += 1
+                    if counter > 0:
+                        person_obj = {'name': user.name, 'amount': counter}
+                        arr.append(person_obj)
 
-        if counter > 0:
-
-            hi = 'hi'
-
-    return jsonify({"value": 'hej'})
-            #test_arr = {"name": user.name, "amount": counter}
-            #arr.append(test_arr)
-
-    #sorted(arr, key=lambda user: user['amount'])
-    ##print(arr)
-    #return jsonify(arr)
-
+            return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
+    except:
+        return jsonify({})
 
 
 # Gets all tags last month, just one event per day.
@@ -399,14 +391,13 @@ def debt_delete(id):
     db.session.commit()
     flash('Deleted debt: %s from member %s' % (debts.amount,
                                                users.name))
-    return redirect("/debt_check")
+    return redirect("/user_page/"+str(users.index))
 
 
 @app.route('/debt_delete_confirm/<id>', methods=['GET'])
 def debt_delete_confirm(id):
     debts = Debt.query.filter_by(id=id).first()
     users = User.query.filter_by(index=debts.uid).first()
-
 
     return render_template('debt_delete_confirm.html',
                            title='Delete',
@@ -444,7 +435,7 @@ def debt_create(id_test):
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
                                                     user.name))
-        return redirect("/debt_check")
+        return redirect("/user_page/"+id_test)
 
     return render_template('debt_create.html',
                            title='Debt Create',
@@ -602,6 +593,7 @@ def get_recent_events():
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
     user = User.query.filter_by(index=user_index).first()
+    debts = Debt.query.filter_by(uid=user.index)
 
     if user is None:
         return "No user Found"
@@ -611,7 +603,8 @@ def user_page(user_index=None):
         return render_template('user_page.html',
                                title='User Page',
                                data=user.dict(),
-                               tags=tagevents)
+                               tags=tagevents,
+                               debts=debts)
 
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])

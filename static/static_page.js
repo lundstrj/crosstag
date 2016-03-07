@@ -3,8 +3,9 @@ window.onload = function() {
     var counter = 0;
     var display_user = false;
     var user_data = null;
-    var display_time = 20;
+    var display_time = 30;
     var sleep_time = 2;
+<<<<<<< HEAD
     var current_user = null;
 
     
@@ -23,6 +24,10 @@ window.onload = function() {
             return null
         }
     }
+=======
+
+
+>>>>>>> c4be1b3e68e5c217281edac593b3b513cdc8fccc
     var eventSource = new EventSource("/stream");
     eventSource.onmessage = function(e){
         if(e.data != 'None'){
@@ -39,6 +44,7 @@ window.onload = function() {
         }
     };
 
+<<<<<<< HEAD
 
     top_five_tag();
 
@@ -103,6 +109,8 @@ window.onload = function() {
         //document.getElementById("tag_amount").innerHTML = user_data.amount;
     }
 
+=======
+>>>>>>> c4be1b3e68e5c217281edac593b3b513cdc8fccc
     //Controls if the user should be shown, for how long and removes the diaplyed user from the page
     function CheckTagins() {
         if (!user_data && display_user) {
@@ -114,6 +122,7 @@ window.onload = function() {
             //this.print_user(this.user_data, this.user_tagins);
             //print_user(user_data, user_tagins);
             counter += 1
+            top_five_tag();
         }
 
         if (display_user && user_data && counter != 0) {
@@ -133,4 +142,76 @@ window.onload = function() {
     setInterval(function(){
         CheckTagins();
     }, 1000);
+
+
+    function top_five_tag() {
+        try{
+           var xhr = new XMLHttpRequest();
+           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
+           xhr.addEventListener("load", function(){
+               var data_arr = JSON.parse(xhr.response);
+
+               data_arr['json_arr'].sort(function(a, b) {
+                    return parseFloat(b.amount) - parseFloat(a.amount);
+               });
+               print_top_five(data_arr);
+           });
+
+           xhr.send();
+       }
+        catch(exception){
+            return null;
+        }
+    }
+
+     function print_top_five(user_data) {
+         var data = {
+             labels: [user_data['json_arr'][0]['name'], user_data['json_arr'][1]['name'], user_data['json_arr'][2]['name'],
+                        user_data['json_arr'][3]['name'], user_data['json_arr'][4]['name']],
+             datasets: [
+                 {
+                     label: "Topp 5 taggningar denna vecka",
+                     fillColor: "rgba(255,105,180,0.2)",
+                     strokeColor: "rgba(255,105,180,0.9)",
+                     pointColor: "rgba(220,220,220,1)",
+                     pointStrokeColor: "#fff",
+                     pointHighlightFill: "#fff",
+                     pointHighlightStroke: "rgba(220,220,220,1)",
+                     data: [user_data['json_arr'][0]['amount'],
+                            user_data['json_arr'][1]['amount'],
+                            user_data['json_arr'][2]['amount'],
+                            user_data['json_arr'][3]['amount'],
+                            user_data['json_arr'][4]['amount']]
+                 }
+             ]
+         };
+
+         var options = {
+             segmentShowStroke: false,
+             animateScale: true,
+             showTooltips: false,
+             animationSteps: 60,
+             animationEasing: 'easeInCubic',
+             scaleFontStyle: "bold",
+             onAnimationComplete: function () {
+
+                 var ctx = this.chart.ctx;
+                 ctx.font = this.scale.font;
+                 ctx.fillStyle = this.scale.textColor;
+                 ctx.textAlign = "center";
+                 ctx.textBaseline = "bottom";
+                 this.datasets.forEach(function (dataset) {
+                     dataset.bars.forEach(function (bar) {
+                         if (bar.value !== 0) {
+                             ctx.fillText(bar.value, bar.x, bar.y);
+                         }
+                     });
+                 })
+             }
+         }
+
+         var chart1 = document.getElementById("top-five-chart").getContext("2d");
+         new Chart(chart1).Bar(data, options);
+     }
+    top_five_tag();
 };
