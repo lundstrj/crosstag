@@ -32,6 +32,9 @@ statistic.Main.prototype.genderStats = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     }
+    document.getElementById("maleCounter").innerHTML = stats[0][0];
+    document.getElementById("femaleCounter").innerHTML = stats[0][1];
+
     var chart1 = document.getElementById("genderChart").getContext("2d");
     new Chart(chart1).Pie(data1, options);
 
@@ -64,6 +67,8 @@ statistic.Main.prototype.genderTags = function(stats) {
 	segmentShowStroke : false,
 	animateScale : true,
     }
+    document.getElementById("maleTagCounter").innerHTML = stats[1][0];
+    document.getElementById("femaleTagCounter").innerHTML = stats[1][1];
     var chart1 = document.getElementById("genderChart1").getContext("2d");
     new Chart(chart1).Pie(data, options);
 
