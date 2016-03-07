@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, render_template, flash, redirect, Response
+from crosstag_init import app, db, jsonify, render_template, flash, redirect, Response
 import json
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
-from flask.ext.sqlalchemy import SQLAlchemy
 from optparse import OptionParser
 from datetime import datetime, timedelta
 from forms.new_tag import NewTag
@@ -14,25 +13,31 @@ from forms.new_debt import NewDebt
 from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
 from server_helper_scripts.get_last_tag_event import get_last_tag_event
 from server_helper_scripts.latecomers_mail import latecomers_mail
-# from db_models.exercise import Exercise
+from server_helper_scripts.get_inactive_members import get_inactive_members
 
-app = Flask(__name__)
+
+from db_models import debt
+from db_models import user
+from db_models import tagevent
+
+User = user.User
+Tagevent = tagevent.Tagevent
+Debt = debt.Debt
+
 app.config.from_pyfile('config.py')
-db = SQLAlchemy(app)
 app_name = 'crosstag'
 last_tag_events = None
-
 
 @app.route('/')
 @app.route('/index')
 @app.route('/%s' % app_name)
 def index():
+
     return render_template('index.html')
 
 
 @app.route('/stream')
 def stream():
-    from db_models.user import User
 
     def up_stream():
         while True:
@@ -69,6 +74,11 @@ def static_tagin_page():
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
+    users = User.query.all()
+    arr = []
+    test_arr = []
+    hello = None
+
     from db_models.tagevent import Tagevent
     from db_models.user import User
     users = User.query.all()
@@ -84,18 +94,23 @@ def static_top_five():
             counter += 1
 
         if counter > 0:
-            test_arr = {"name": user.name, "amount": counter}
-            arr.append(test_arr)
 
-    sorted(arr, key=lambda user: user['amount'])
-    print(arr)
-    return jsonify(arr)
+            hi = 'hi'
+
+    return jsonify({"value": 'hej'})
+            #test_arr = {"name": user.name, "amount": counter}
+            #arr.append(test_arr)
+
+    #sorted(arr, key=lambda user: user['amount'])
+    ##print(arr)
+    #return jsonify(arr)
+
 
 
 # Gets all tags last month, just one event per day.
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
 def get_events_from_user_by_tag_id(tag_id):
-    from db_models.tagevent import Tagevent
+
     try:
         gs = GenerateStats()
         current_year = gs.get_current_year_string()
@@ -119,7 +134,6 @@ def get_events_from_user_by_tag_id(tag_id):
 
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
-    from db_models.tagevent import Tagevent
     event = Tagevent(tag_id)
     db.session.add(event)
     db.session.commit()
@@ -128,7 +142,6 @@ def tagevent(tag_id):
 
 @app.route('/crosstag/v1.0/last_tagin', methods=['GET'])
 def last_tagin():
-    from db_models.tagevent import Tagevent
     try:
         return Tagevent.query.all()[-1].json()
     except:
@@ -137,7 +150,6 @@ def last_tagin():
 
 @app.route('/crosstag/v1.0/get_user_data_tag/<tag_id>', methods=['GET'])
 def get_user_data_tag(tag_id):
-    from db_models.user import User
     try:
         return User.query.filter_by(tag_id=tag_id).first().json()
     except:
@@ -146,7 +158,6 @@ def get_user_data_tag(tag_id):
 
 @app.route('/crosstag/v1.0/specialtagevent/<tag_id>/<timestamp>')
 def specialtagevent(tag_id, timestamp):
-    from db_models.tagevent import Tagevent
     event = Tagevent(tag_id)
     # date_object = datetime.strptime('Jun 1 2005  1:33PM', '%b %d %Y %I:%M%p')
     event.timestamp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M')
@@ -157,7 +168,6 @@ def specialtagevent(tag_id, timestamp):
 
 @app.route('/all_tagevents', methods=['GET'])
 def all_tagevents():
-    from db_models.tagevent import Tagevent
     ret = []
     events = Tagevent.query.all()
     for hit in events:
@@ -171,7 +181,6 @@ def all_tagevents():
 
 @app.route('/all_users/<filter>', methods=['GET', 'POST'])
 def all_users(filter=None):
-    from db_models.user import User
     ret = []
     counter = 0
 
@@ -195,14 +204,12 @@ def all_users(filter=None):
 
 @app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>', methods=['GET'])
 def get_user_data_tag_dict(tag_id):
-    from db_models.user import User
     user = User.query.filter_by(tag_id=tag_id).first()
     return user.dict()
 
 
 @app.route('/last_tagins', methods=['GET'])
 def last_tagins():
-    from db_models.tagevent import Tagevent
     ret = []
     events = Tagevent.query.all()[-10:]
     for hit in events:
@@ -224,7 +231,6 @@ def last_tagins():
 
 @app.route('/crosstag/v1.0/remove_user/<index>', methods=['POST'])
 def remove_user(index):
-    from db_models.user import User
     user = User.query.filter_by(index=index).first()
     db.session.delete(user)
     db.session.commit()
@@ -233,7 +239,6 @@ def remove_user(index):
 
 @app.route('/add_new_user', methods=['GET', 'POST'])
 def add_new_user():
-    from db_models.user import User
     form = NewUser()
     print("errors", form.errors)
     if form.validate_on_submit():
@@ -274,7 +279,6 @@ def tagevents():
 
 @app.route('/tagin_user', methods=['GET', 'POST'])
 def tagin_user():
-    from db_models.tagevent import Tagevent
     form = NewTag(csrf_enabled=False)
 
     print(str(form.validate_on_submit()))
@@ -293,7 +297,6 @@ def tagin_user():
 
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
-    from db_models.user import User
     form = SearchUser()
     print(str(form.validate_on_submit()))
     print("errors", form.errors)
@@ -335,7 +338,6 @@ def search_user():
 @app.route('/crosstag/v1.0/link_user_to_last_tag/<user_id>',
            methods=['GET', 'POST'])
 def link_user_to_last_tag(user_id):
-    from db_models.user import User
     tagevent = get_last_tag_event()
     user = User.query.filter_by(index=user_id).first()
     user.tag_id = tagevent.tag_id
@@ -345,14 +347,12 @@ def link_user_to_last_tag(user_id):
 
 @app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])
 def get_tag(user_index):
-    from db_models.user import User
     user = User.query.filter_by(index=user_index).first()
     return str(user.tag_id)
 
 
 @app.route('/crosstag/v1.0/get_tagevents_user_dict/<user_index>', methods=['GET'])
 def get_tagevents_user_dict(user_index):
-    from db_models.tagevent import Tagevent
     tag_id = get_tag(user_index)
     events = Tagevent.query.filter_by(tag_id=tag_id)[-20:]
     ret = []
@@ -365,40 +365,15 @@ def get_tagevents_user_dict(user_index):
 
 @app.route('/inactive_check', methods=['GET'])
 def inactive_check():
-    from db_models.user import User
-    from db_models.tagevent import Tagevent
-    users = User.query.filter(User.status == "Active").all()
-    arr = []
-    testarr = []
-
-    two_weeks = datetime.now() - timedelta(weeks=2)
-
-    for user in users:
-        valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()[-1:]
-        # valid_tagevent.reverse()
-        for event in valid_tagevent:
-            if event.timestamp < two_weeks:
-                day_intervall = datetime.now() - event.timestamp
-
-                temp = int(str(day_intervall)[:3])
-
-                if temp >= 99:
-
-                    temp = str(99) + "+"
-
-                testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': temp}
-                arr.append(testarr)
-    # If latcomer exist send mail TODO: Send with time interval
-    if arr:
-        latecomers_mail(arr)
+    # TODO: LINE BELOW SHOULD BE AUTOMATIC!
+    latecomers_mail()
     return render_template('inactive_check.html',
                            title='Check',
-                           hits=arr)
+                           hits=get_inactive_members())
 
 
 @app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
 def debt_delete(id):
-    from db_models.debt import Debt
     debts = Debt.query.filter_by(id=id).first()
     db.session.delete(debts)
     db.session.commit()
@@ -409,7 +384,6 @@ def debt_delete(id):
 
 @app.route('/debt_delete_confirm/<id>', methods=['GET'])
 def debt_delete_confirm(id):
-    from db_models.debt import Debt
     debts = Debt.query.filter_by(id=id).first()
 
     return render_template('debt_delete_confirm.html',
@@ -419,7 +393,6 @@ def debt_delete_confirm(id):
 
 @app.route('/debt_check', methods=['GET'])
 def debt_check():
-    from db_models.debt import Debt
     debts = Debt.query.all()
 
     arr = []
@@ -436,7 +409,6 @@ def debt_check():
 
 @app.route('/debt_create', methods=['GET', 'POST'])
 def debt_create():
-    from db_models.debt import Debt
     form = NewDebt()
     print("errors", form.errors)
     if form.validate_on_submit():
@@ -454,8 +426,6 @@ def debt_create():
 
 @app.route('/statistics', methods=['GET'])
 def statistics():
-    from db_models.user import User
-    from db_models.tagevent import Tagevent
     default_date = datetime.now()
 
     default_date_array = {'year': str(default_date.year), 'month': str(default_date.month), 'day':str(default_date.day)}
@@ -488,8 +458,6 @@ def statistics():
 
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
 def statistics_by_date(_month, _day, _year):
-    from db_models.user import User
-    from db_models.tagevent import Tagevent
     chosen_date_array = {'year': _year, 'month': _month, 'day': _day}
 
     gs = GenerateStats()
@@ -543,8 +511,7 @@ def fortnox_specific_user(fortnox_id):
 # TEST FUNKTION!!!!!
 @app.route('/pb/<user_id>', methods=['GET'])
 def pb(user_id):
-    from db_models.user import User
-    from db_models.records import Records
+
     '''OLD SHIT, Save for future reference--------------------------------|
     tag_id = get_tag(1)
     events = Statistics.query.filter_by(tag_id=tag_id)[-20:]
@@ -581,7 +548,6 @@ def pb(user_id):
 
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
-    from db_models.tagevent import Tagevent
     three_months_ago = datetime.now() - timedelta(weeks=8)
     tags = Tagevent.query.filter(Tagevent.timestamp > three_months_ago).all()
     tags_json = {}
@@ -608,7 +574,6 @@ def get_recent_events():
 
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
-    from db_models.user import User
     user = User.query.filter_by(index=user_index).first()
 
     if user is None:
@@ -624,7 +589,6 @@ def user_page(user_index=None):
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
-    from db_models.user import User
     user = User.query.filter_by(index=user_index).first()
     if user is None:
         return "No user have this ID"
@@ -663,7 +627,6 @@ def edit_user(user_index=None):
 @app.route('/%s/v1.0/link_user_to_tag/<user_index>/<tag_id>' % app_name,
            methods=['POST'])
 def link_user_to_tag(user_index, tag_id):
-    from db_models.user import User
     user = User.query.filter_by(index=user_index).first()
     user.tag = tag_id
     db.session.commit()
@@ -672,7 +635,6 @@ def link_user_to_tag(user_index, tag_id):
 
 @app.route('/%s/v1.0/get_all_users' % app_name, methods=['GET'])
 def get_all_users():
-    from db_models.user import User
     users = User.query.all()
     ret = {}
     for user in users:

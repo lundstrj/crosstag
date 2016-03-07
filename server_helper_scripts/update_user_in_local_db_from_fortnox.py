@@ -1,12 +1,11 @@
 from server_helper_scripts.strip_ssn import strip_ssn
 from server_helper_scripts.get_gender_from_ssn import get_gender_from_ssn
+from crosstag_init import db
+from db_models.user import User
 
 
 # Updating an existing user in local DB from fortnox.
 def update_user_in_local_db_from_fortnox(customer):
-    from crosstag_server import db
-    from db_models.user import User
-
     user = User.query.filter_by(fortnox_id=customer['FortnoxID']).first()
     if user is None:
         return "she wrote upon it; no such number, no such zone"

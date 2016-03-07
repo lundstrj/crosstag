@@ -2,11 +2,13 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from server_helper_scripts.get_inactive_members import get_inactive_members
 
 
-def latecomers_mail(inactive_users):
+def latecomers_mail():
+    inactive_users = get_inactive_members()
     sender = "eric.sj11@hotmail.se"
-    reciver = "all@crosstag.se"
+    reciver = "ej222pj@student.lnu.se"
     msg = MIMEMultipart("alternative")
     part1 = ""
 
@@ -37,6 +39,6 @@ def latecomers_mail(inactive_users):
     s.ehlo()
     s.login(sender, 'Battle93net11')
 
-    # s.sendmail(sender, reciver, msg.as_string())
+    s.sendmail(sender, reciver, msg.as_string())
 
     s.quit()

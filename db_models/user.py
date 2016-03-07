@@ -1,6 +1,7 @@
 from flask import jsonify
 from datetime import datetime
-from crosstag_server import db
+from crosstag_init import db
+
 
 
 class User(db.Model):
