@@ -3,6 +3,16 @@
 
 {% block content %}
 
+{% if error %}
+
+{% if error["amount"] %}
+    <p style="color:red;">Not a valid number, must be full number.</p>
+{% endif %}
+{% if error["product"] %}
+    <p style="color:red;">Not a valid Name</p>
+{% endif %}
+{% endif %}
+
 <h1>Create new debt</h1>
 <form action="" method="post" name="new_debt" class="form-horizontal" role="form">
     {{form.hidden_tag()}}

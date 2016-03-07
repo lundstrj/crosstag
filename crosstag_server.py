@@ -442,7 +442,8 @@ def debt_create(id_test):
 
     return render_template('debt_create.html',
                            title='Debt Create',
-                           form=form)
+                           form=form,
+                           error=form.errors)
 
 
 @app.route('/statistics', methods=['GET'])
