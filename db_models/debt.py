@@ -5,14 +5,14 @@ from crosstag_init import db
 class Debt(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     amount = db.Column(db.Numeric)
-    name = db.Column(db.String(50))
+    uid = db.Column(db.Integer)
 
-    def __init__(self, amount=None, name=None):
+    def __init__(self, amount=None, uid=None):
         self.amount = amount
-        self.name = name
+        self.uid = uid
 
     def dict(self):
-        return {'id': self.id, 'amount': self.amount, 'name': self.name}
+        return {'id': self.id, 'amount': self.amount, 'uid': self.uid}
 
     def json(self):
         return jsonify(self.dict())
