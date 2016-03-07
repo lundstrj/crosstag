@@ -5,29 +5,8 @@ window.onload = function() {
     var user_data = null;
     var display_time = 30;
     var sleep_time = 2;
-<<<<<<< HEAD
-    var current_user = null;
-
-    
-
-    //Asks the server if there's a new tagevent
-    function poll_server(callback) {
-        try {
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://localhost:80/crosstag/v1.0/last_tagin", true);
-            xhr.addEventListener("load", function(){
-                callback(display_user_after_user_data_set, JSON.parse(xhr.response));
-            });
-            xhr.send(null);
-        }
-        catch (exception){
-            return null
-        }
-    }
-=======
 
 
->>>>>>> c4be1b3e68e5c217281edac593b3b513cdc8fccc
     var eventSource = new EventSource("/stream");
     eventSource.onmessage = function(e){
         if(e.data != 'None'){
@@ -44,73 +23,6 @@ window.onload = function() {
         }
     };
 
-<<<<<<< HEAD
-
-    top_five_tag();
-
-    function top_five_tag() {
-        try{
-           var xhr = new XMLHttpRequest();
-           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
-           xhr.addEventListener("load", function(){
-               var data_arr = JSON.parse(xhr.response);
-               console.log(data_arr);
-               //print_top_five(data_arr);
-           });
-
-           xhr.send();
-       }
-        catch(exception){
-            return null;
-        }
-    }
-
-    function top_five_tag() {
-        try{
-           var xhr = new XMLHttpRequest();
-           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
-           xhr.addEventListener("load", function(){
-
-                var r = JSON.parse(xhr.response);
-
-           });
-
-           xhr.send();
-       }
-        catch(exception){
-            return null;
-        }
-    }
-
-    function print_top_five(user_data) {
-        // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
-        console.log(user_data);
-    }
-        //document.getElementById("top_five_user_name").innerHTML = user_data.name;
-        //document.getElementById("tag_amount").innerHTML = user_data.amount;
-
-    //Controls if a object is empty or not
-    function is_not_empty(object){
-        for(var key in object){
-            if(object.hasOwnProperty(key)){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    function print_top_five(user_data) {
-        // Create a table. Make loop that runs 5 times. In the loop, append these to elements.
-        var test = document.createElement("label");
-        test.innerHTML = user_data['name'];
-        document.getElementById("top-five").appendChild(test);
-
-        //document.getElementById("top_five_user_name").innerHTML = user_data.name;
-        //document.getElementById("tag_amount").innerHTML = user_data.amount;
-    }
-
-=======
->>>>>>> c4be1b3e68e5c217281edac593b3b513cdc8fccc
     //Controls if the user should be shown, for how long and removes the diaplyed user from the page
     function CheckTagins() {
         if (!user_data && display_user) {
