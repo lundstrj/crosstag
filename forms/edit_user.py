@@ -12,7 +12,7 @@ class EditUser(Form):
     city = TextField('city', [validators.Length(max=120), validators.DataRequired()])
     zip_code = TextField('zip_code', validators=[])
     tag_id = TextField('tag_id', validators=[])
-    expiry_date = DateField('expiry_date', validators=[], format='%Y-%m-%d', description="DESC1")
+    expiry_date = DateField('expiry_date', [validators.Optional()], format='%Y-%m-%d', description="DESC1")
     gender = RadioField('gender', [validators.DataRequired()], choices=[('male', 'male'), ('female', 'female'),
                                                                       ('unknown', 'unknown')])
     status = RadioField(
