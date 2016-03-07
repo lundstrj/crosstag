@@ -428,9 +428,11 @@ def debt_check():
 def debt_create(id_test):
     user = User.query.filter_by(index=id_test).first()
     form = NewDebt()
+
+    test = datetime.now()
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_debt = Debt(form.amount.data, user.index)
+        tmp_debt = Debt(form.amount.data, user.index, form.product.data, test)
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
