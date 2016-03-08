@@ -73,17 +73,15 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
-
         now = datetime.now()
-        currentYear = str(now.year)
-        currentMonth = str(now.month)
-
+        current_year = str(now.year)
+        current_month = str(now.month)
 
         one_week = datetime.now() - timedelta(weeks=1)
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
-        #user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
+        # user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
-        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(currentYear)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
+        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(current_year)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
         arr = []
 
@@ -93,7 +91,7 @@ def static_top_five():
 
                 if user_tagevents is not None:
                     for event in user_tagevents:
-                        if int(currentMonth) == event.timestamp.month:
+                        if int(current_month) == event.timestamp.month:
                             if event.uid == user.index:
                                 counter += 1
 
@@ -101,8 +99,8 @@ def static_top_five():
                     person_obj = {'name': user.name, 'amount': counter}
                     arr.append(person_obj)
 
-        newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-        return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
+        new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
+        return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
