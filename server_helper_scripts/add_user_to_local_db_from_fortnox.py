@@ -6,8 +6,6 @@ from db_models.user import User
 
 # Adding a fortnox user to the local DB
 def add_user_to_local_db_from_fortnox(customer):
-
-
     tmp_usr = User(customer['Name'], customer['Email'], customer['Phone'],
                    customer['Address1'], customer['Address2'], customer['City'],
                    customer['Zipcode'], None, customer['FortnoxID'],

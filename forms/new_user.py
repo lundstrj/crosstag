@@ -1,6 +1,5 @@
 from flask.ext.wtf import Form
 from wtforms import TextField, RadioField, DateField, validators
-from wtforms.validators import Required
 
 
 class NewUser(Form):

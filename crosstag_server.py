@@ -12,10 +12,13 @@ from forms.search_user import SearchUser
 from forms.new_debt import NewDebt
 from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
 from server_helper_scripts.get_last_tag_event import get_last_tag_event
-
+from server_helper_scripts.get_inactive_members import get_inactive_members
 from db_models import debt
 from db_models import user
 from db_models import tagevent
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 User = user.User
 Tagevent = tagevent.Tagevent
@@ -25,17 +28,16 @@ app.config.from_pyfile('config.py')
 app_name = 'crosstag'
 last_tag_events = None
 
+
 @app.route('/')
 @app.route('/index')
 @app.route('/%s' % app_name)
 def index():
-
     return render_template('index.html')
 
 
 @app.route('/stream')
 def stream():
-
     def up_stream():
         while True:
             global last_tag_events
@@ -64,7 +66,6 @@ def stream():
 # Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
-
     return render_template('static_tagin.html',
                            title='Static tagins')
 
@@ -89,10 +90,10 @@ def static_top_five():
                         person_obj = {'name': user.name, 'amount': counter}
                         arr.append(person_obj)
 
-            newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-            print(newArr)
+            new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
+            print(new_arr)
 
-            return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
+            return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
@@ -100,7 +101,6 @@ def static_top_five():
 # Gets all tags last month, just one event per day.
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
 def get_events_from_user_by_tag_id(tag_id):
-
     try:
         gs = GenerateStats()
         current_year = gs.get_current_year_string()
@@ -355,33 +355,9 @@ def get_tagevents_user_dict(user_index):
 
 @app.route('/inactive_check', methods=['GET'])
 def inactive_check():
-    users = User.query.filter(User.status == "Active").all()
-    arr = []
-    testarr = []
-
-    two_weeks = datetime.now() - timedelta(weeks=2)
-
-    for user in users:
-
-        valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()[-1:]
-        # valid_tagevent.reverse()
-        for event in valid_tagevent:
-
-            if event.timestamp < two_weeks:
-
-                day_intervall = datetime.now() - event.timestamp
-
-                temp = int(str(day_intervall)[:3])
-
-                if temp >= 99:
-
-                    temp = str(99) + "+"
-
-                testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': temp}
-                arr.append(testarr)
     return render_template('inactive_check.html',
                            title='Check',
-                           hits=arr)
+                           hits=get_inactive_members())
 
 
 @app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
@@ -411,18 +387,18 @@ def debt_check():
     debts = Debt.query.all()
     users = User.query.all()
 
-    debtAndUserArray = []
-    multiArray = []
+    debt_and_user_array = []
+    multi_array = []
 
     for debt in debts:
         for user in users:
             if debt.uid == user.index:
-                debtAndUserArray = {'debt': debt, 'user': user}
-                multiArray.append(debtAndUserArray)
+                debt_and_user_array = {'debt': debt, 'user': user}
+                multi_array.append(debt_and_user_array)
 
     return render_template('debt_check.html',
                            title='Check',
-                           hits=multiArray)
+                           hits=multi_array)
 
 
 @app.route('/debt_create/<id_test>', methods=['GET', 'POST'])
@@ -497,7 +473,7 @@ def statistics_by_date(_month, _day, _year):
     month_name = selected_date.strftime('%B')
     custom_date_day = {'weekday': week_day_name + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
 
-    custom_date_month = {'month': month_name + ' '  + str(selected_date.year)}
+    custom_date_month = {'month': month_name + ' ' + str(selected_date.year)}
 
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, chosen_date_array)
@@ -528,44 +504,6 @@ def fortnox_specific_user(fortnox_id):
     return render_template('fortnox.html',
                            plot_paths='',
                            data=ret)
-
-
-# TEST FUNKTION!!!!!
-@app.route('/pb/<user_id>', methods=['GET'])
-def pb(user_id):
-
-    '''OLD SHIT, Save for future reference--------------------------------|
-    tag_id = get_tag(1)
-    events = Statistics.query.filter_by(tag_id=tag_id)[-20:]
-    userList = users.query.join(friendships, users.id==friendships.user_id)
-    .add_columns(users.userId, users.name, users.email, friends.userId, friendId)
-    .filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-
-    results = User.query.join(Statistics, User.index == Statistics.uid).add_columns(User.name, User.tag_id, Statistics.exercise, Statistics.record, Statistics.unit, Statistics.record_date, Statistics.uid).filter(User.index == user_id).filter(Statistics.uid == user_id)
-    ret = []
-    logging.debug("hello")
-    END OF OLD SHIT----------------------------------------------------|'''
-
-    users = User.query.filter_by(index=user_id)
-    personalstats = Records.query.filter_by(uid=user_id)
-
-    ret = []
-    userret = []
-    exerciseret = []
-
-    for hit in personalstats:
-        pbjs = hit.dict()
-        ret.append(pbjs)
-
-    '''exercise = Exercise.query.filter_by(index=pbjs['exercise_id'])
-    exercisejs = exercise[0].dict()
-    exerciseret.append(exercisejs)'''
-
-    for hit in users:
-        js = hit.dict()
-        userret.append(js)
-
-    return render_template('PB.html', plot_paths='', data=ret, users=userret, exercises=exerciseret)
 
 
 @app.route('/getrecentevents', methods=['GET'])
@@ -609,6 +547,47 @@ def user_page(user_index=None):
                                data=user.dict(),
                                tags=tagevents,
                                debts=debts)
+
+
+@app.route('/crosstag/v1.0/send_latecomers_email/', methods=['GET'])
+def latecomers_mail():
+    # TODO: Change the emails to correct crossfitkalmar emails
+    inactive_users = get_inactive_members()
+    sender = "eric.sj11@hotmail.se"
+    reciver = "ej222pj@student.lnu.se"
+    msg = MIMEMultipart("alternative")
+    part1 = ""
+
+    for user in inactive_users:
+        temp_msg = user['user'].name + ' \r\n ' + \
+                   user['user'].email + ' \r\n Telefon: ' + \
+                   user['user'].phone + ' \r\n Adress: ' + \
+                   user['user'].address + ' \r\n Taggade senast: ' + \
+                   user['event'] + ' \r\n ' + \
+                   str(user['days']) + ' dagar sedan senaste taggningen.'
+
+        part1 = temp_msg + "\r\n\r\n" + part1
+
+        # Converts string to UTF-8
+        msg.attach(MIMEText(u'' + part1 + '', "plain", "utf-8"))
+
+    msg.as_string().encode('ascii')
+
+    msg['From'] = sender
+    msg['To'] = reciver
+    msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
+
+    s = smtplib.SMTP("smtp.live.com", 587)
+    # Hostname to send for this command defaults to the fully qualified domain name of the local host.
+    s.ehlo()
+    # Puts connection to SMTP server in TLS mode
+    s.starttls()
+    s.ehlo()
+    s.login(sender, '')
+
+    s.sendmail(sender, reciver, msg.as_string())
+
+    s.quit()
 
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
