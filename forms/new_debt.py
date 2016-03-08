@@ -1,6 +1,8 @@
 from flask.ext.wtf import Form
-from wtforms import DecimalField, StringField
+from wtforms import TextField, validators, IntegerField
+
 
 
 class NewDebt(Form):
-    amount = DecimalField('amount', validators=[])
+    amount = IntegerField('amount', validators=[])
+    product = TextField('product', [validators.Length(max=60), validators.DataRequired()])

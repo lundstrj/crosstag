@@ -6,8 +6,6 @@ from fortnox import Fortnox
 
 # Syncs the fortnox database with the local DB
 def sync_from_fortnox():
-
-
     fortnox_data = Fortnox()
     customers = fortnox_data.get_all_customers()
     ret = []

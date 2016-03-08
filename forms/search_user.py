@@ -1,6 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, RadioField
-from wtforms.validators import Required
+from wtforms import TextField
 
 
 class SearchUser(Form):
