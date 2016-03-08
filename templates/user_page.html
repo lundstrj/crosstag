@@ -15,7 +15,19 @@
     <p>Tag-ID : {{ data.tag_id }}</p>
     <p>Gender : {{ data.gender }}</p>
     <p>Expiry date : {{ data.expiry_date }}</p>
-    <p>Membership status : {{ data.status }}</p>
+
+    Membership Status :
+    {% if data.status == "Active" or data.status == "Special" %}
+    <span style="color:green">{{data.status}}</span>
+    {% elif data.status == "Frozen" %}
+    <span style="color:blue">{{data.status}}</span>
+    {% elif data.status == "Free" %}
+    <span style="color:darkgoldenrod">{{data.status}}</span>
+    {% else %}
+    <span style="color:red">{{data.status}}</span>
+    {% endif %}
+
+
 
 
     <h3><a href='/edit_user/{{data.index}}'>Edit user</a></h3>
