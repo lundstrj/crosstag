@@ -19,6 +19,7 @@ from db_models import tagevent
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import config as cfg
 
 User = user.User
 Tagevent = tagevent.Tagevent
@@ -553,8 +554,9 @@ def user_page(user_index=None):
 def latecomers_mail():
     # TODO: Change the emails to correct crossfitkalmar emails
     inactive_users = get_inactive_members()
-    sender = "eric.sj11@hotmail.se"
-    reciver = "ej222pj@student.lnu.se"
+    sender = "system@crosstag.se"
+    # johan.roth79@gmail.com, stefan@crossfitkalmar.se
+    recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.nu.se']
     msg = MIMEMultipart("alternative")
     part1 = ""
 
@@ -574,18 +576,18 @@ def latecomers_mail():
     msg.as_string().encode('ascii')
 
     msg['From'] = sender
-    msg['To'] = reciver
+    msg['To'] = ", ".join(recipients)
     msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
 
-    s = smtplib.SMTP("smtp.live.com", 587)
+    s = smtplib.SMTP("smtp.crosstag.se", 587)
     # Hostname to send for this command defaults to the fully qualified domain name of the local host.
     s.ehlo()
     # Puts connection to SMTP server in TLS mode
     s.starttls()
     s.ehlo()
-    s.login(sender, '')
+    s.login(sender, cfg.EMAIL_PASSWORD)
 
-    s.sendmail(sender, reciver, msg.as_string())
+    s.sendmail(sender, recipients, msg.as_string())
 
     s.quit()
 
