@@ -91,9 +91,12 @@ def static_top_five():
                         person_obj = {'name': user.name, 'amount': counter}
                         arr.append(person_obj)
 
-            return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
+            newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
+            print(newArr)
+
+            return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
     except:
-        return jsonify({})
+        return jsonify({'json_arr': None})
 
 
 # Gets all tags last month, just one event per day.
@@ -405,9 +408,11 @@ def debt_check():
 def debt_create(id_test):
     user = User.query.filter_by(index=id_test).first()
     form = NewDebt()
+
+    test = datetime.now()
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_debt = Debt(form.amount.data, user.index)
+        tmp_debt = Debt(form.amount.data, user.index, form.product.data, test)
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
@@ -416,7 +421,8 @@ def debt_create(id_test):
 
     return render_template('debt_create.html',
                            title='Debt Create',
-                           form=form)
+                           form=form,
+                           error=form.errors)
 
 
 @app.route('/statistics', methods=['GET'])

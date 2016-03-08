@@ -26,11 +26,15 @@
         <table class="table table-hover">
         <tbody>
             <thead>
-
+                 <tr>
+                    <th>Product</th><th>Amount</th><th>Date</th>
+                </tr>
             </thead>
                     {% for debt in debts %}
                     <tr>
-                        <td>{{debt.amount}}</td>
+                        <td>{{debt.product}}</td>
+                        <td step="0.00">{{debt.amount}}</td>
+                        <td>{{debt.create_date}}</td>
                         <td>
                             <form id="tjuue" action="../debt_delete_confirm/{{ debt.id }}" method="get" >
                             <input type="submit"  value="Delete Debt" onclick="">
