@@ -12,7 +12,6 @@ from forms.search_user import SearchUser
 from forms.new_debt import NewDebt
 from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
 from server_helper_scripts.get_last_tag_event import get_last_tag_event
-from server_helper_scripts.latecomers_mail import latecomers_mail
 from server_helper_scripts.get_inactive_members import get_inactive_members
 from db_models import debt
 from db_models import user
@@ -91,10 +90,10 @@ def static_top_five():
                         person_obj = {'name': user.name, 'amount': counter}
                         arr.append(person_obj)
 
-            newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-            print(newArr)
+            new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
+            print(new_arr)
 
-            return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
+            return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
@@ -356,8 +355,6 @@ def get_tagevents_user_dict(user_index):
 
 @app.route('/inactive_check', methods=['GET'])
 def inactive_check():
-    # TODO: LINE BELOW SHOULD BE AUTOMATIC!
-    latecomers_mail()
     return render_template('inactive_check.html',
                            title='Check',
                            hits=get_inactive_members())
@@ -390,18 +387,18 @@ def debt_check():
     debts = Debt.query.all()
     users = User.query.all()
 
-    debtAndUserArray = []
-    multiArray = []
+    debt_and_user_array = []
+    multi_array = []
 
     for debt in debts:
         for user in users:
             if debt.uid == user.index:
-                debtAndUserArray = {'debt': debt, 'user': user}
-                multiArray.append(debtAndUserArray)
+                debt_and_user_array = {'debt': debt, 'user': user}
+                multi_array.append(debt_and_user_array)
 
     return render_template('debt_check.html',
                            title='Check',
-                           hits=multiArray)
+                           hits=multi_array)
 
 
 @app.route('/debt_create/<id_test>', methods=['GET', 'POST'])
@@ -476,7 +473,7 @@ def statistics_by_date(_month, _day, _year):
     month_name = selected_date.strftime('%B')
     custom_date_day = {'weekday': week_day_name + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
 
-    custom_date_month = {'month': month_name + ' '  + str(selected_date.year)}
+    custom_date_month = {'month': month_name + ' ' + str(selected_date.year)}
 
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, chosen_date_array)
@@ -554,6 +551,7 @@ def user_page(user_index=None):
 
 @app.route('/crosstag/v1.0/send_latecomers_email/', methods=['GET'])
 def latecomers_mail():
+    # TODO: Change the emails to correct crossfitkalmar emails
     inactive_users = get_inactive_members()
     sender = "eric.sj11@hotmail.se"
     reciver = "ej222pj@student.lnu.se"
@@ -585,7 +583,7 @@ def latecomers_mail():
     # Puts connection to SMTP server in TLS mode
     s.starttls()
     s.ehlo()
-    s.login(sender, 'Battle93net11')
+    s.login(sender, '')
 
     s.sendmail(sender, reciver, msg.as_string())
 

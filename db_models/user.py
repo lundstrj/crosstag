@@ -3,7 +3,6 @@ from datetime import datetime
 from crosstag_init import db
 
 
-
 class User(db.Model):
     index = db.Column(db.Integer, primary_key=True)
     fortnox_id = db.Column(db.Integer)
