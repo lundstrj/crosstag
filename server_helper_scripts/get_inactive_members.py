@@ -2,6 +2,7 @@ from db_models.user import User
 from db_models.tagevent import Tagevent
 from datetime import datetime, timedelta
 
+
 def get_inactive_members():
     users = User.query.filter(User.status == "Active").all()
     arr = []

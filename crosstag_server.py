@@ -14,11 +14,12 @@ from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
 from server_helper_scripts.get_last_tag_event import get_last_tag_event
 from server_helper_scripts.latecomers_mail import latecomers_mail
 from server_helper_scripts.get_inactive_members import get_inactive_members
-
-
 from db_models import debt
 from db_models import user
 from db_models import tagevent
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 User = user.User
 Tagevent = tagevent.Tagevent
@@ -28,17 +29,16 @@ app.config.from_pyfile('config.py')
 app_name = 'crosstag'
 last_tag_events = None
 
+
 @app.route('/')
 @app.route('/index')
 @app.route('/%s' % app_name)
 def index():
-
     return render_template('index.html')
 
 
 @app.route('/stream')
 def stream():
-
     def up_stream():
         while True:
             global last_tag_events
@@ -67,15 +67,12 @@ def stream():
 # Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
-
     return render_template('static_tagin.html',
                            title='Static tagins')
 
 
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
-    from db_models.user import User
-    from db_models.tagevent import Tagevent
     try:
         users = User.query.all()
         arr = []
@@ -102,7 +99,6 @@ def static_top_five():
 # Gets all tags last month, just one event per day.
 @app.route('/crosstag/v1.0/get_events_from_user_by_tag_id/<tag_id>', methods=['GET'])
 def get_events_from_user_by_tag_id(tag_id):
-
     try:
         gs = GenerateStats()
         current_year = gs.get_current_year_string()
@@ -507,44 +503,6 @@ def fortnox_specific_user(fortnox_id):
                            data=ret)
 
 
-# TEST FUNKTION!!!!!
-@app.route('/pb/<user_id>', methods=['GET'])
-def pb(user_id):
-
-    '''OLD SHIT, Save for future reference--------------------------------|
-    tag_id = get_tag(1)
-    events = Statistics.query.filter_by(tag_id=tag_id)[-20:]
-    userList = users.query.join(friendships, users.id==friendships.user_id)
-    .add_columns(users.userId, users.name, users.email, friends.userId, friendId)
-    .filter(users.id == friendships.friend_id).filter(friendships.user_id == userID).paginate(page, 1, False)
-
-    results = User.query.join(Statistics, User.index == Statistics.uid).add_columns(User.name, User.tag_id, Statistics.exercise, Statistics.record, Statistics.unit, Statistics.record_date, Statistics.uid).filter(User.index == user_id).filter(Statistics.uid == user_id)
-    ret = []
-    logging.debug("hello")
-    END OF OLD SHIT----------------------------------------------------|'''
-
-    users = User.query.filter_by(index=user_id)
-    personalstats = Records.query.filter_by(uid=user_id)
-
-    ret = []
-    userret = []
-    exerciseret = []
-
-    for hit in personalstats:
-        pbjs = hit.dict()
-        ret.append(pbjs)
-
-    '''exercise = Exercise.query.filter_by(index=pbjs['exercise_id'])
-    exercisejs = exercise[0].dict()
-    exerciseret.append(exercisejs)'''
-
-    for hit in users:
-        js = hit.dict()
-        userret.append(js)
-
-    return render_template('PB.html', plot_paths='', data=ret, users=userret, exercises=exerciseret)
-
-
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
     three_months_ago = datetime.now() - timedelta(weeks=8)
@@ -586,6 +544,46 @@ def user_page(user_index=None):
                                data=user.dict(),
                                tags=tagevents,
                                debts=debts)
+
+
+@app.route('/crosstag/v1.0/send_latecomers_email/', methods=['GET'])
+def latecomers_mail():
+    inactive_users = get_inactive_members()
+    sender = "eric.sj11@hotmail.se"
+    reciver = "ej222pj@student.lnu.se"
+    msg = MIMEMultipart("alternative")
+    part1 = ""
+
+    for user in inactive_users:
+        temp_msg = user['user'].name + ' \r\n ' + \
+                   user['user'].email + ' \r\n Telefon: ' + \
+                   user['user'].phone + ' \r\n Adress: ' + \
+                   user['user'].address + ' \r\n Taggade senast: ' + \
+                   user['event'] + ' \r\n ' + \
+                   str(user['days']) + ' dagar sedan senaste taggningen.'
+
+        part1 = temp_msg + "\r\n\r\n" + part1
+
+        # Converts string to UTF-8
+        msg.attach(MIMEText(u'' + part1 + '', "plain", "utf-8"))
+
+    msg.as_string().encode('ascii')
+
+    msg['From'] = sender
+    msg['To'] = reciver
+    msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
+
+    s = smtplib.SMTP("smtp.live.com", 587)
+    # Hostname to send for this command defaults to the fully qualified domain name of the local host.
+    s.ehlo()
+    # Puts connection to SMTP server in TLS mode
+    s.starttls()
+    s.ehlo()
+    s.login(sender, 'Battle93net11')
+
+    s.sendmail(sender, reciver, msg.as_string())
+
+    s.quit()
 
 
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
