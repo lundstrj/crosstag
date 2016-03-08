@@ -107,7 +107,7 @@ window.onload = function() {
              segmentShowStroke: false,
              animateScale: true,
              showTooltips: false,
-             animationSteps: 60,
+             animationSteps: 4,
              animationEasing: 'easeInCubic',
              scaleFontStyle: "bold",
              onAnimationComplete: function () {
