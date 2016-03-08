@@ -28,11 +28,6 @@ app.config.from_pyfile('config.py')
 app_name = 'crosstag'
 last_tag_events = None
 
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 322a4d10a8ecc100c0c8cfc3ad060879c72dbb4a
 @app.route('/')
 @app.route('/index')
 @app.route('/%s' % app_name)
@@ -77,15 +72,17 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
+
+        now = datetime.now()
+        currentYear = str(now.year)
+        currentMonth = str(now.month)
+
+
         one_week = datetime.now() - timedelta(weeks=1)
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
-        user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
-        testcounter = 0
+        #user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
-        for testevent in user_tagevents:
-            testcounter += 1
-
-        print(testcounter)
+        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(currentYear)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
         arr = []
 
@@ -95,22 +92,16 @@ def static_top_five():
 
                 if user_tagevents is not None:
                     for event in user_tagevents:
-                        if(event.uid == user.index):
-                            counter += 1
+                        if int(currentMonth) == event.timestamp.month:
+                            if event.uid == user.index:
+                                counter += 1
 
-<<<<<<< HEAD
                 if counter > 0:
                     person_obj = {'name': user.name, 'amount': counter}
                     arr.append(person_obj)
 
         newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
         return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
-=======
-            new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-            print(new_arr)
-
-            return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
->>>>>>> 322a4d10a8ecc100c0c8cfc3ad060879c72dbb4a
     except:
         return jsonify({'json_arr': None})
 

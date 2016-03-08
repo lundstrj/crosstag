@@ -87,7 +87,7 @@ window.onload = function() {
                         user_data['json_arr'][3]['name'], user_data['json_arr'][4]['name']],
              datasets: [
                  {
-                     label: "Topp 5 taggningar denna vecka",
+                     label: "Topp 5 taggningar denna månad",
                      fillColor: "rgba(255,105,180,0.2)",
                      strokeColor: "rgba(255,105,180,0.9)",
                      pointColor: "rgba(220,220,220,1)",
