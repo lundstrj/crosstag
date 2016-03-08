@@ -91,7 +91,12 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">Expiry date</label>
                 <div class="col-sm-10">
+                    {% if data.expiry_date == "" or data.expiry_date == "None" %}
+                    {{form.expiry_date(size=80, value="")}}
+                    {% else %}
                     {{form.expiry_date(size=80, value=data.expiry_date)}}
+                    {% endif %}
+
                 </div>
         </div>
 
