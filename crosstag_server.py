@@ -19,6 +19,7 @@ from db_models import tagevent
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import config as cfg
 
 User = user.User
 Tagevent = tagevent.Tagevent
@@ -72,17 +73,15 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
-
         now = datetime.now()
-        currentYear = str(now.year)
-        currentMonth = str(now.month)
-
+        current_year = str(now.year)
+        current_month = str(now.month)
 
         one_week = datetime.now() - timedelta(weeks=1)
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
-        #user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
+        # user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
-        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(currentYear)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
+        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(current_year)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
         arr = []
 
@@ -92,7 +91,7 @@ def static_top_five():
 
                 if user_tagevents is not None:
                     for event in user_tagevents:
-                        if int(currentMonth) == event.timestamp.month:
+                        if int(current_month) == event.timestamp.month:
                             if event.uid == user.index:
                                 counter += 1
 
@@ -100,8 +99,8 @@ def static_top_five():
                     person_obj = {'name': user.name, 'amount': counter}
                     arr.append(person_obj)
 
-        newArr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-        return jsonify({'json_arr': [newArr[0], newArr[1], newArr[2], newArr[3], newArr[4]]})
+        new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
+        return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
@@ -561,8 +560,9 @@ def user_page(user_index=None):
 def latecomers_mail():
     # TODO: Change the emails to correct crossfitkalmar emails
     inactive_users = get_inactive_members()
-    sender = "eric.sj11@hotmail.se"
-    reciver = "ej222pj@student.lnu.se"
+    sender = "system@crosstag.se"
+    # johan.roth79@gmail.com, stefan@crossfitkalmar.se
+    recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.nu.se']
     msg = MIMEMultipart("alternative")
     part1 = ""
 
@@ -582,18 +582,18 @@ def latecomers_mail():
     msg.as_string().encode('ascii')
 
     msg['From'] = sender
-    msg['To'] = reciver
+    msg['To'] = ", ".join(recipients)
     msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
 
-    s = smtplib.SMTP("smtp.live.com", 587)
+    s = smtplib.SMTP("smtp.crosstag.se", 587)
     # Hostname to send for this command defaults to the fully qualified domain name of the local host.
     s.ehlo()
     # Puts connection to SMTP server in TLS mode
     s.starttls()
     s.ehlo()
-    s.login(sender, '')
+    s.login(sender, cfg.EMAIL_PASSWORD)
 
-    s.sendmail(sender, reciver, msg.as_string())
+    s.sendmail(sender, recipients, msg.as_string())
 
     s.quit()
 
