@@ -29,6 +29,7 @@ app.config.from_pyfile('config.py')
 app_name = 'crosstag'
 last_tag_events = None
 
+
 @app.route('/')
 @app.route('/index')
 @app.route('/%s' % app_name)
@@ -36,6 +37,9 @@ def index():
     return render_template('index.html')
 
 
+# This function will be called by the javascript on the static_tagin_page
+# The function will look for the last tag event and if there is a new tag event,
+# it will get the user with the tag and the users all tagevents and send it to the page.
 @app.route('/stream')
 def stream():
     def up_stream():
@@ -70,6 +74,8 @@ def static_tagin_page():
                            title='Static tagins')
 
 
+# Is called by the static page, it will send back an array with the top 5 of..
+# those who exercise the most. if there is not five people it will return an empty array.
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
@@ -129,6 +135,7 @@ def get_events_from_user_by_tag_id(tag_id):
         return {"value": 0}
 
 
+# Retrieves a tag and stores it in the database.
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
     event = Tagevent(tag_id)
@@ -137,6 +144,7 @@ def tagevent(tag_id):
     return "%s server tagged %s" % (event.timestamp, tag_id)
 
 
+# Returns the last tag event
 @app.route('/crosstag/v1.0/last_tagin', methods=['GET'])
 def last_tagin():
     try:
@@ -145,6 +153,7 @@ def last_tagin():
         return jsonify({})
 
 
+# Returns a user by tag_id, the user is in form of a dictionary
 @app.route('/crosstag/v1.0/get_user_data_tag/<tag_id>', methods=['GET'])
 def get_user_data_tag(tag_id):
     try:
@@ -153,6 +162,7 @@ def get_user_data_tag(tag_id):
         return jsonify({})
 
 
+# Stores a tag event based on tag_id and a timestamp
 @app.route('/crosstag/v1.0/specialtagevent/<tag_id>/<timestamp>')
 def specialtagevent(tag_id, timestamp):
     event = Tagevent(tag_id)
@@ -163,6 +173,7 @@ def specialtagevent(tag_id, timestamp):
     return "%s server tagged %s" % (event.timestamp, tag_id)
 
 
+# Renders a HTML page with all tag events
 @app.route('/all_tagevents', methods=['GET'])
 def all_tagevents():
     ret = []
@@ -176,6 +187,7 @@ def all_tagevents():
                            hits=ret)
 
 
+# Renders a HTML page with filter on membership
 @app.route('/all_users/<filter>', methods=['GET', 'POST'])
 def all_users(filter=None):
     ret = []
@@ -199,12 +211,14 @@ def all_users(filter=None):
                            count=counter)
 
 
+# Returns a user based on tag_id, in form of a dictionary
 @app.route('/crosstag/v1.0/get_user_data_tag_dict/<tag_id>', methods=['GET'])
 def get_user_data_tag_dict(tag_id):
     user = User.query.filter_by(tag_id=tag_id).first()
     return user.dict()
 
 
+# Renders a HTML page with the last 10 tag events
 @app.route('/last_tagins', methods=['GET'])
 def last_tagins():
     ret = []
@@ -226,6 +240,7 @@ def last_tagins():
                            hits=ret)
 
 
+# Deletes an user from the local DB based on their index
 @app.route('/crosstag/v1.0/remove_user/<index>', methods=['POST'])
 def remove_user(index):
     user = User.query.filter_by(index=index).first()
@@ -234,6 +249,7 @@ def remove_user(index):
     return redirect("/all_users/all")
 
 
+# Adds an user to the local DB. Gets all the values from a form in the HTML page.
 @app.route('/add_new_user', methods=['GET', 'POST'])
 def add_new_user():
     form = NewUser()
@@ -268,12 +284,14 @@ def add_new_user():
                            form=form)
 
 
+# Renders a HTML page with tag events.
 @app.route('/tagevent', methods=['GET'])
 def tagevents():
         return render_template('tagevent.html',
                                title='Tagevents')
 
 
+# Renders a HTML page which has the same function as the crosstag_reader dummy function.
 @app.route('/tagin_user', methods=['GET', 'POST'])
 def tagin_user():
     form = NewTag(csrf_enabled=False)
@@ -292,6 +310,7 @@ def tagin_user():
     return render_template('tagin_user.html', title='New tag', form=form)
 
 
+# Renders a HTML page with a form to search for a specific user or many users.
 @app.route('/search_user', methods=['GET', 'POST'])
 def search_user():
     form = SearchUser()
@@ -332,6 +351,7 @@ def search_user():
                            form=form)
 
 
+# Will bind the last tag to an user by a POST, when finished it will redirect to the "edit user" page.
 @app.route('/crosstag/v1.0/link_user_to_last_tag/<user_id>',
            methods=['GET', 'POST'])
 def link_user_to_last_tag(user_id):
@@ -342,12 +362,14 @@ def link_user_to_last_tag(user_id):
     return redirect("/edit_user/"+str(user.index))
 
 
+# Returns an users tag.
 @app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])
 def get_tag(user_index):
     user = User.query.filter_by(index=user_index).first()
     return str(user.tag_id)
 
 
+# Returns the 20 last tag events by a user.
 @app.route('/crosstag/v1.0/get_tagevents_user_dict/<user_index>', methods=['GET'])
 def get_tagevents_user_dict(user_index):
     tag_id = get_tag(user_index)
@@ -360,6 +382,7 @@ def get_tagevents_user_dict(user_index):
     return ret
 
 
+# Renders a HTML page with all inactive members.
 @app.route('/inactive_check', methods=['GET'])
 def inactive_check():
     return render_template('inactive_check.html',
@@ -367,6 +390,7 @@ def inactive_check():
                            hits=get_inactive_members())
 
 
+# Delets a debt from a user. Redirects to "user page"
 @app.route('/debt_delete_confirm/debt_delete/<id>', methods=['POST'])
 def debt_delete(id):
     debts = Debt.query.filter_by(id=id).first()
@@ -378,6 +402,7 @@ def debt_delete(id):
     return redirect("/user_page/"+str(users.index))
 
 
+# Renders a HTML page when deleting a debt.
 @app.route('/debt_delete_confirm/<id>', methods=['GET'])
 def debt_delete_confirm(id):
     debts = Debt.query.filter_by(id=id).first()
@@ -389,6 +414,7 @@ def debt_delete_confirm(id):
                            hits2=users)
 
 
+# Renders a HTML page with all users and their debts
 @app.route('/debt_check', methods=['GET'])
 def debt_check():
     debts = Debt.query.all()
@@ -408,6 +434,7 @@ def debt_check():
                            hits=multi_array)
 
 
+# Renders a HTML page with a new created debt
 @app.route('/debt_create/<id_test>', methods=['GET', 'POST'])
 def debt_create(id_test):
     user = User.query.filter_by(index=id_test).first()
@@ -429,6 +456,7 @@ def debt_create(id_test):
                            error=form.errors)
 
 
+# Renders a HTML page with all the statistics
 @app.route('/statistics', methods=['GET'])
 def statistics():
     default_date = datetime.now()
@@ -461,6 +489,7 @@ def statistics():
                            data3=custom_date_month)
 
 
+# Renders a HTML page based on month, day and year.
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
 def statistics_by_date(_month, _day, _year):
     chosen_date_array = {'year': _year, 'month': _month, 'day': _day}
@@ -500,7 +529,7 @@ def fortnox_users():
     return redirect("/")
 
 
-# Testar fortnoxhämtning av en custom# er. 2016-02-12/ Kim, Patrik
+# Renders a HTML page with a user from fortnox
 @app.route('/fortnox/<fortnox_id>', methods=['GET'])
 def fortnox_specific_user(fortnox_id):
 
@@ -513,6 +542,7 @@ def fortnox_specific_user(fortnox_id):
                            data=ret)
 
 
+# Returns an array with recent tag events
 @app.route('/getrecentevents', methods=['GET'])
 def get_recent_events():
     three_months_ago = datetime.now() - timedelta(weeks=8)
@@ -539,6 +569,7 @@ def get_recent_events():
     return json.dumps(res)
 
 
+# Renders a HTML page with a user and it debts
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
     user = User.query.filter_by(index=user_index).first()
@@ -556,6 +587,7 @@ def user_page(user_index=None):
                                debts=debts)
 
 
+# Sends an email to a person with all the latecomers.
 @app.route('/crosstag/v1.0/send_latecomers_email/', methods=['GET'])
 def latecomers_mail():
     # TODO: Change the emails to correct crossfitkalmar emails
@@ -598,6 +630,7 @@ def latecomers_mail():
     s.quit()
 
 
+# Renders a HTML page to edit an user
 @app.route('/edit_user/<user_index>', methods=['GET', 'POST'])
 def edit_user(user_index=None):
     user = User.query.filter_by(index=user_index).first()
