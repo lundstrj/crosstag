@@ -44,8 +44,8 @@ def stream():
             tag = get_last_tag_event()
             user = None
 
-            if last_tag_events is None or last_tag_events != tag.tag_id:
-                last_tag_events = tag.tag_id
+            if last_tag_events is None or last_tag_events != tag.index:
+                last_tag_events = tag.index
 
                 try:
                     user = User.query.filter_by(tag_id=tag.tag_id).first().dict()
