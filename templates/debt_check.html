@@ -16,7 +16,7 @@
             </thead>
             {% for hit in hits %}
                 <tr>
-                    <td><a href='/user_page/{{hit['user'].index}}'>{{ hit['user'].name }}</a></td><td>{{ hit['debt'].product }} </td><td>{{ hit['debt'].amount }} </td><td>{{ hit['debt'].create_date }} </td>
+                    <td><a href='/user_page/{{hit['user'].index}}'>{{ hit['user'].name }}</a></td><td>{{ hit['debt'].product }} </td><td>{{ hit['debt'].amount }} SEK</td><td>{{ hit['debt'].create_date }} </td>
                     <td>
                         <form id="tjuue" action="debt_delete_confirm/{{ hit['debt'].id }}" method="get" >
                         <input type="submit"  value="Delete Debt" onclick="">

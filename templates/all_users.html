@@ -36,15 +36,27 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 		</thead>
 				{% for hit in hits %}
 				<tr>
-					<td>{{hit.name}}</td> <td>{{hit.status}}</td> <td>{{hit.email}}</td> <td>{{hit.expiry_date}}</td>
-                    <td>
-                        {% if hit.tag_id == "None" or hit.tag_id == ""  or not hit.tag_id %}
-                            No
+					<td>{{hit.name}}</td>
+                    <td>{% if hit.status == "Active" or hit.status == "Special"%}
+                        <p style="color:green">{{hit.status}}</p>
+                        {% elif hit.status == "Frozen" %}
+                        <p style="color:blue">{{hit.status}}</p>
+                        {% elif hit.status == "Free" %}
+                        <p style="color:darkgoldenrod">{{hit.status}}</p>
                         {% else %}
-                            Yes
+                        <p style="color:red">{{hit.status}}</p>
                         {% endif %}
                     </td>
-                    <td><a href='/user_page/{{hit.index}}'>Info</a> </td>
+                    <td>{{hit.email}}</td>
+                    <td>{{hit.expiry_date}}</td>
+                    <td>
+                        {% if hit.tag_id == "None" or hit.tag_id == ""  or not hit.tag_id %}
+                            <p style="color:red">No</p>
+                        {% else %}
+                            <p style="color:green">Yes</p>
+                        {% endif %}
+                    </td>
+                    <td><a style="text-decoration: underline;" href='/user_page/{{hit.index}}'>Info</a> </td>
 				</tr>
 				{% endfor %}
 	</tbody>
