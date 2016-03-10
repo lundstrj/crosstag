@@ -12,6 +12,9 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 {% if error["name"] %}
     <p style="color:red;">Not a valid Name.</p>
 {% endif %}
+{% if error["email"] %}
+    <p style="color:red;">You need to enter a valid Email-address (test@domain.com)</p>
+{% endif %}
 {% if error["address"] %}
     <p style="color:red;">You need to enter an Address.</p>
 {% endif %}
@@ -42,7 +45,7 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
                 </div>
         </div>
         <div class="form-group">
-            <label for="inputEmail3" class="col-sm-2 control-label">E-mail</label>
+            <label for="inputEmail3" class="col-sm-2 control-label">E-mail*</label>
                 <div class="col-sm-10">
                     {{form.email(size=80, value=data.email)}}
                 </div>

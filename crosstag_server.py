@@ -45,24 +45,32 @@ def stream():
     def up_stream():
         while True:
             global last_tag_events
-            tag = get_last_tag_event()
+            tag = session['last_tagin']['tagid']
+            session['last_tagin']['timer'] += 1
             user = None
 
-            if last_tag_events is None or last_tag_events != tag.index:
-                last_tag_events = tag.index
-
+            if tag is not None:
                 try:
-                    user = User.query.filter_by(tag_id=tag.tag_id).first().dict()
+                    if session['last_tagin']['timer'] <= 1:
+                       user = User.query.filter_by(tag_id=tag).filter(User.status != "Inactive").first().dict()
+
+                       if user is not None:
+
+                            date_handler = lambda user: (
+                            user.isoformat()
+                            if isinstance(user, datetime)
+                            or isinstance(user, date)
+                            else None
+                            )
+                            return 'data: %s\n\n' % json.dumps(user, default=date_handler)
+                    else:
+                        user = None
                 except:
                     user = None
 
-                if user is not None:
-                    user_tagins = get_events_from_user_by_tag_id(tag.tag_id)
-                    user['tagins'] = user_tagins['value']
 
-                    return 'data: %s\n\n' % json.dumps(user)
 
-            return 'data: %s\n\n' % user
+                return 'data: %s\n\n' % None
 
     return Response(up_stream(), mimetype='text/event-stream')
 
@@ -79,55 +87,18 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
 
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
->>>>>>> 18b5271cd228db701db35bf44946140d1ae27a98
+
         now = datetime.now()
         current_year = str(now.year)
         current_month = str(now.month)
 
-        one_week = datetime.now() - timedelta(weeks=1)
-<<<<<<< HEAD
-        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
-        # user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
-
-        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(current_year)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
-=======
-
-        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
->>>>>>> 6f36da20624b7d7b654f39ebdcc5a87d7057b504
-=======
->>>>>>> 18b5271cd228db701db35bf44946140d1ae27a98
-
         arr = []
         if users is not None:
             for user in users:
-<<<<<<< HEAD
-<<<<<<< HEAD
-                counter = 0
-
-                if user_tagevents is not None:
-                    for event in user_tagevents:
-                        if int(current_month) == event.timestamp.month:
-                            if event.uid == user.index:
-                                counter += 1
-
-                if counter > 0:
-                    person_obj = {'name': user.name, 'amount': counter}
-                    arr.append(person_obj)
-=======
                 person_obj = {'name': user.name, 'amount': user.tagcounter}
                 arr.append(person_obj)
->>>>>>> 6f36da20624b7d7b654f39ebdcc5a87d7057b504
-=======
-
-                person_obj = {'name': user.name, 'amount': user.tagcounter}
-                arr.append(person_obj)
->>>>>>> 18b5271cd228db701db35bf44946140d1ae27a98
 
         return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
     except:
@@ -161,29 +132,28 @@ def get_events_from_user_by_tag_id(tag_id):
 # Retrieves a tag and stores it in the database.
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
-    session['last_tagin'] = tag_id
+    session['last_tagin'] = {'tagid': tagid, 'timer': 0}
     date = datetime.now()
     user = User.query.filter(User.tag_id == tag_id).first()
-    if user is not None:
-        user.tagcounter += 1
-        user.last_tag_timestamp = date
     now = datetime.now()
-    currentYear = str(now.year)
-    currentMonth = now.month
-    currentDay = now.day
+    hour = now.hour
 
     now = str(now)
 
     timestampquery = now[:10]
 
-    tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).first()
+    tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(hour)).first()
 
-    if tmp_tag is None or tmp_tag == None:
-        tmp_tag = Tagevent()
-        tmp_tag.amount = 1
-        db.session.add(tmp_tag)
-    else:
-        tmp_tag.amount += 1
+    if user is not None:
+        user.tagcounter += 1
+        user.last_tag_timestamp = date
+
+        if tmp_tag is None or tmp_tag == None:
+            tmp_tag = Tagevent()
+            tmp_tag.amount = 1
+            db.session.add(tmp_tag)
+        else:
+            tmp_tag.amount += 1
 
     db.session.commit()
     return "%s server tagged %s" % (tmp_tag.timestamp, tag_id)
@@ -348,9 +318,7 @@ def tagin_user():
     currentDay = now.day
     currentHour = now.hour
 
-    session['last_tagin'] = 'testformanualtagin'
-
-
+    session['last_tagin'] = {'tagid': form.tag_id.data, 'timer': 0}
 
     nowtostring = str(now)
     timestampquery = nowtostring[:10]
@@ -363,6 +331,7 @@ def tagin_user():
         tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(currentHour)).first()
         #JUST A TEST THING FOR THE MANUAL TAGIN!!!!!!!!!!!!
         user = User.query.filter(User.tag_id == form.tag_id.data).first()
+
 
         if user is not None:
             user.tagcounter += 1
@@ -428,13 +397,15 @@ def search_user():
 @app.route('/crosstag/v1.0/link_user_to_last_tag/<user_id>',
            methods=['GET', 'POST'])
 def link_user_to_last_tag(user_id):
-    if session['last_tagin'] is not None:
-        tag_id = session['last_tagin']
-    user = User.query.filter_by(index=user_id).first()
-    user.tag_id = tag_id
-    db.session.commit()
-    return redirect("/edit_user/"+str(user.index))
-
+    try:
+        if session['last_tagin']['tagid'] is not None:
+            tag_id = session['last_tagin']['tagid']
+        user = User.query.filter_by(index=user_id).first()
+        user.tag_id = tag_id
+        db.session.commit()
+        return redirect("/edit_user/"+str(user.index))
+    except:
+        flash("No tagging have happened")
 
 # Returns an users tag.
 @app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])

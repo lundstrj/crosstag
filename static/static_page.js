@@ -19,7 +19,8 @@ window.onload = function() {
             document.getElementById("expire_date").innerHTML = user_data.expiry_date;
             document.getElementById("create_date").innerHTML = user_data.create_date;
             document.getElementById("user_email").innerHTML = user_data.email;
-            document.getElementById("tagin_month").innerHTML = user_data.tagins;
+            document.getElementById("tagin_month").innerHTML = user_data.tagcounter;
+
         }
     };
 
