@@ -45,7 +45,7 @@
                     {% for debt in debts %}
                     <tr>
                         <td>{{debt.product}}</td>
-                        <td step="0.00">{{debt.amount}}SEK</td>
+                        <td>{{debt.amount}} SEK</td>
                         <td>{{debt.create_date}}</td>
                         <td>
                             <form id="tjuue" action="../debt_delete_confirm/{{ debt.id }}" method="get" >
