@@ -79,43 +79,23 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
-<<<<<<< HEAD
+
 
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
-=======
         now = datetime.now()
         current_year = str(now.year)
         current_month = str(now.month)
 
         one_week = datetime.now() - timedelta(weeks=1)
-        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
-        # user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
-
-        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(current_year)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
->>>>>>> b033ea97832bb4324545c717f32c14917e60c83f
 
         arr = []
         if users is not None:
             for user in users:
-<<<<<<< HEAD
+
                 person_obj = {'name': user.name, 'amount': user.tagcounter}
                 arr.append(person_obj)
-=======
-                counter = 0
 
-                if user_tagevents is not None:
-                    for event in user_tagevents:
-                        if int(current_month) == event.timestamp.month:
-                            if event.uid == user.index:
-                                counter += 1
-
-                if counter > 0:
-                    person_obj = {'name': user.name, 'amount': counter}
-                    arr.append(person_obj)
->>>>>>> b033ea97832bb4324545c717f32c14917e60c83f
-
-        new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-        return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
+        return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
