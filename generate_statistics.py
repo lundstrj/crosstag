@@ -6,7 +6,6 @@ class GenerateStats:
 
     def get_data(self, users, tagevent, chosenDateArray):
         data = []
-
         one_month = datetime.now() - timedelta(weeks=4)
         one_month_events = tagevent.query.filter(tagevent.timestamp > one_month).all()
 
@@ -41,20 +40,11 @@ class GenerateStats:
         femaleCounter = 0
         unknownCounter = 0
 
-        year = datetime.now().year
-
-        for event in one_month_events:
-
-            if year == event.timestamp.year:
-                for user in users:
-
-                    if str(user.tag_id) == str(event.tag_id):
-                        if user.gender == "male":
-                            maleCounter += 1
-                        if user.gender == "female":
-                            femaleCounter += 1
-                        if user.gender == "unknown":
-                            unknownCounter += 1
+        for user in users:
+            if user.gender == 'male':
+                maleCounter += user.tagcounter
+            elif user.gender == 'female':
+                femaleCounter += user.tagcounter
 
         return [maleCounter, femaleCounter, unknownCounter]
 
@@ -63,14 +53,16 @@ class GenerateStats:
 
         currentYear = chosenDateArray['year']
 
+
         timestamps = event.query.filter(event.timestamp.contains(currentYear))
+
+       # timestamps = event.query.all()
 
         for timestamp in timestamps:
 
             for x in range(1, 13):
-
                 if x == timestamp.timestamp.month:
-                    yearArr[x-1] += 1
+                    yearArr[x-1] += timestamp.amount
 
         yearArr.append(int(currentYear))
         return yearArr
@@ -79,7 +71,8 @@ class GenerateStats:
 
         currentYear = chosenDateArray['year']
         currentMonth = chosenDateArray['month']
-        currentDay = chosenDateArray['day']
+
+        datequery = currentYear + '-' + currentMonth
 
         uselessTuple = monthrange(int(currentYear), int(currentMonth))
 
@@ -87,40 +80,33 @@ class GenerateStats:
 
         dayArr = [0]*daysInMonth
 
-        timestamps = event.query.filter(event.timestamp.contains(currentYear))
+        timestamps = event.query.filter(event.timestamp.contains(datequery))
 
-        #timestamps = event.query.all()
         for timestamp in timestamps:
-
             for x in range(1, daysInMonth+1):
-                if int(currentMonth) == timestamp.timestamp.month:
-                    if x == timestamp.timestamp.day:
-                        dayArr[x-1] += 1
+                if x == timestamp.timestamp.day:
+                    dayArr[x-1] += timestamp.amount
+
         return dayArr
 
     #Add optional parameter for user to be able to choose year, month and day
     def get_taginsByHour(self, event, chosenDateArray):
-        '''currentYear = self.get_current_year_string()
-        currentMonth = self.get_current_month_string()
-        currentDay = self.get_current_day_string()'''
-
         currentYear = chosenDateArray['year']
         currentMonth = chosenDateArray['month']
         currentDay = chosenDateArray['day']
 
+        datequery = currentYear + '-' + currentMonth + '-' + currentDay
 
-        timestamps = event.query.filter(event.timestamp.contains(currentYear))
+        print(datequery)
+
+        timestamps = event.query.filter(event.timestamp.contains(datequery))
 
         hourArr = [0]*24
 
         for timestamp in timestamps:
-
             for x in range(1, 25):
-                if int(currentYear) == timestamp.timestamp.year:
-                  if int(currentMonth) == timestamp.timestamp.month:
-                    if int(currentDay) == timestamp.timestamp.day:
-                        if x == timestamp.timestamp.hour:
-                            hourArr[x-1] += 1
+                if x == timestamp.clockstamp:
+                    hourArr[x-1] += timestamp.amount
 
         return hourArr
 

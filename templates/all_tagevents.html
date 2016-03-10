@@ -14,12 +14,12 @@ Add tag: {{message[1]}} to this user? <a href="/crosstag/v1.0/link_user_to_last_
 	<tbody>
 		<thead>
 			<tr>
-				<th>index</th> <th>timestamp</th><th>tag_id</th>
+				<th>TagID</th> <th>timestamp</th><th>amount</th>
 			</tr>
 		</thead>
 				{% for hit in hits %}
 				<tr>
-					<td>{{hit.index}}</td> <td>{{hit.timestamp}}</td> <td>{{hit.tag_id}}</td>
+					<td>{{hit.tagid}}</td> <td>{{hit.timestamp}}</td> <td>{{hit.amount}}</td>
 				</tr>
 				{% endfor %}
 	</tbody>
