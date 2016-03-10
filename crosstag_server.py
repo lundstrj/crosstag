@@ -80,11 +80,18 @@ def static_tagin_page():
 def static_top_five():
     try:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
+>>>>>>> 18b5271cd228db701db35bf44946140d1ae27a98
         now = datetime.now()
         current_year = str(now.year)
         current_month = str(now.month)
 
         one_week = datetime.now() - timedelta(weeks=1)
+<<<<<<< HEAD
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
         # user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
 
@@ -93,10 +100,13 @@ def static_top_five():
 
         users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
 >>>>>>> 6f36da20624b7d7b654f39ebdcc5a87d7057b504
+=======
+>>>>>>> 18b5271cd228db701db35bf44946140d1ae27a98
 
         arr = []
         if users is not None:
             for user in users:
+<<<<<<< HEAD
 <<<<<<< HEAD
                 counter = 0
 
@@ -113,9 +123,13 @@ def static_top_five():
                 person_obj = {'name': user.name, 'amount': user.tagcounter}
                 arr.append(person_obj)
 >>>>>>> 6f36da20624b7d7b654f39ebdcc5a87d7057b504
+=======
 
-        new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-        return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
+                person_obj = {'name': user.name, 'amount': user.tagcounter}
+                arr.append(person_obj)
+>>>>>>> 18b5271cd228db701db35bf44946140d1ae27a98
+
+        return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
