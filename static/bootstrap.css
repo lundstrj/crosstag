@@ -14,6 +14,19 @@ body {
   margin: 0;
 }
 
+.admin{
+  font-family: Verdana;
+  font-style: italic;
+  font-size: 32px;
+  color: silver;
+  font-weight: bold;
+}
+
+.cflogo{
+  margin-left: 80%;
+  position: absolute;
+}
+
 .debt{
   margin-top: 30px;
   font-size: 20px;
@@ -929,12 +942,13 @@ textarea {
   line-height: inherit;
 }
 a {
-  color: #337ab7;
+  font-size: 14px;
+  color: black;
   text-decoration: none;
 }
 a:hover,
 a:focus {
-  color: #23527c;
+  color: black;
   text-decoration: underline;
 }
 a:focus {
@@ -4636,8 +4650,9 @@ a.badge:focus {
 .jumbotron {
   padding: 30px 15px;
   margin-bottom: 30px;
-  color: inherit;
-  background-color: #eee;
+  color: silver;
+  background-color: white;
+  font-family: Verdana;
 }
 .jumbotron h1,
 .jumbotron .h1 {
