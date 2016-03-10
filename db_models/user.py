@@ -20,9 +20,10 @@ class User(db.Model):
     create_date = db.Column(db.Date)
     status = db.Column(db.String(50))
     tagcounter = db.Column(db.Integer)
+    last_tag_timestamp = db.Column(db.DateTime)
 
     def __init__(self, name, email, phone=None, address=None, address2=None, city=None, zip_code=None, tag_id=None, fortnox_id=None,
-                 expiry_date=None, ssn=None, gender=None, status=None):
+                 expiry_date=None, ssn=None, gender=None, status=None, last_tag_timestamp=None):
         self.name = name
         self.email = email
         self.phone = phone
@@ -37,6 +38,9 @@ class User(db.Model):
         self.gender = gender
         self.create_date = datetime.now()
         self.status = status
+        if(self.tagcounter is None):
+            self.tagcounter = 0
+
 
     def dict(self):
         return {'index': self.index, 'name': self.name,
@@ -51,7 +55,8 @@ class User(db.Model):
                 'ssn': self.ssn,
                 'gender': self.gender,
                 'status': self.status,
-                'tagcounter': self.tagcounter
+                'tagcounter': self.tagcounter,
+                'last_tag_timestamp': self.last_tag_timestamp
                 }
 
     def json(self):

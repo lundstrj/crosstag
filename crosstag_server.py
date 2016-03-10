@@ -114,9 +114,11 @@ def get_events_from_user_by_tag_id(tag_id):
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
     session['last_tagin'] = tag_id
+    date = datetime.now()
     user = User.query.filter(User.tag_id == tag_id).first()
     if user is not None:
         user.tagcounter += 1
+        user.last_tag_timestamp = date
     now = datetime.now()
     currentYear = str(now.year)
     currentMonth = now.month
@@ -281,6 +283,7 @@ def tagin_user():
     form = NewTag(csrf_enabled=False)
 
     now = datetime.now()
+
     currentYear = str(now.year)
     currentMonth = now.month
     currentDay = now.day
@@ -289,23 +292,22 @@ def tagin_user():
     session['last_tagin'] = 'testformanualtagin'
 
 
-    now = str(now)
 
-    timestampquery = now[:10]
+    nowtostring = str(now)
+    timestampquery = nowtostring[:10]
 
     print(str(form.validate_on_submit()))
     print("errors", form.errors)
     if form.validate_on_submit():
 
+
         tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(currentHour)).first()
         #JUST A TEST THING FOR THE MANUAL TAGIN!!!!!!!!!!!!
-        user = User.query.filter(User.tag_id == 33333333).first()
+        user = User.query.filter(User.tag_id == form.tag_id.data).first()
 
-        for x in range(0, 8):
-            if user is not None:
-                user.tagcounter += 1
-
-            print(tmp_tag)
+        if user is not None:
+            user.tagcounter += 1
+            user.last_tag_timestamp = now
 
             if tmp_tag is None or tmp_tag == None:
                 tmp_tag = Tagevent()

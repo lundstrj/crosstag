@@ -21,5 +21,9 @@ def update_user_in_local_db_from_fortnox(customer):
         user.ssn = strip_ssn(customer)
         user.expiry_date = user.expiry_date
         user.create_date = user.create_date
+        if(user.tagcounter is None):
+            user.tagcounter = 0
+        if user.status is None:
+            user.status = 'Inactive'
 
         db.session.commit()
