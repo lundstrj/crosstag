@@ -19,6 +19,7 @@ class User(db.Model):
     expiry_date = db.Column(db.Date)
     create_date = db.Column(db.Date)
     status = db.Column(db.String(50))
+    tagcounter = db.Column(db.Integer)
 
     def __init__(self, name, email, phone=None, address=None, address2=None, city=None, zip_code=None, tag_id=None, fortnox_id=None,
                  expiry_date=None, ssn=None, gender=None, status=None):
@@ -42,12 +43,15 @@ class User(db.Model):
                 'email': self.email, 'tag_id': self.tag_id,
                 'phone': self.phone, 'address': self.address,
                 'address2': self.address2, 'city': self.city,
-                'zip_code': self.zip_code, 'fortnox_id': self.fortnox_id,
+                'zip_code': self.zip_code,
+                'tag_id': self.tag_id,
+                'fortnox_id': self.fortnox_id,
                 'expiry_date': str(self.expiry_date),
                 'create_date': str(self.create_date),
                 'ssn': self.ssn,
                 'gender': self.gender,
-                'status': self.status
+                'status': self.status,
+                'tagcounter': self.tagcounter
                 }
 
     def json(self):

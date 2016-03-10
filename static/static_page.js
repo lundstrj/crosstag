@@ -27,7 +27,7 @@ window.onload = function() {
     function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
-            display_user = false
+            display_user = false;
         }
 
         if (display_user && user_data && counter == 0) {
