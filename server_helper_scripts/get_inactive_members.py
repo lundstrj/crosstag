@@ -4,24 +4,21 @@ from datetime import datetime, timedelta
 
 
 def get_inactive_members():
-    users = User.query.filter(User.status == "Active").all()
+    users = User.query.filter(User.status == "Active").filter(User.last_tag_timestamp is not None).filter(User.last_tag_timestamp != '').all()
     arr = []
 
     two_weeks = datetime.now() - timedelta(weeks=2)
 
     for user in users:
-        valid_tagevent = Tagevent.query.filter(Tagevent.uid == user.index).all()[-1:]
-        # valid_tagevent.reverse()
-        for event in valid_tagevent:
-            if event.timestamp < two_weeks:
-                day_intervall = datetime.now() - event.timestamp
+        if user.last_tag_timestamp < two_weeks:
+            day_intervall = datetime.now() - user.last_tag_timestamp
 
-                days = int(str(day_intervall)[:3])
+            days = int(str(day_intervall)[:3])
 
-                if days >= 99:
+            if days >= 99:
 
-                    days = str(99) + "+"
+                days = str(99) + "+"
 
-                testarr = {'user': user, 'event': event.timestamp.strftime("%Y-%m-%d"), 'days': days}
-                arr.append(testarr)
+            testarr = {'user': user, 'event': user.last_tag_timestamp.strftime("%Y-%m-%d"), 'days': days}
+            arr.append(testarr)
     return arr

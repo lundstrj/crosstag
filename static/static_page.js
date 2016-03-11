@@ -19,7 +19,8 @@ window.onload = function() {
             document.getElementById("expire_date").innerHTML = user_data.expiry_date;
             document.getElementById("create_date").innerHTML = user_data.create_date;
             document.getElementById("user_email").innerHTML = user_data.email;
-            document.getElementById("tagin_month").innerHTML = user_data.tagins;
+            document.getElementById("tagin_month").innerHTML = user_data.tagcounter;
+
         }
     };
 
@@ -27,7 +28,7 @@ window.onload = function() {
     function CheckTagins() {
         if (!user_data && display_user) {
             //print("read tag: %s" % current['tag_id'])
-            display_user = false
+            display_user = false;
         }
 
         if (display_user && user_data && counter == 0) {

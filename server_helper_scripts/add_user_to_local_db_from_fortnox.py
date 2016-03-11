@@ -11,5 +11,6 @@ def add_user_to_local_db_from_fortnox(customer):
                    customer['Zipcode'], None, customer['FortnoxID'],
                    None, strip_ssn(customer),
                    get_gender_from_ssn(customer), None)
+    tmp_usr.status = 'Inactive'
     db.session.add(tmp_usr)
     db.session.commit()

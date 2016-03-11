@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from crosstag_init import app, db, jsonify, render_template, flash, redirect, Response
+from crosstag_init import app, db, jsonify, render_template, flash, redirect, Response, session, escape
 import json
 from generate_statistics import GenerateStats
 from fortnox import Fortnox
@@ -45,24 +45,32 @@ def stream():
     def up_stream():
         while True:
             global last_tag_events
-            tag = get_last_tag_event()
+            tag = session['last_tagin']['tagid']
+            session['last_tagin']['timer'] += 1
             user = None
 
-            if last_tag_events is None or last_tag_events != tag.index:
-                last_tag_events = tag.index
-
+            if tag is not None:
                 try:
-                    user = User.query.filter_by(tag_id=tag.tag_id).first().dict()
+                    if session['last_tagin']['timer'] <= 1:
+                       user = User.query.filter_by(tag_id=tag).filter(User.status != "Inactive").first().dict()
+
+                       if user is not None:
+
+                            date_handler = lambda user: (
+                            user.isoformat()
+                            if isinstance(user, datetime)
+                            or isinstance(user, date)
+                            else None
+                            )
+                            return 'data: %s\n\n' % json.dumps(user, default=date_handler)
+                    else:
+                        user = None
                 except:
                     user = None
 
-                if user is not None:
-                    user_tagins = get_events_from_user_by_tag_id(tag.tag_id)
-                    user['tagins'] = user_tagins['value']
 
-                    return 'data: %s\n\n' % json.dumps(user)
 
-            return 'data: %s\n\n' % user
+                return 'data: %s\n\n' % None
 
     return Response(up_stream(), mimetype='text/event-stream')
 
@@ -79,34 +87,20 @@ def static_tagin_page():
 @app.route('/crosstag/v1.0/static_top_five')
 def static_top_five():
     try:
+
+        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
+
         now = datetime.now()
         current_year = str(now.year)
         current_month = str(now.month)
 
-        one_week = datetime.now() - timedelta(weeks=1)
-        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '')
-        # user_tagevents = Tagevent.query.filter(Tagevent.timestamp > one_week).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
-
-        user_tagevents = Tagevent.query.filter(Tagevent.timestamp.contains(current_year)).filter(Tagevent.uid is not None).filter(Tagevent.uid != '')
-
         arr = []
-
         if users is not None:
             for user in users:
-                counter = 0
+                person_obj = {'name': user.name, 'amount': user.tagcounter}
+                arr.append(person_obj)
 
-                if user_tagevents is not None:
-                    for event in user_tagevents:
-                        if int(current_month) == event.timestamp.month:
-                            if event.uid == user.index:
-                                counter += 1
-
-                if counter > 0:
-                    person_obj = {'name': user.name, 'amount': counter}
-                    arr.append(person_obj)
-
-        new_arr = sorted(arr, key=lambda person_obj: person_obj['amount'], reverse=True)
-        return jsonify({'json_arr': [new_arr[0], new_arr[1], new_arr[2], new_arr[3], new_arr[4]]})
+        return jsonify({'json_arr': [arr[0], arr[1], arr[2], arr[3], arr[4]]})
     except:
         return jsonify({'json_arr': None})
 
@@ -121,7 +115,7 @@ def get_events_from_user_by_tag_id(tag_id):
         now = datetime.now()
 
         users_tagins = Tagevent.query.filter(Tagevent.tag_id.contains(tag_id)).\
-            filter(Tagevent.timestamp.contains(current_year)).all()
+            filter(Tagevent.timestamp.contains(current_year)).filter(Tagevent.uid != '').filter(Tagevent.uid is not None)
 
         for tag_event in users_tagins:
             for days in range(1, 32):
@@ -138,10 +132,31 @@ def get_events_from_user_by_tag_id(tag_id):
 # Retrieves a tag and stores it in the database.
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
-    event = Tagevent(tag_id)
-    db.session.add(event)
+    session['last_tagin'] = {'tagid': tagid, 'timer': 0}
+    date = datetime.now()
+    user = User.query.filter(User.tag_id == tag_id).first()
+    now = datetime.now()
+    hour = now.hour
+
+    now = str(now)
+
+    timestampquery = now[:10]
+
+    tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(hour)).first()
+
+    if user is not None:
+        user.tagcounter += 1
+        user.last_tag_timestamp = date
+
+        if tmp_tag is None or tmp_tag == None:
+            tmp_tag = Tagevent()
+            tmp_tag.amount = 1
+            db.session.add(tmp_tag)
+        else:
+            tmp_tag.amount += 1
+
     db.session.commit()
-    return "%s server tagged %s" % (event.timestamp, tag_id)
+    return "%s server tagged %s" % (tmp_tag.timestamp, tag_id)
 
 
 # Returns the last tag event
@@ -296,12 +311,39 @@ def tagevents():
 def tagin_user():
     form = NewTag(csrf_enabled=False)
 
+    now = datetime.now()
+
+    currentYear = str(now.year)
+    currentMonth = now.month
+    currentDay = now.day
+    currentHour = now.hour
+
+    session['last_tagin'] = {'tagid': form.tag_id.data, 'timer': 0}
+
+    nowtostring = str(now)
+    timestampquery = nowtostring[:10]
+
     print(str(form.validate_on_submit()))
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_tag = Tagevent(form.tag_id.data)
 
-        db.session.add(tmp_tag)
+
+        tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(currentHour)).first()
+        #JUST A TEST THING FOR THE MANUAL TAGIN!!!!!!!!!!!!
+        user = User.query.filter(User.tag_id == form.tag_id.data).first()
+
+
+        if user is not None:
+            user.tagcounter += 1
+            user.last_tag_timestamp = now
+
+            if tmp_tag is None or tmp_tag == None:
+                tmp_tag = Tagevent()
+                tmp_tag.amount = 1
+                db.session.add(tmp_tag)
+            else:
+                tmp_tag.amount += 1
+
         db.session.commit()
         flash('New tag created')
         return render_template('tagin_user.html',
@@ -355,12 +397,15 @@ def search_user():
 @app.route('/crosstag/v1.0/link_user_to_last_tag/<user_id>',
            methods=['GET', 'POST'])
 def link_user_to_last_tag(user_id):
-    tagevent = get_last_tag_event()
-    user = User.query.filter_by(index=user_id).first()
-    user.tag_id = tagevent.tag_id
-    db.session.commit()
-    return redirect("/edit_user/"+str(user.index))
-
+    try:
+        if session['last_tagin']['tagid'] is not None:
+            tag_id = session['last_tagin']['tagid']
+        user = User.query.filter_by(index=user_id).first()
+        user.tag_id = tag_id
+        db.session.commit()
+        return redirect("/edit_user/"+str(user.index))
+    except:
+        flash("No tagging have happened")
 
 # Returns an users tag.
 @app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])
@@ -373,13 +418,13 @@ def get_tag(user_index):
 @app.route('/crosstag/v1.0/get_tagevents_user_dict/<user_index>', methods=['GET'])
 def get_tagevents_user_dict(user_index):
     tag_id = get_tag(user_index)
-    events = Tagevent.query.filter_by(tag_id=tag_id)[-20:]
+    '''events = Tagevent.query.filter_by(tag_id=tag_id)[-20:]
     ret = []
     for hit in events:
         js = hit.dict()
         ret.append(js)
     ret.reverse()
-    return ret
+    return ret'''
 
 
 # Renders a HTML page with all inactive members.
@@ -461,10 +506,7 @@ def debt_create(id_test):
 def statistics():
     default_date = datetime.now()
 
-    default_date_array = {'year': str(default_date.year), 'month': str(default_date.month), 'day':str(default_date.day)}
-
-    # return default_date_array['month']
-    # return default_date
+    default_date_array = {'year': str(default_date.year), 'month': str(default_date.strftime('%m')), 'day':str(default_date.strftime('%d'))}
     gs = GenerateStats()
     # Chosenyear, chosenmonth, chosenday
 
