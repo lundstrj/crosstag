@@ -569,7 +569,7 @@ def statistics_by_date(_month, _day, _year):
 @app.route('/crosstag/v1.0/fortnox/', methods=['GET'])
 def fortnox_users():
     sync_from_fortnox()
-    flash('Local database synced with fortnox')
+    flash('Empty database was created')
     return redirect("/")
 
 
