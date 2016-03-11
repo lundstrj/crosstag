@@ -406,6 +406,8 @@ def link_user_to_last_tag(user_id):
         return redirect("/edit_user/"+str(user.index))
     except:
         flash("No tagging have happened")
+        user = User.query.filter_by(index=user_id).first()
+        return redirect("/edit_user/"+str(user.index))
 
 # Returns an users tag.
 @app.route('/crosstag/v1.0/get_tag/<user_index>', methods=['GET'])
