@@ -60,7 +60,7 @@ window.onload = function() {
     function top_five_tag() {
         try{
            var xhr = new XMLHttpRequest();
-           xhr.open("GET", "http://localhost:80/crosstag/v1.0/static_top_five", true);
+           xhr.open("GET", "http://192.168.0.90:80/crosstag/v1.0/static_top_five", true);
            xhr.addEventListener("load", function(){
                var data_arr = JSON.parse(xhr.response);
 
