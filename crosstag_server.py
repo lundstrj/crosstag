@@ -53,10 +53,12 @@ def stream():
             if last_tag_events is None or last_tag_events != tag.index:
                 last_tag_events = tag.index
 
+
                 try:
                     user = User.query.filter_by(tag_id=tag.tag_id).filter(User.status != "Inactive").first().dict()
                 except:
                     user = None
+
 
                 if user is not None:
                     date_handler = lambda user: (
@@ -67,9 +69,11 @@ def stream():
                     )
                     return 'data: %s\n\n' % json.dumps(user, default=date_handler)
 
+
             return 'data: %s\n\n' % user
 
     return Response(up_stream(), mimetype='text/event-stream')
+
 
 
 # Renders a static page for the tagin view. Shows the person who tags in.
@@ -621,6 +625,17 @@ def user_page(user_index=None):
                                data=user.dict(),
                                tags=tagevents,
                                debts=debts)
+
+
+@app.route('/crosstag/v1.0/clear_tagcounter/', methods=['GET'])
+def clear_tagcounter():
+    users = User.query.all()
+    if users is None:
+            print("she wrote upon it; no such number, no such zone")
+    for user in users:
+        user.tagcounter = 0
+
+    db.session.commit()
 
 
 # Sends an email to a person with all the latecomers.
