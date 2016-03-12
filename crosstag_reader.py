@@ -53,14 +53,12 @@ class CrosstagReader(object):
                     continue
                 try:
                     print('%s reader tagging [%s]' % (now, tag_nbr))
-<<<<<<< HEAD
                     urls = ["http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr)]
 
                     unsent = (grequests.get(url) for url in urls)
                     res = grequests.map(unsent)
-=======
                     res = grequests.get("http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr), timeout=3)
->>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
+
                     now = datetime.now()
 
 
@@ -90,20 +88,14 @@ class CrosstagReader(object):
 
             now = datetime.now()
             print('%s reader tagging [%s]' % (now, tag_nbr))
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
             urls = ["http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr)]
 
             unsent = (grequests.get(url) for url in urls)
             res = grequests.map(unsent)
-<<<<<<< HEAD
-            now = datetime.now()
-=======
 
->>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
+            now = datetime.now()
+
             logging.info("%s reader tagging result: [%s]" % (now, tag_nbr))
 
 
