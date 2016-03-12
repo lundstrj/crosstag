@@ -68,8 +68,6 @@ def stream():
                 except:
                     user = None
 
-
-
                 return 'data: %s\n\n' % None
 
     return Response(up_stream(), mimetype='text/event-stream')
@@ -629,6 +627,17 @@ def user_page(user_index=None):
                                data=user.dict(),
                                tags=tagevents,
                                debts=debts)
+
+
+@app.route('/crosstag/v1.0/clear_tagcounter/', methods=['GET'])
+def clear_tagcounter():
+    users = User.query.all()
+    if users is None:
+            print("she wrote upon it; no such number, no such zone")
+    for user in users:
+        user.tagcounter = 0
+
+    db.session.commit()
 
 
 # Sends an email to a person with all the latecomers.
