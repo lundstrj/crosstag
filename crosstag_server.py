@@ -650,38 +650,39 @@ def clear_tagcounter():
 def latecomers_mail():
     # TODO: Change the emails to correct crossfitkalmar emails
     inactive_users = get_inactive_members()
-    sender = "system@crosstag.se"
-    # johan.roth79@gmail.com, stefan@crossfitkalmar.se
-    recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.lnu.se']
-    msg = MIMEMultipart("alternative")
-    part1 = ""
-    for user in inactive_users:
-        temp_msg = user['user'].name + ' \r\n ' + \
-                   user['user'].email + ' \r\n Telefon: ' + \
-                   user['user'].phone + ' \r\n Adress: ' + \
-                   user['user'].address + ' \r\n Taggade senast: ' + \
-                   user['event'] + ' \r\n ' + \
-                   str(user['days']) + ' dagar sedan senaste taggningen.'
+    if inactive_users is not None:
+        sender = "system@crosstag.se"
+        # johan.roth79@gmail.com, stefan@crossfitkalmar.se
+        recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.lnu.se']
+        msg = MIMEMultipart("alternative")
+        part1 = ""
+        for user in inactive_users:
+            temp_msg = user['user'].name + ' \r\n ' + \
+                       user['user'].email + ' \r\n Telefon: ' + \
+                       user['user'].phone + ' \r\n Adress: ' + \
+                       user['user'].address + ' \r\n Taggade senast: ' + \
+                       user['event'] + ' \r\n ' + \
+                       str(user['days']) + ' dagar sedan senaste taggningen.'
 
-        part1 = temp_msg + "\r\n\r\n" + part1
+            part1 = temp_msg + "\r\n\r\n" + part1
 
-        # Converts string to UTF-8
-        msg.attach(MIMEText(u'' + part1 + '', "plain", "utf-8"))
+            # Converts string to UTF-8
+            msg.attach(MIMEText(u'' + part1 + '', "plain", "utf-8"))
 
-    msg.as_string().encode('ascii')
+        msg.as_string().encode('ascii')
 
-    msg['From'] = sender
-    msg['To'] = ", ".join(recipients)
-    msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
-    s = smtplib.SMTP("smtp.crosstag.se", 587)
-    # Hostname to send for this command defaults to the fully qualified domain name of the local host.
-    s.ehlo()
-    # Puts connection to SMTP server in TLS mode
-    s.starttls()
-    s.ehlo()
-    s.login(sender, cfg.EMAIL_PASSWORD)
-    s.sendmail(sender, recipients, msg.as_string())
-    s.quit()
+        msg['From'] = sender
+        msg['To'] = ", ".join(recipients)
+        msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
+        s = smtplib.SMTP("smtp.crosstag.se", 587)
+        # Hostname to send for this command defaults to the fully qualified domain name of the local host.
+        s.ehlo()
+        # Puts connection to SMTP server in TLS mode
+        s.starttls()
+        s.ehlo()
+        s.login(sender, cfg.EMAIL_PASSWORD)
+        s.sendmail(sender, recipients, msg.as_string())
+        s.quit()
 
 
 # Renders a HTML page to edit an user
