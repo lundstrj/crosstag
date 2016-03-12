@@ -53,12 +53,10 @@ def stream():
             if last_tag_events is None or last_tag_events != tag.index:
                 last_tag_events = tag.index
 
-
                 try:
                     user = User.query.filter_by(tag_id=tag.tag_id).filter(User.status != "Inactive").first().dict()
                 except:
                     user = None
-
 
                 if user is not None:
                     date_handler = lambda user: (
@@ -69,6 +67,14 @@ def stream():
                     )
                     return 'data: %s\n\n' % json.dumps(user, default=date_handler)
 
+                if user is not None:
+                    date_handler = lambda user: (
+                    user.isoformat()
+                    if isinstance(user, datetime)
+                    or isinstance(user, date)
+                    else None
+                    )
+                    return 'data: %s\n\n' % json.dumps(user, default=date_handler)
 
             return 'data: %s\n\n' % user
 
@@ -89,7 +95,7 @@ def static_tagin_page():
 def static_top_five():
     try:
 
-        users = User.query.filter(User.status == 'Active').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
+        users = User.query.filter(User.status != 'Inactive').filter(User.tag_id is not None).filter(User.tag_id != '').order_by(User.tagcounter.desc()).limit(5)
 
         now = datetime.now()
         current_year = str(now.year)
@@ -140,6 +146,10 @@ def tagevent(tag_id):
     print(tag_id)
 
     now = str(now)
+    
+    user = User.query.filter(User.tag_id == tag_id).first()
+    detailedtag = DetailedTagevent(tag_id)
+    db.session.add(detailedtag)
 
     user = User.query.filter(User.tag_id == tag_id).first()
     detailedtag = DetailedTagevent(tag_id)
@@ -160,8 +170,9 @@ def tagevent(tag_id):
         else:
             tmp_tag.amount += 1
 
+
     db.session.commit()
-    return "%s server tagged %s" % (tmp_tag.timestamp, tag_id)
+    return "%s server tagged %s" % (detailedtag.timestamp, tag_id)
 
 
 # Returns the last tag event
@@ -242,7 +253,7 @@ def get_user_data_tag_dict(tag_id):
 @app.route('/last_tagins', methods=['GET'])
 def last_tagins():
     ret = []
-    events = Tagevent.query.all()[-10:]
+    events = DetailedTagevent.query.all()[-10:]
     for hit in events:
         js = hit.dict()
         tag = js['tag_id']
@@ -629,13 +640,14 @@ def user_page(user_index=None):
 
 @app.route('/crosstag/v1.0/clear_tagcounter/', methods=['GET'])
 def clear_tagcounter():
-    users = User.query.all()
+    users = User.query.filter(User.tagcounter > 0)
     if users is None:
             print("she wrote upon it; no such number, no such zone")
     for user in users:
         user.tagcounter = 0
 
     db.session.commit()
+    return redirect('/')
 
 
 # Sends an email to a person with all the latecomers.

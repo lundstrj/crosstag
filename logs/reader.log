@@ -1,6 +1,658 @@
 INFO:root:Attempting to set up the reader on: localhost:80
 ERROR:root:2016-02-25 12:46:16.688118 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
 INFO:root:Attempting to set up the reader on: localhost:80
+<<<<<<< HEAD
+INFO:root:Crosstag reader is up and running.
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 500 None
+INFO:root:2016-03-11 14:47:36.434379 reader tagging result: [<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+  "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>AttributeError: 'NoneType' object has no attribute 'timestamp' // Werkzeug Debugger</title>
+    <link rel="stylesheet" href="?__debugger__=yes&amp;cmd=resource&amp;f=style.css"
+        type="text/css">
+    <!-- We need to make sure this has a favicon so that the debugger does
+         not by accident trigger a request to /favicon.ico which might
+         change the application state. -->
+    <link rel="shortcut icon"
+        href="?__debugger__=yes&amp;cmd=resource&amp;f=console.png">
+    <script src="?__debugger__=yes&amp;cmd=resource&amp;f=jquery.js"></script>
+    <script src="?__debugger__=yes&amp;cmd=resource&amp;f=debugger.js"></script>
+    <script type="text/javascript">
+      var TRACEBACK = 3033499152,
+          CONSOLE_MODE = false,
+          EVALEX = true,
+          EVALEX_TRUSTED = false,
+          SECRET = "PdSURwwm1KmU8B47CnHz";
+    </script>
+  </head>
+  <body>
+    <div class="debugger">
+<h1>builtins.AttributeError</h1>
+<div class="detail">
+  <p class="errormsg">AttributeError: 'NoneType' object has no attribute 'timestamp'</p>
+</div>
+<h2 class="traceback">Traceback <em>(most recent call last)</em></h2>
+<div class="traceback">
+  
+  <ul><li><div class="frame" id="frame-3033501328">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1836</em>,
+      in <code class="function">__call__</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">                                </span>'Flask.blueprints instead'), stacklevel=2)</pre>
+<pre class="line before"><span class="ws">        </span>return self.blueprints</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def __call__(self, environ, start_response):</pre>
+<pre class="line before"><span class="ws">        </span>&quot;&quot;&quot;Shortcut for :attr:`wsgi_app`.&quot;&quot;&quot;</pre>
+<pre class="line current"><span class="ws">        </span>return self.wsgi_app(environ, start_response)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def __repr__(self):</pre>
+<pre class="line after"><span class="ws">        </span>return '&lt;%s %r&gt;' % (</pre>
+<pre class="line after"><span class="ws">            </span>self.__class__.__name__,</pre>
+<pre class="line after"><span class="ws">            </span>self.name,</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033498736">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1820</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>response = self.full_dispatch_request()</pre>
+<pre class="line before"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line before"><span class="ws">                </span>error = e</pre>
+<pre class="line current"><span class="ws">                </span>response = self.make_response(self.handle_exception(e))</pre>
+<pre class="line after"><span class="ws">            </span>return response(environ, start_response)</pre>
+<pre class="line after"><span class="ws">        </span>finally:</pre>
+<pre class="line after"><span class="ws">            </span>if self.should_ignore_error(error):</pre>
+<pre class="line after"><span class="ws">                </span>error = None</pre>
+<pre class="line after"><span class="ws">            </span>ctx.auto_pop(error)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033501616">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1403</em>,
+      in <code class="function">handle_exception</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span># if we want to repropagate the exception, we can attempt to</pre>
+<pre class="line before"><span class="ws">            </span># raise it with the whole traceback in case we can do that</pre>
+<pre class="line before"><span class="ws">            </span># (the function was actually called from the except part)</pre>
+<pre class="line before"><span class="ws">            </span># otherwise, we just raise the error again</pre>
+<pre class="line before"><span class="ws">            </span>if exc_value is e:</pre>
+<pre class="line current"><span class="ws">                </span>reraise(exc_type, exc_value, tb)</pre>
+<pre class="line after"><span class="ws">            </span>else:</pre>
+<pre class="line after"><span class="ws">                </span>raise e</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">        </span>self.log_exception((exc_type, exc_value, tb))</pre>
+<pre class="line after"><span class="ws">        </span>if handler is None:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033497680">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/_compat.py"</cite>,
+      line <em class="line">33</em>,
+      in <code class="function">reraise</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">    </span>from io import StringIO</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def reraise(tp, value, tb=None):</pre>
+<pre class="line before"><span class="ws">        </span>if value.__traceback__ is not tb:</pre>
+<pre class="line before"><span class="ws">            </span>raise value.with_traceback(tb)</pre>
+<pre class="line current"><span class="ws">        </span>raise value</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>implements_to_string = _identity</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>else:</pre>
+<pre class="line after"><span class="ws">    </span>text_type = unicode</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033500752">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1817</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>ctx = self.request_context(environ)</pre>
+<pre class="line before"><span class="ws">        </span>ctx.push()</pre>
+<pre class="line before"><span class="ws">        </span>error = None</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line current"><span class="ws">                </span>response = self.full_dispatch_request()</pre>
+<pre class="line after"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">                </span>error = e</pre>
+<pre class="line after"><span class="ws">                </span>response = self.make_response(self.handle_exception(e))</pre>
+<pre class="line after"><span class="ws">            </span>return response(environ, start_response)</pre>
+<pre class="line after"><span class="ws">        </span>finally:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033498928">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1477</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span>request_started.send(self)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line before"><span class="ws">                </span>rv = self.dispatch_request()</pre>
+<pre class="line before"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line current"><span class="ws">            </span>rv = self.handle_user_exception(e)</pre>
+<pre class="line after"><span class="ws">        </span>response = self.make_response(rv)</pre>
+<pre class="line after"><span class="ws">        </span>response = self.process_response(response)</pre>
+<pre class="line after"><span class="ws">        </span>request_finished.send(self, response=response)</pre>
+<pre class="line after"><span class="ws">        </span>return response</pre>
+<pre class="line after"><span class="ws"></span> </pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033497936">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1381</em>,
+      in <code class="function">handle_user_exception</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>app_handlers = self.error_handler_spec[None].get(None, ())</pre>
+<pre class="line before"><span class="ws">        </span>for typecheck, handler in chain(blueprint_handlers, app_handlers):</pre>
+<pre class="line before"><span class="ws">            </span>if isinstance(e, typecheck):</pre>
+<pre class="line before"><span class="ws">                </span>return handler(e)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line current"><span class="ws">        </span>reraise(exc_type, exc_value, tb)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def handle_exception(self, e):</pre>
+<pre class="line after"><span class="ws">        </span>&quot;&quot;&quot;Default exception handling that kicks in when an exception</pre>
+<pre class="line after"><span class="ws">        </span>occurs that is not caught.  In debug mode the exception will</pre>
+<pre class="line after"><span class="ws">        </span>be re-raised immediately, otherwise it is logged and the handler</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033500496">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/_compat.py"</cite>,
+      line <em class="line">33</em>,
+      in <code class="function">reraise</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">    </span>from io import StringIO</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def reraise(tp, value, tb=None):</pre>
+<pre class="line before"><span class="ws">        </span>if value.__traceback__ is not tb:</pre>
+<pre class="line before"><span class="ws">            </span>raise value.with_traceback(tb)</pre>
+<pre class="line current"><span class="ws">        </span>raise value</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>implements_to_string = _identity</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>else:</pre>
+<pre class="line after"><span class="ws">    </span>text_type = unicode</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033501520">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1475</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span>self.try_trigger_before_first_request_functions()</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>request_started.send(self)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line current"><span class="ws">                </span>rv = self.dispatch_request()</pre>
+<pre class="line after"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">            </span>rv = self.handle_user_exception(e)</pre>
+<pre class="line after"><span class="ws">        </span>response = self.make_response(rv)</pre>
+<pre class="line after"><span class="ws">        </span>response = self.process_response(response)</pre>
+<pre class="line after"><span class="ws">        </span>request_finished.send(self, response=response)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033500112">
+  <h4>File <cite class="filename">"/usr/local/lib/python3.4/dist-packages/flask/app.py"</cite>,
+      line <em class="line">1461</em>,
+      in <code class="function">dispatch_request</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">        </span># request came with the OPTIONS method, reply automatically</pre>
+<pre class="line before"><span class="ws">        </span>if getattr(rule, 'provide_automatic_options', False) \</pre>
+<pre class="line before"><span class="ws">           </span>and req.method == 'OPTIONS':</pre>
+<pre class="line before"><span class="ws">            </span>return self.make_default_options_response()</pre>
+<pre class="line before"><span class="ws">        </span># otherwise dispatch to the handler for that endpoint</pre>
+<pre class="line current"><span class="ws">        </span>return self.view_functions[rule.endpoint](**req.view_args)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def full_dispatch_request(self):</pre>
+<pre class="line after"><span class="ws">        </span>&quot;&quot;&quot;Dispatches the request and on top of that performs request</pre>
+<pre class="line after"><span class="ws">        </span>pre and postprocessing as well as HTTP exception catching and</pre>
+<pre class="line after"><span class="ws">        </span>error handling.</pre></div>
+</div>
+
+<li><div class="frame" id="frame-3033500336">
+  <h4>File <cite class="filename">"/home/pi/crosstag/crosstag/crosstag_server.py"</cite>,
+      line <em class="line">158</em>,
+      in <code class="function">tagevent</code></h4>
+  <div class="source"><pre class="line before"><span class="ws">            </span>db.session.add(tmp_tag)</pre>
+<pre class="line before"><span class="ws">        </span>else:</pre>
+<pre class="line before"><span class="ws">            </span>tmp_tag.amount += 1</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>db.session.commit()</pre>
+<pre class="line current"><span class="ws">    </span>return &quot;%s server tagged %s&quot; % (tmp_tag.timestamp, tag_id)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span># Returns the last tag event</pre>
+<pre class="line after"><span class="ws"></span>@app.route('/crosstag/v1.0/last_tagin', methods=['GET'])</pre>
+<pre class="line after"><span class="ws"></span>def last_tagin():</pre></div>
+</div>
+</ul>
+  <blockquote>AttributeError: 'NoneType' object has no attribute 'timestamp'</blockquote>
+</div>
+
+<div class="plain">
+  <form action="/?__debugger__=yes&amp;cmd=paste" method="post">
+    <p>
+      <input type="hidden" name="language" value="pytb">
+      This is the Copy/Paste friendly version of the traceback.  <span
+      class="pastemessage">You can also paste this traceback into
+      a <a href="https://gist.github.com/">gist</a>:
+      <input type="submit" value="create paste"></span>
+    </p>
+    <textarea cols="50" rows="10" name="code" readonly>Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1836, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1820, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1403, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/pi/crosstag/crosstag/crosstag_server.py", line 158, in tagevent
+    return "%s server tagged %s" % (tmp_tag.timestamp, tag_id)
+AttributeError: 'NoneType' object has no attribute 'timestamp'</textarea>
+  </form>
+</div>
+<div class="explanation">
+  The debugger caught an exception in your WSGI application.  You can now
+  look at the traceback which led to the error.  <span class="nojavascript">
+  If you enable JavaScript you can also use additional features such as code
+  execution (if the evalex feature is enabled), automatic pasting of the
+  exceptions and much more.</span>
+</div>
+      <div class="footer">
+        Brought to you by <strong class="arthur">DON'T PANIC</strong>, your
+        friendly Werkzeug powered traceback interpreter.
+      </div>
+    </div>
+
+    <div class="pin-prompt">
+      <div class="inner">
+        <h3>Console Locked</h3>
+        <p>
+          The console is locked and needs to be unlocked by entering the PIN.
+          You can find the PIN printed out on the standard output of your
+          shell that runs the server.
+        <form>
+          <p>PIN:
+            <input type=text name=pin size=14>
+            <input type=submit name=btn value="Confirm Pin">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!--
+
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1836, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1820, in wsgi_app
+    response = self.make_response(self.handle_exception(e))
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1403, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1817, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1477, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1381, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/usr/local/lib/python3.4/dist-packages/flask/_compat.py", line 33, in reraise
+    raise value
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1475, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/usr/local/lib/python3.4/dist-packages/flask/app.py", line 1461, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/pi/crosstag/crosstag/crosstag_server.py", line 158, in tagevent
+    return "%s server tagged %s" % (tmp_tag.timestamp, tag_id)
+AttributeError: 'NoneType' object has no attribute 'timestamp'
+
+-->
+]
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:47:48.072194 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:48:10.828324 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:51:05.877250 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:51:35.678614 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:53:54.675254 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:54:12.318411 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:55:17.976394 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:55:49.620491 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:56:21.289307 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:56:44.602109 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:57:15.533237 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010A3C629BCE' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:57:29.209957 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'010A3C629BCE']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010A3C629BCE' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:57:57.871724 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'010A3C629BCE']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010DEBB56E3C' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:58:11.442767 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'010DEBB56E3C']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010DEBB56E3C' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:58:42.165170 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'010DEBB56E3C']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010A3C629BCE' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:58:55.790359 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'010A3C629BCE']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 14:59:27.496761 reader tagging result: [2016-03-11 14:47:47.844293 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:00:39.372108 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:01:07.187606 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010DEBB56E3C' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:01:16.002617 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'010DEBB56E3C']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:02:08.887785 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:02:19.535524 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:02:49.190360 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:03:18.014430 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:03:25.772620 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:03:42.617793 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:04:19.503841 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:04:36.172435 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:07:15.204069 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:07:23.999959 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:07:34.607912 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:07:42.295701 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:07:50.082082 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+ERROR:root:2016-03-11 15:07:56.102143 reader failed (timeout?) to tag b'0E005B8172A6' error: <class 'requests.exceptions.ReadTimeout'>
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+ERROR:root:2016-03-11 15:08:11.251793 reader failed (timeout?) to tag b'0E005B8172A6' error: <class 'requests.exceptions.ReadTimeout'>
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:08:46.005398 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:08:50.793369 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:08:56.570293 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:00.399120 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:05.019513 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E0055432830']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:06.808185 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:09:06.818240 reader ERROR [b'\x020E0055432830'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:08.581513 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:09:08.601965 reader ERROR [b'\x020E0055432830'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:11.762695 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:09:11.783125 reader ERROR [b'\x020E0055432830'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:13.601266 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+ERROR:root:2016-03-11 15:09:13.611470 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:28.285709 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:31.937494 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:36.036679 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:42.896813 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:09:42.914893 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:44.840494 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:09:44.885997 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:09:44.895970 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:47.675802 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:09:47.696027 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:09:47.726912 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:09:49.357929 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:09:49.368544 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:10:06.217372 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:02.351937 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:10.136025 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:18.909217 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:23.793955 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:27.521459 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:31.214767 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:11:37.106721 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:root:Attempting to set up the reader on: localhost:80
+INFO:root:Crosstag reader is up and running.
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:13:55.461317 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:03.248047 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:11.986897 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:14:11.997012 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:13.630245 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:14:13.658190 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:13.678127 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:13.697904 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:15.718529 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:14:15.729926 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:15.740291 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:15.750261 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:17.408292 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:14:17.428996 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:17.449030 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:17.476732 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:17.502188 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:19.736066 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:14:19.746329 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:19.756477 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:19.767189 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:19.777053 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:14:19.787012 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:14:43.542664 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:06.184957 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:13.928003 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:21.698622 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:15:21.709400 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:21.719203 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:21.729073 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:23.330066 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:15:23.340161 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:23.350149 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:23.360012 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:23.370374 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:25.832102 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:15:25.842375 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:25.852080 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:25.862330 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:25.872204 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:25.882231 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+ERROR:root:2016-03-11 15:15:26.904623 reader failed (timeout?) to tag b'0E005B8172A6' error: <class 'requests.exceptions.ReadTimeout'>
+ERROR:root:2016-03-11 15:15:30.076492 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.096559 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.116631 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.137364 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.164313 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.184902 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.205128 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.225979 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.246350 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.266573 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:15:30.287479 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:31.907875 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:15:45.558893 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:16:35.245426 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:16:35.256036 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:16:35.265968 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:16:37.003012 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:16:37.017416 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:16:37.027251 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:16:38.039584 reader ERROR [b'05E1B93D8'] is too long.",                                  " len(tag_nbr): 9
+ERROR:root:2016-03-11 15:16:38.059532 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:16:38.089537 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:17:59.052829 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:17:59.073259 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:17:59.093426 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:17:59.113839 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:18:01.117182 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:18:01.127671 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:18:01.137459 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:18:01.148104 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:18:01.158207 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:18:02.971701 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+ERROR:root:2016-03-11 15:18:02.991986 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:18:03.012164 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:18:03.032233 reader ERROR [b'\x020E005B8172A6'] is too long.",                                  " len(tag_nbr): 13
+ERROR:root:2016-03-11 15:18:03.052466 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:18:05.089896 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+ERROR:root:2016-03-11 15:18:05.100612 reader ERROR [b'\x020E005E1B93D8'] is too long.",                                  " len(tag_nbr): 13
+INFO:root:Attempting to set up the reader on: localhost:80
+INFO:root:Crosstag reader is up and running.
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:30:02.540692 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:30:17.187834 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005B8172A6' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:30:23.906436 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005B8172A6']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'010A3C629BCE' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:30:28.483350 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'010A3C629BCE']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005E1B93D8' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:30:37.157320 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005E1B93D8']
+INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
+DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
+INFO:root:2016-03-11 15:30:40.828405 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
+ERROR:root:2016-03-11 16:11:57.544029 reader ERROR [b'05B4D425A'] is too long.",                                  " len(tag_nbr): 9
+=======
 ERROR:root:2016-03-12 12:15:16.568744 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
 INFO:root:Attempting to set up the reader on: localhost:80
 ERROR:root:2016-03-12 12:15:42.302357 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
+>>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
