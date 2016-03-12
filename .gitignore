@@ -1,6 +1,7 @@
 config.py
 fortnox_cfg.py
 config.py~
+config.py.save
 fortnox_cfg.py~
 __pycache__/
 forms/__pycache__/
