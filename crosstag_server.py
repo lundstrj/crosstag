@@ -53,6 +53,10 @@ def stream():
             if last_tag_events is None or last_tag_events != tag.index:
                 last_tag_events = tag.index
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
                 try:
                     user = User.query.filter_by(tag_id=tag.tag_id).filter(User.status != "Inactive").first().dict()
                 except:
@@ -67,9 +71,23 @@ def stream():
                     )
                     return 'data: %s\n\n' % json.dumps(user, default=date_handler)
 
+<<<<<<< HEAD
+=======
+                if user is not None:
+                    date_handler = lambda user: (
+                    user.isoformat()
+                    if isinstance(user, datetime)
+                    or isinstance(user, date)
+                    else None
+                    )
+                    return 'data: %s\n\n' % json.dumps(user, default=date_handler)
+
+
+>>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
             return 'data: %s\n\n' % user
 
     return Response(up_stream(), mimetype='text/event-stream')
+
 
 
 # Renders a static page for the tagin view. Shows the person who tags in.
@@ -133,8 +151,14 @@ def tagevent(tag_id):
     now = datetime.now()
     hour = now.hour
 
+    print(tag_id)
+
     now = str(now)
     
+    user = User.query.filter(User.tag_id == tag_id).first()
+    detailedtag = DetailedTagevent(tag_id)
+    db.session.add(detailedtag)
+
     user = User.query.filter(User.tag_id == tag_id).first()
     detailedtag = DetailedTagevent(tag_id)
     db.session.add(detailedtag)
@@ -560,7 +584,7 @@ def statistics_by_date(_month, _day, _year):
 @app.route('/crosstag/v1.0/fortnox/', methods=['GET'])
 def fortnox_users():
     sync_from_fortnox()
-    flash('Local database synced with fortnox')
+    flash('Empty database was created')
     return redirect("/")
 
 
@@ -620,6 +644,17 @@ def user_page(user_index=None):
                                data=user.dict(),
                                tags=tagevents,
                                debts=debts)
+
+
+@app.route('/crosstag/v1.0/clear_tagcounter/', methods=['GET'])
+def clear_tagcounter():
+    users = User.query.all()
+    if users is None:
+            print("she wrote upon it; no such number, no such zone")
+    for user in users:
+        user.tagcounter = 0
+
+    db.session.commit()
 
 
 # Sends an email to a person with all the latecomers.

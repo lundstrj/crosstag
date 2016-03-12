@@ -1,6 +1,7 @@
 INFO:root:Attempting to set up the reader on: localhost:80
 ERROR:root:2016-02-25 12:46:16.688118 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
 INFO:root:Attempting to set up the reader on: localhost:80
+<<<<<<< HEAD
 INFO:root:Crosstag reader is up and running.
 INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): localhost
 DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E0055432830' HTTP/1.1" 500 None
@@ -650,3 +651,8 @@ INFO:requests.packages.urllib3.connectionpool:Starting new HTTP connection (1): 
 DEBUG:requests.packages.urllib3.connectionpool:"GET /crosstag/v1.0/tagevent/b'0E005BF09134' HTTP/1.1" 200 56
 INFO:root:2016-03-11 15:30:40.828405 reader tagging result: [2016-03-11 15:00:39.181145 server tagged b'0E005BF09134']
 ERROR:root:2016-03-11 16:11:57.544029 reader ERROR [b'05B4D425A'] is too long.",                                  " len(tag_nbr): 9
+=======
+ERROR:root:2016-03-12 12:15:16.568744 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
+INFO:root:Attempting to set up the reader on: localhost:80
+ERROR:root:2016-03-12 12:15:42.302357 reader ERROR unable to setup the RFID reade,",                          " is it plugged in?
+>>>>>>> 9923c7f2c4ed38c4d72058d1ed4db0cf3b062a5d
