@@ -65,8 +65,8 @@ Setup for Crontab
 ```sh
 sudo apt-get install gnome-schedule
 crontab -e <== Opens crontab file
-Add 2 lines in the bottom for automatic email and automatic sync
-* 10 * * 1 wget -O - -q -t 1 http://localhost/crosstag/v1.0/send_latecomers_emal
-* 6 * * 1 wget -O - -q -t 1 http://localhost/crosstag/v1.0/fortnox
-0 4 1 * * wget -O - -q -t 1 http://localhost/crosstag/v1.0/clear_tagcounter
+Add 3 lines in the bottom for automatic email, automatic sync and clear tagcounter
+* 10 * * 1 wget -O - -q -t 1 http://localhost/crosstag/v1.0/send_latecomers_email/
+* 6 * * 1 wget -O - -q -t 1 http://localhost/crosstag/v1.0/fortnox/
+0 4 1 * * wget -O - -q -t 1 http://localhost/crosstag/v1.0/clear_tagcounter/
 ```

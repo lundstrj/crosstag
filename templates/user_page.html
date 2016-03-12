@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>{{data.name}}</h2>
+<h2>{{data.name}}<span style="margin-left: 2%;" class="btn btn-info btn-xs"><a href='/edit_user/{{data.index}}'>Edit user</a></span></h2>
 
     <p>E-mail : {{ data.email }}</p>
     <p>Phone : {{ data.phone }}</p>
@@ -26,11 +26,6 @@
     {% else %}
     <span style="color:red">{{data.status}}</span>
     {% endif %}
-
-
-
-
-    <h3 class="btn btn-primary"><a href='/edit_user/{{data.index}}'>Edit user</a></h3>
 
 
 {% if debts %}

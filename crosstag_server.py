@@ -81,7 +81,6 @@ def stream():
     return Response(up_stream(), mimetype='text/event-stream')
 
 
-
 # Renders a static page for the tagin view. Shows the person who tags in.
 @app.route('/crosstag/v1.0/static_tagin_page')
 def static_tagin_page():
@@ -142,23 +141,16 @@ def tagevent(tag_id):
     date = datetime.now()
     now = datetime.now()
     hour = now.hour
-
     print(tag_id)
-
     now = str(now)
-    
     user = User.query.filter(User.tag_id == tag_id).first()
     detailedtag = DetailedTagevent(tag_id)
     db.session.add(detailedtag)
-
     user = User.query.filter(User.tag_id == tag_id).first()
     detailedtag = DetailedTagevent(tag_id)
     db.session.add(detailedtag)
-
     timestampquery = now[:10]
-
     tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(hour)).first()
-
     if user is not None:
         user.tagcounter += 1
         user.last_tag_timestamp = date
@@ -169,8 +161,6 @@ def tagevent(tag_id):
             db.session.add(tmp_tag)
         else:
             tmp_tag.amount += 1
-
-
     db.session.commit()
     return "%s server tagged %s" % (detailedtag.timestamp, tag_id)
 
@@ -223,14 +213,12 @@ def all_tagevents():
 def all_users(filter=None):
     ret = []
     counter = 0
-
     # Lists all users
     if filter == "all":
         users = User.query.order_by("expiry_date desc").all()
     # List users depending on the membership
     elif filter:
         users = User.query.filter(User.status == filter.title())
-
     for hit in users:
         counter += 1
         js = hit.dict()
@@ -296,10 +284,8 @@ def add_new_user():
         flash('Created new user: %s with id: %s' % (form.name.data,
                                                     tmp_usr.index))
         tagevent = get_last_tag_event()
-
         fortnox_data = Fortnox()
         fortnox_data.insert_customer(tmp_usr)
-
         msg = None
         if tagevent is None:
             msg = None
@@ -326,32 +312,26 @@ def tagevents():
 @app.route('/tagin_user', methods=['GET', 'POST'])
 def tagin_user():
     form = NewTag(csrf_enabled=False)
-
     now = datetime.now()
-    currentHour = now.hour
-
+    currenthour = now.hour
     nowtostring = str(now)
     timestampquery = nowtostring[:10]
-
     print(str(form.validate_on_submit()))
     print("errors", form.errors)
     if form.validate_on_submit():
-        tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(currentHour)).first()
+        tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(currenthour)).first()
         user = User.query.filter(User.tag_id == form.tag_id.data).first()
         detailedtag = DetailedTagevent(form.tag_id.data)
         db.session.add(detailedtag)
-
         if user is not None:
             user.tagcounter += 1
             user.last_tag_timestamp = now
-
             if tmp_tag is None or tmp_tag == None:
                 tmp_tag = Tagevent()
                 tmp_tag.amount = 1
                 db.session.add(tmp_tag)
             else:
                 tmp_tag.amount += 1
-
         db.session.commit()
         flash('New tag created')
         return render_template('tagin_user.html',
@@ -473,10 +453,8 @@ def debt_delete_confirm(id):
 def debt_check():
     debts = Debt.query.all()
     users = User.query.all()
-
     debt_and_user_array = []
     multi_array = []
-
     for debt in debts:
         for user in users:
             if debt.uid == user.index:
@@ -493,7 +471,6 @@ def debt_check():
 def debt_create(id_test):
     user = User.query.filter_by(index=id_test).first()
     form = NewDebt()
-
     test = datetime.now()
     print("errors", form.errors)
     if form.validate_on_submit():
@@ -501,9 +478,8 @@ def debt_create(id_test):
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
-                                                    user.name))
+                                                      user.name))
         return redirect("/user_page/"+id_test)
-
     return render_template('debt_create.html',
                            title='Debt Create',
                            form=form,
@@ -514,25 +490,19 @@ def debt_create(id_test):
 @app.route('/statistics', methods=['GET'])
 def statistics():
     default_date = datetime.now()
-
     default_date_array = {'year': str(default_date.year), 'month': str(default_date.strftime('%m')), 'day':str(default_date.strftime('%d'))}
     gs = GenerateStats()
     # Chosenyear, chosenmonth, chosenday
-
     # Fetch the data from the database.
     users = User.query.all()
     event = Tagevent
-
     week_day_name = default_date.strftime('%A')
     month_name = default_date.strftime('%B')
     custom_date_day = {'weekday': week_day_name + ' ' + str(default_date.day) + '/' + str(default_date.month) + '/' +
                        str(default_date.year)}
-
     custom_date_month = {'month': month_name + ' ' + str(default_date.year)}
-
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, default_date_array)
-
     return render_template('statistics.html',
                            plot_paths='',
                            data=ret,
@@ -544,27 +514,19 @@ def statistics():
 @app.route('/<_month>/<_day>/<_year>', methods=['GET'])
 def statistics_by_date(_month, _day, _year):
     chosen_date_array = {'year': _year, 'month': _month, 'day': _day}
-
     gs = GenerateStats()
     # Chosenyear, chosenmonth, chosenday
-
     # Fetch the data from the database.
     users = User.query.all()
     event = Tagevent
-
     default_date = datetime.now()
-
     selected_date = default_date.replace(day=int(_day), month=int(_month), year=int(_year))
-
     week_day_name = selected_date.strftime('%A')
     month_name = selected_date.strftime('%B')
     custom_date_day = {'weekday': week_day_name + ' ' + str(selected_date.day) + '/' + str(selected_date.month) + '/' + str(selected_date.year)}
-
     custom_date_month = {'month': month_name + ' ' + str(selected_date.year)}
-
     # Send the data to a method who returns an multi dimensional array with statistics.
     ret = gs.get_data(users, event, chosen_date_array)
-
     return render_template('statistics.html',
                            plot_paths='',
                            data=ret,
@@ -583,11 +545,8 @@ def fortnox_users():
 # Renders a HTML page with a user from fortnox
 @app.route('/fortnox/<fortnox_id>', methods=['GET'])
 def fortnox_specific_user(fortnox_id):
-
     fortnox_data = Fortnox()
-
     ret = fortnox_data.get_customer_by_id(fortnox_id)
-
     return render_template('fortnox.html',
                            plot_paths='',
                            data=ret)
@@ -625,10 +584,8 @@ def get_recent_events():
 def user_page(user_index=None):
     user = User.query.filter_by(index=user_index).first()
     debts = Debt.query.filter_by(uid=user.index)
-
     if user is None:
         return "No user Found"
-
     else:
         tagevents = get_tagevents_user_dict(user_index)
         return render_template('user_page.html',
@@ -655,42 +612,40 @@ def clear_tagcounter():
 def latecomers_mail():
     # TODO: Change the emails to correct crossfitkalmar emails
     inactive_users = get_inactive_members()
-    sender = "system@crosstag.se"
-    # johan.roth79@gmail.com, stefan@crossfitkalmar.se
-    recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.nu.se']
-    msg = MIMEMultipart("alternative")
-    part1 = ""
 
-    for user in inactive_users:
-        temp_msg = user['user'].name + ' \r\n ' + \
-                   user['user'].email + ' \r\n Telefon: ' + \
-                   user['user'].phone + ' \r\n Adress: ' + \
-                   user['user'].address + ' \r\n Taggade senast: ' + \
-                   user['event'] + ' \r\n ' + \
-                   str(user['days']) + ' dagar sedan senaste taggningen.'
+    if inactive_users is not None:
+        sender = "system@crosstag.se"
+        # johan.roth79@gmail.com, stefan@crossfitkalmar.se
+        recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.lnu.se']
+        msg = MIMEMultipart("alternative")
+        part1 = ""
+        for user in inactive_users:
+            temp_msg = user['user'].name + ' \r\n ' + \
+                       user['user'].email + ' \r\n Telefon: ' + \
+                       user['user'].phone + ' \r\n Adress: ' + \
+                       user['user'].address + ' \r\n Taggade senast: ' + \
+                       user['event'] + ' \r\n ' + \
+                       str(user['days']) + ' dagar sedan senaste taggningen.'
 
-        part1 = temp_msg + "\r\n\r\n" + part1
+            part1 = temp_msg + "\r\n\r\n" + part1
 
-        # Converts string to UTF-8
-        msg.attach(MIMEText(u'' + part1 + '', "plain", "utf-8"))
+            # Converts string to UTF-8
+            msg.attach(MIMEText(u'' + part1 + '', "plain", "utf-8"))
 
-    msg.as_string().encode('ascii')
+        msg.as_string().encode('ascii')
 
-    msg['From'] = sender
-    msg['To'] = ", ".join(recipients)
-    msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
-
-    s = smtplib.SMTP("smtp.crosstag.se", 587)
-    # Hostname to send for this command defaults to the fully qualified domain name of the local host.
-    s.ehlo()
-    # Puts connection to SMTP server in TLS mode
-    s.starttls()
-    s.ehlo()
-    s.login(sender, cfg.EMAIL_PASSWORD)
-
-    s.sendmail(sender, recipients, msg.as_string())
-
-    s.quit()
+        msg['From'] = sender
+        msg['To'] = ", ".join(recipients)
+        msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
+        s = smtplib.SMTP("smtp.crosstag.se", 587)
+        # Hostname to send for this command defaults to the fully qualified domain name of the local host.
+        s.ehlo()
+        # Puts connection to SMTP server in TLS mode
+        s.starttls()
+        s.ehlo()
+        s.login(sender, cfg.EMAIL_PASSWORD)
+        s.sendmail(sender, recipients, msg.as_string())
+        s.quit()
 
 
 # Renders a HTML page to edit an user
@@ -713,13 +668,11 @@ def edit_user(user_index=None):
         user.gender = form.gender.data
         user.expiry_date = form.expiry_date.data
         user.status = form.status.data
-
         db.session.commit()
         # If we successfully edited the user, redirect back to userpage.
         fortnox_data = Fortnox()
         fortnox_data.update_customer(user)
         return redirect("/user_page/"+str(user.index))
-
     if user:
         return render_template('edit_user.html',
                                title='Edit User',
@@ -750,7 +703,6 @@ def get_all_users():
         ret[user.index]['tag'] = user.tag_id
     ret = jsonify(ret)
     return ret
-
 
 if __name__ == '__main__':
     parser = OptionParser(usage="usage: %prog [options] arg \nTry this: " +
