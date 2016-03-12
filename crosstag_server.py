@@ -22,6 +22,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import config as cfg
 
+
 User = user.User
 Tagevent = tagevent.Tagevent
 Debt = debt.Debt
@@ -141,7 +142,6 @@ def tagevent(tag_id):
     date = datetime.now()
     now = datetime.now()
     hour = now.hour
-    print(tag_id)
     now = str(now)
     user = User.query.filter(User.tag_id == tag_id).first()
     detailedtag = DetailedTagevent(tag_id)
@@ -538,7 +538,6 @@ def statistics_by_date(_month, _day, _year):
 @app.route('/crosstag/v1.0/fortnox/', methods=['GET'])
 def fortnox_users():
     sync_from_fortnox()
-    flash('Empty database was created')
     return redirect("/")
 
 
@@ -614,9 +613,8 @@ def latecomers_mail():
     inactive_users = get_inactive_members()
 
     if inactive_users is not None:
-        sender = "system@crosstag.se"
-        # johan.roth79@gmail.com, stefan@crossfitkalmar.se
-        recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.lnu.se']
+        sender = cfg.sender
+        recipients = cfg.recipients
         msg = MIMEMultipart("alternative")
         part1 = ""
         for user in inactive_users:
