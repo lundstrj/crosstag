@@ -12,3 +12,4 @@ WTForms==2.0.1
 Werkzeug==0.9.6
 pyserial==2.7
 requests==2.2.1
+grequests==0.3.0
