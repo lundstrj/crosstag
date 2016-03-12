@@ -8,7 +8,7 @@ Development Lead
 Core Contributors
 `````````````````
 
-- Oxana Sachenkova <oxana.sachenkova@gmail.com> `@meranlin <https://github.com/merenlin>`_
+- Oxana Sachenkova <oxana.sachenkova@gmail.com> `@merenlin <https://github.com/merenlin>`_
 
 - Linus Anderson (la222tc) <la222tc@student.lnu.se>
 
