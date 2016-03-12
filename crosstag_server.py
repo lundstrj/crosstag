@@ -571,7 +571,6 @@ def statistics_by_date(_month, _day, _year):
                            data2=custom_date_day,
                            data3=custom_date_month)
 
-
 # Syncs the local database with customers from fortnox
 @app.route('/crosstag/v1.0/fortnox/', methods=['GET'])
 def fortnox_users():
@@ -579,19 +578,14 @@ def fortnox_users():
     flash('Empty database was created')
     return redirect("/")
 
-
 # Renders a HTML page with a user from fortnox
 @app.route('/fortnox/<fortnox_id>', methods=['GET'])
 def fortnox_specific_user(fortnox_id):
-
     fortnox_data = Fortnox()
-
     ret = fortnox_data.get_customer_by_id(fortnox_id)
-
     return render_template('fortnox.html',
                            plot_paths='',
                            data=ret)
-
 
 # Returns an array with recent tag events
 @app.route('/getrecentevents', methods=['GET'])
@@ -619,16 +613,13 @@ def get_recent_events():
     res = [{'datestamp': x, 'count': y} for x, y in tags_json.iteritems()]
     return json.dumps(res)
 
-
 # Renders a HTML page with a user and it debts
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
     user = User.query.filter_by(index=user_index).first()
     debts = Debt.query.filter_by(uid=user.index)
-
     if user is None:
         return "No user Found"
-
     else:
         tagevents = get_tagevents_user_dict(user_index)
         return render_template('user_page.html',
@@ -636,7 +627,6 @@ def user_page(user_index=None):
                                data=user.dict(),
                                tags=tagevents,
                                debts=debts)
-
 
 @app.route('/crosstag/v1.0/clear_tagcounter/', methods=['GET'])
 def clear_tagcounter():
@@ -649,7 +639,6 @@ def clear_tagcounter():
     db.session.commit()
     return redirect('/')
 
-
 # Sends an email to a person with all the latecomers.
 @app.route('/crosstag/v1.0/send_latecomers_email/', methods=['GET'])
 def latecomers_mail():
@@ -657,10 +646,9 @@ def latecomers_mail():
     inactive_users = get_inactive_members()
     sender = "system@crosstag.se"
     # johan.roth79@gmail.com, stefan@crossfitkalmar.se
-    recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.nu.se']
+    recipients = ['ej222pj@student.lnu.se', 'kn222gp@student.lnu.se']
     msg = MIMEMultipart("alternative")
     part1 = ""
-
     for user in inactive_users:
         temp_msg = user['user'].name + ' \r\n ' + \
                    user['user'].email + ' \r\n Telefon: ' + \
@@ -679,7 +667,6 @@ def latecomers_mail():
     msg['From'] = sender
     msg['To'] = ", ".join(recipients)
     msg['Subject'] = "Medlemmar som inte har taggat på 2 veckor!"
-
     s = smtplib.SMTP("smtp.crosstag.se", 587)
     # Hostname to send for this command defaults to the fully qualified domain name of the local host.
     s.ehlo()
@@ -687,9 +674,7 @@ def latecomers_mail():
     s.starttls()
     s.ehlo()
     s.login(sender, cfg.EMAIL_PASSWORD)
-
     s.sendmail(sender, recipients, msg.as_string())
-
     s.quit()
 
 
@@ -713,13 +698,11 @@ def edit_user(user_index=None):
         user.gender = form.gender.data
         user.expiry_date = form.expiry_date.data
         user.status = form.status.data
-
         db.session.commit()
         # If we successfully edited the user, redirect back to userpage.
         fortnox_data = Fortnox()
         fortnox_data.update_customer(user)
         return redirect("/user_page/"+str(user.index))
-
     if user:
         return render_template('edit_user.html',
                                title='Edit User',
@@ -739,7 +722,6 @@ def link_user_to_tag(user_index, tag_id):
     db.session.commit()
     return "OK"
 
-
 @app.route('/%s/v1.0/get_all_users' % app_name, methods=['GET'])
 def get_all_users():
     users = User.query.all()
@@ -750,7 +732,6 @@ def get_all_users():
         ret[user.index]['tag'] = user.tag_id
     ret = jsonify(ret)
     return ret
-
 
 if __name__ == '__main__':
     parser = OptionParser(usage="usage: %prog [options] arg \nTry this: " +
