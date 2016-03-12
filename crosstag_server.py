@@ -16,6 +16,7 @@ from server_helper_scripts.get_inactive_members import get_inactive_members
 from db_models import debt
 from db_models import user
 from db_models import tagevent
+from db_models import detailedtagevent
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -24,6 +25,7 @@ import config as cfg
 User = user.User
 Tagevent = tagevent.Tagevent
 Debt = debt.Debt
+DetailedTagevent = detailedtagevent.DetailedTagevent
 
 app.config.from_pyfile('config.py')
 app_name = 'crosstag'
@@ -45,32 +47,27 @@ def stream():
     def up_stream():
         while True:
             global last_tag_events
-            tag = session['last_tagin']['tagid']
-            session['last_tagin']['timer'] += 1
+            tag = get_last_tag_event()
             user = None
 
-            if tag is not None:
+            if last_tag_events is None or last_tag_events != tag.index:
+                last_tag_events = tag.index
+
                 try:
-                    if session['last_tagin']['timer'] <= 1:
-                       user = User.query.filter_by(tag_id=tag).filter(User.status != "Inactive").first().dict()
-
-                       if user is not None:
-
-                            date_handler = lambda user: (
-                            user.isoformat()
-                            if isinstance(user, datetime)
-                            or isinstance(user, date)
-                            else None
-                            )
-                            return 'data: %s\n\n' % json.dumps(user, default=date_handler)
-                    else:
-                        user = None
+                    user = User.query.filter_by(tag_id=tag.tag_id).filter(User.status != "Inactive").first().dict()
                 except:
                     user = None
 
+                if user is not None:
+                    date_handler = lambda user: (
+                    user.isoformat()
+                    if isinstance(user, datetime)
+                    or isinstance(user, date)
+                    else None
+                    )
+                    return 'data: %s\n\n' % json.dumps(user, default=date_handler)
 
-
-                return 'data: %s\n\n' % None
+            return 'data: %s\n\n' % user
 
     return Response(up_stream(), mimetype='text/event-stream')
 
@@ -132,13 +129,17 @@ def get_events_from_user_by_tag_id(tag_id):
 # Retrieves a tag and stores it in the database.
 @app.route('/crosstag/v1.0/tagevent/<tag_id>')
 def tagevent(tag_id):
-    session['last_tagin'] = {'tagid': tagid, 'timer': 0}
     date = datetime.now()
-    user = User.query.filter(User.tag_id == tag_id).first()
     now = datetime.now()
     hour = now.hour
 
+    print(tag_id)
+
     now = str(now)
+
+    user = User.query.filter(User.tag_id == tag_id).first()
+    detailedtag = DetailedTagevent(tag_id)
+    db.session.add(detailedtag)
 
     timestampquery = now[:10]
 
@@ -312,13 +313,7 @@ def tagin_user():
     form = NewTag(csrf_enabled=False)
 
     now = datetime.now()
-
-    currentYear = str(now.year)
-    currentMonth = now.month
-    currentDay = now.day
     currentHour = now.hour
-
-    session['last_tagin'] = {'tagid': form.tag_id.data, 'timer': 0}
 
     nowtostring = str(now)
     timestampquery = nowtostring[:10]
@@ -326,12 +321,10 @@ def tagin_user():
     print(str(form.validate_on_submit()))
     print("errors", form.errors)
     if form.validate_on_submit():
-
-
         tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(currentHour)).first()
-        #JUST A TEST THING FOR THE MANUAL TAGIN!!!!!!!!!!!!
         user = User.query.filter(User.tag_id == form.tag_id.data).first()
-
+        detailedtag = DetailedTagevent(form.tag_id.data)
+        db.session.add(detailedtag)
 
         if user is not None:
             user.tagcounter += 1
@@ -398,14 +391,13 @@ def search_user():
            methods=['GET', 'POST'])
 def link_user_to_last_tag(user_id):
     try:
-        if session['last_tagin']['tagid'] is not None:
-            tag_id = session['last_tagin']['tagid']
+        tagevent = get_last_tag_event()
         user = User.query.filter_by(index=user_id).first()
-        user.tag_id = tag_id
+        user.tag_id = tagevent.tag_id
         db.session.commit()
         return redirect("/edit_user/"+str(user.index))
     except:
-        flash("No tagging have happened")
+        flash("No tagging has happened")
         user = User.query.filter_by(index=user_id).first()
         return redirect("/edit_user/"+str(user.index))
 
@@ -420,13 +412,13 @@ def get_tag(user_index):
 @app.route('/crosstag/v1.0/get_tagevents_user_dict/<user_index>', methods=['GET'])
 def get_tagevents_user_dict(user_index):
     tag_id = get_tag(user_index)
-    '''events = Tagevent.query.filter_by(tag_id=tag_id)[-20:]
+    events = DetailedTagevent.query.filter_by(tag_id=tag_id)[-20:]
     ret = []
     for hit in events:
         js = hit.dict()
         ret.append(js)
     ret.reverse()
-    return ret'''
+    return ret
 
 
 # Renders a HTML page with all inactive members.

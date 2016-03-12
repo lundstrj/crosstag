@@ -9,7 +9,7 @@ except:
 import sys
 from datetime import datetime
 from optparse import OptionParser
-import requests
+import grequests
 import time
 from random import randint
 
@@ -53,8 +53,7 @@ class CrosstagReader(object):
                     continue
                 try:
                     print('%s reader tagging [%s]' % (now, tag_nbr))
-                    res = requests.get("http://%s:%d/crosstag/v1.0/tagevent/%s"
-                                       % (server, port, tag_nbr), timeout=3)
+                    res = grequests.get("http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr), timeout=3)
                     now = datetime.now()
 
 
@@ -83,9 +82,14 @@ class CrosstagReader(object):
                 tag_nbr = ('%s' % answer) * 8
             now = datetime.now()
             print('%s reader tagging [%s]' % (now, tag_nbr))
-            res = requests.get("http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr), timeout=3)
-            now = datetime.now()
-            logging.info("%s reader tagging result: [%s]" % (now, res.text))
+
+
+            urls = ["http://%s:%d/crosstag/v1.0/tagevent/%s" % (server, port, tag_nbr)]
+
+            unsent = (grequests.get(url) for url in urls)
+            res = grequests.map(unsent)
+
+            logging.info("%s reader tagging result: [%s]" % (now, tag_nbr))
 
 
 if __name__ == '__main__':
