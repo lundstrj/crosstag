@@ -501,7 +501,7 @@ def debt_create(id_test):
         db.session.add(tmp_debt)
         db.session.commit()
         flash('Created new debt: %s for member %s' % (form.amount.data,
-                                                    user.name))
+                                                      user.name))
         return redirect("/user_page/"+id_test)
 
     return render_template('debt_create.html',
@@ -571,12 +571,14 @@ def statistics_by_date(_month, _day, _year):
                            data2=custom_date_day,
                            data3=custom_date_month)
 
+
 # Syncs the local database with customers from fortnox
 @app.route('/crosstag/v1.0/fortnox/', methods=['GET'])
 def fortnox_users():
     sync_from_fortnox()
     flash('Empty database was created')
     return redirect("/")
+
 
 # Renders a HTML page with a user from fortnox
 @app.route('/fortnox/<fortnox_id>', methods=['GET'])
@@ -586,6 +588,7 @@ def fortnox_specific_user(fortnox_id):
     return render_template('fortnox.html',
                            plot_paths='',
                            data=ret)
+
 
 # Returns an array with recent tag events
 @app.route('/getrecentevents', methods=['GET'])
@@ -613,6 +616,7 @@ def get_recent_events():
     res = [{'datestamp': x, 'count': y} for x, y in tags_json.iteritems()]
     return json.dumps(res)
 
+
 # Renders a HTML page with a user and it debts
 @app.route('/user_page/<user_index>', methods=['GET', 'POST'])
 def user_page(user_index=None):
@@ -628,6 +632,7 @@ def user_page(user_index=None):
                                tags=tagevents,
                                debts=debts)
 
+
 @app.route('/crosstag/v1.0/clear_tagcounter/', methods=['GET'])
 def clear_tagcounter():
     users = User.query.filter(User.tagcounter > 0)
@@ -638,6 +643,7 @@ def clear_tagcounter():
 
     db.session.commit()
     return redirect('/')
+
 
 # Sends an email to a person with all the latecomers.
 @app.route('/crosstag/v1.0/send_latecomers_email/', methods=['GET'])
@@ -721,6 +727,7 @@ def link_user_to_tag(user_index, tag_id):
     user.tag = tag_id
     db.session.commit()
     return "OK"
+
 
 @app.route('/%s/v1.0/get_all_users' % app_name, methods=['GET'])
 def get_all_users():
