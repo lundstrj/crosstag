@@ -146,9 +146,6 @@ def tagevent(tag_id):
     user = User.query.filter(User.tag_id == tag_id).first()
     detailedtag = DetailedTagevent(tag_id)
     db.session.add(detailedtag)
-    user = User.query.filter(User.tag_id == tag_id).first()
-    detailedtag = DetailedTagevent(tag_id)
-    db.session.add(detailedtag)
     timestampquery = now[:10]
     tmp_tag = Tagevent.query.filter(Tagevent.timestamp.contains(timestampquery)).filter(Tagevent.clockstamp.contains(hour)).first()
     if user is not None:
