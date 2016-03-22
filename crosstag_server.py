@@ -1,27 +1,26 @@
 # -*- coding: utf-8 -*-
-from crosstag_init import app, db, jsonify, render_template, flash, redirect, Response, session, escape
 import json
-from generate_statistics import GenerateStats
-from fortnox import Fortnox
-from optparse import OptionParser
-from datetime import datetime, timedelta
-from forms.new_tag import NewTag
-from forms.new_user import NewUser
-from forms.edit_user import EditUser
-from forms.search_user import SearchUser
-from forms.new_debt import NewDebt
-from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
-from server_helper_scripts.get_last_tag_event import get_last_tag_event
-from server_helper_scripts.get_inactive_members import get_inactive_members
-from db_models import debt
-from db_models import user
-from db_models import tagevent
-from db_models import detailedtagevent
 import smtplib
+from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from optparse import OptionParser
 import config as cfg
-
+from crosstag_init import app, db, jsonify, render_template, flash, redirect, Response
+from db_models import debt
+from db_models import detailedtagevent
+from db_models import tagevent
+from db_models import user
+from forms.edit_user import EditUser
+from forms.new_debt import NewDebt
+from forms.new_tag import NewTag
+from forms.new_user import NewUser
+from forms.search_user import SearchUser
+from fortnox.fortnox import Fortnox
+from server_helper_scripts.get_inactive_members import get_inactive_members
+from server_helper_scripts.get_last_tag_event import get_last_tag_event
+from server_helper_scripts.sync_from_fortnox import sync_from_fortnox
+from statistics_scripts.generate_statistics import GenerateStats
 
 User = user.User
 Tagevent = tagevent.Tagevent

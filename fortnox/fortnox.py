@@ -2,10 +2,8 @@ import http.client
 import json
 import requests
 import fortnox_cfg as cfg
-from pyfiglet import Figlet
-import os
 
-##testar fortnox hämtning.
+
 class Fortnox:
 
     def get_all_customers(self):
@@ -45,13 +43,12 @@ class Fortnox:
             # Exception
             print('Exception during request')
 
-
     def insert_customer(self, user):
         try:
             r = requests.post(
-                url = 'https://api.fortnox.se/3/customers',
-                headers = cfg.fortnox,
-                data = json.dumps({
+                url='https://api.fortnox.se/3/customers',
+                headers=cfg.fortnox,
+                data=json.dumps({
                     "Customer": {
                         "Name": user.name,
                         "Email": user.email,
@@ -72,15 +69,13 @@ class Fortnox:
         except http.client.HTTPException as e:
             print('Exception during POST-request')
 
-
-    #Kommer fungera sen när vår databas har fortnox ID på posterna! Patrik, Kim, Kevin
     def update_customer(self, user):
         try:
             userId = str(user.fortnox_id)
             r = requests.put(
-                url = 'https://api.fortnox.se/3/customers/'+userId+'/',
-                headers = cfg.fortnox,
-                data = json.dumps({
+                url='https://api.fortnox.se/3/customers/'+userId+'/',
+                headers=cfg.fortnox,
+                data=json.dumps({
                     "Customer": {
                         "Name": user.name,
                         "Email": user.email,
@@ -101,13 +96,3 @@ class Fortnox:
             print(user.zip_code)
         except http.client.HTTPException as e:
             print('Exception during POST-request')
-
-
-
-
-
-
-
-
-
-
