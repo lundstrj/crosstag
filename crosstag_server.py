@@ -209,6 +209,7 @@ def all_tagevents():
 def all_users(filter=None):
     ret = []
     counter = 0
+    users = []
     # Lists all users
     if filter == "all":
         users = User.query.order_by("expiry_date desc").all()
