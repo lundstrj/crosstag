@@ -13,3 +13,4 @@ Werkzeug==0.9.6
 pyserial==2.7
 requests==2.2.1
 grequests==0.3.0
+pyfiglet==0.7.4
